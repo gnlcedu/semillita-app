@@ -15,15 +15,15 @@ function toyShop(root){
   const CUST=['🐶','🐱','🐰','🐻','🐼','🐨','🦊','🐷','🐵','🐮'];
   let order=null, bag=[], cash=[], paid=0;
   const money=(v,s=1)=> v<50 ? `<span style="display:inline-grid;place-items:center;width:${(30+v*.6)*s}px;height:${(30+v*.6)*s}px;border-radius:50%;background:${v===25||v===1?'#E9C46A':'#C9CCD3'};border:3px solid rgba(0,0,0,.12);font-size:${11*s}px;font-weight:800">${v}</span>`
-    : `<span style="display:inline-grid;place-items:center;width:${64*s}px;height:${34*s}px;border-radius:6px;background:${{50:'#C9B8EE',100:'#F7C59F',200:'#F5B8D0',500:'#A9D3F0'}[v]};border:2px solid rgba(0,0,0,.12);font-size:${13*s}px;font-weight:800">RD$${v}</span>`;
-  addHTML(root, `<div class="abs" style="inset:0 0 70px 0;background:linear-gradient(#FFF4E4 0 38%,#F3E3C9 38%)"></div>
-    <div class="abs" style="left:0;right:0;top:0;height:30px;background:repeating-linear-gradient(90deg,#F4A6A6 0 30px,#fff 30px 60px);border-radius:0 0 50% 50%/0 0 14px 14px"></div>
-    <div id="cu" class="abs" style="left:14px;top:46px;display:flex;align-items:flex-end;gap:8px;max-width:92%"></div>
-    <div id="sh" class="abs" style="left:10px;right:10px;top:150px;display:grid;grid-template-columns:repeat(4,1fr);gap:8px"></div>
-    <div id="bg" class="abs" style="left:10px;right:10px;bottom:84px;min-height:64px;background:#fff;border:2px dashed var(--line);border-radius:18px;padding:8px;display:flex;flex-wrap:wrap;gap:6px;align-items:center"></div>
+    : `<span style="display:inline-grid;place-items:center;width:${64*s}px;height:${34*s}px;border-radius:6px;background:${{50:'#C9B8EE',100:'#F7C59F',200:'#F5B8D0',500:'#A9D3F0'}[v]};border:var(--bw) solid rgba(0,0,0,.12);font-size:${13*s}px;font-weight:800">RD$${v}</span>`;
+  addHTML(root, `<div class="abs" style="inset:0 0 var(--tbar-h) 0;background:linear-gradient(#FFF4E4 0 38%,#F3E3C9 38%)"></div>
+    <div class="abs" style="left:0;right:0;top:0;height:30px;background:repeating-linear-gradient(90deg,var(--c-rosa) 0 30px,var(--white) 30px 60px);border-radius:0 0 50% 50%/0 0 14px 14px"></div>
+    <div id="cu" class="abs" style="left:14px;top:46px;display:flex;align-items:flex-end;gap:var(--s-2);max-width:92%"></div>
+    <div id="sh" class="abs" style="left:10px;right:10px;top:150px;display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s-2)"></div>
+    <div id="bg" class="abs" style="left:10px;right:10px;bottom:84px;min-height:64px;background:var(--card);border:2px dashed var(--line);border-radius:var(--r-md);padding:var(--s-2);display:flex;flex-wrap:wrap;gap:var(--s-2);align-items:center"></div>
     <div class="tbar" id="tb2"></div>`);
   const cu=root.querySelector('#cu'), sh=root.querySelector('#sh'), bg=root.querySelector('#bg'), tb=root.querySelector('#tb2');
-  sh.innerHTML=PROD.map((p,i)=>`<button data-p="${i}" style="background:#fff;border:2px solid var(--line);border-radius:16px;padding:6px 2px;display:flex;flex-direction:column;align-items:center"><span style="font-size:34px">${p[0]}</span>${lv>1?`<small style="font-weight:800;background:#F8EFC9;border-radius:8px;padding:0 6px">RD$${p[3]}</small>`:`<small style="font-weight:700">${p[1]}</small>`}</button>`).join('');
+  sh.innerHTML=PROD.map((p,i)=>`<button data-p="${i}" style="background:var(--card);border:var(--bw) solid var(--line);border-radius:var(--r-md);padding:var(--s-2) 2px;display:flex;flex-direction:column;align-items:center"><span style="font-size:var(--fs-4xl)">${p[0]}</span>${lv>1?`<small style="font-weight:800;background:var(--butter);border-radius:var(--r-xs);padding:0 var(--s-2)">RD$${p[3]}</small>`:`<small style="font-weight:700">${p[1]}</small>`}</button>`).join('');
   function newCustomer(){
     bag=[]; cash=[]; const who=pick(CUST); const k = lv===1?1:lv===2?rnd(1,2):rnd(2,3);
     const items=sample(PROD.map((_,i)=>i).filter(i=>lv===1||PROD[i][3]<=(lv===2?45:60)),k).map(i=>[i, lv===1?rnd(1,4):rnd(1,3)]);
@@ -31,16 +31,16 @@ function toyShop(root){
     paid = lv===3 ? [50,100,200,500].find(b=>b>total) : 0;
     order={items,total,who};
     const txt='Quiero '+items.map(([i,n])=>`${n} ${n===1?PROD[i][1]:PROD[i][2]}`).join(' y ');
-    cu.innerHTML=`<span style="font-size:58px;animation:popin .4s both">${who}</span><div class="bubble" style="font-size:16px;padding:8px 12px">${txt}${lv===3?`<br><span class="muted">Te pago con ${money(paid,.7)}</span>`:''}</div>`;
+    cu.innerHTML=`<span style="font-size:var(--fs-7xl);animation:popin .4s both">${who}</span><div class="bubble" style="font-size:var(--fs-sm);padding:var(--s-2) var(--s-3)">${txt}${lv===3?`<br><span class="muted">Te pago con ${money(paid,.7)}</span>`:''}</div>`;
     tsay(txt+(lv===3?`. Te pago con ${paid} pesos`:''));
     drawBag();
   }
   function drawBag(){
     const hint = lv===1?'Toca los productos que pide':'1) Toca los productos que pide';
-    bg.innerHTML = bag.length ? bag.map(i=>`<span style="font-size:28px;animation:popin .3s both">${PROD[i][0]}</span>`).join('') : `<span class="muted" style="font-weight:700">🛍️ ${hint}</span>`;
+    bg.innerHTML = bag.length ? bag.map(i=>`<span style="font-size:var(--fs-3xl);animation:popin .3s both">${PROD[i][0]}</span>`).join('') : `<span class="muted" style="font-weight:700">🛍️ ${hint}</span>`;
     if (lv>1 && bag.length){ const step = lv===2?'2) Cobra: toca el dinero que te da':`2) Da el cambio de RD$${paid}`;
-      bg.insertAdjacentHTML('beforeend',`<div style="width:100%;border-top:2px dashed var(--line);margin-top:6px;padding-top:6px;font-weight:800">${step}: ${cash.map(v=>money(v,.6)).join(' ')} <span class="muted">= RD$${cash.reduce((a,b)=>a+b,0)}</span></div>`); }
-    tb.innerHTML=(lv>1?MONEY.filter(v=>lv===3||v<=100).map(v=>`<button data-m="${v}" style="padding:0 6px">${money(v,.8)}</button>`).join('')+'<span class="sep"></span>':'')+`<button id="un">⌫</button><button id="ok" style="background:#B9E3C6">✅ Entregar</button>`;
+      bg.insertAdjacentHTML('beforeend',`<div style="width:100%;border-top:2px dashed var(--line);margin-top:var(--s-2);padding-top:var(--s-2);font-weight:800">${step}: ${cash.map(v=>money(v,.6)).join(' ')} <span class="muted">= RD$${cash.reduce((a,b)=>a+b,0)}</span></div>`); }
+    tb.innerHTML=(lv>1?MONEY.filter(v=>lv===3||v<=100).map(v=>`<button data-m="${v}" style="padding:0 var(--s-2)">${money(v,.8)}</button>`).join('')+'<span class="sep"></span>':'')+`<button id="un">⌫</button><button id="ok" style="background:var(--c-menta)">✅ Entregar</button>`;
     tb.querySelectorAll('[data-m]').forEach(b=>b.addEventListener('click',()=>{ if(!bag.length){ tsay('Primero pon los productos en la funda'); return; } cash.push(+b.dataset.m); coinS(); drawBag(); }));
     tb.querySelector('#un').addEventListener('click',()=>{ if(cash.length) cash.pop(); else bag.pop(); drawBag(); });
     tb.querySelector('#ok').addEventListener('click',check);
@@ -63,13 +63,13 @@ function toyFarm(root){
   const lv=LV();
   const A=[['🐄','vaca','¡Muuu!','moo','cow','🌾'],['🐷','cerdo','¡Oinc, oinc!','oink','pig','🍎'],['🐔','gallina','¡Coc, coc, coc!','cluck','hen','🌽'],['🐑','oveja','¡Beee!','baa','sheep','🌿'],['🐴','caballo','¡Iiiiih!','neigh','horse','🥕'],['🦆','pato','¡Cuac, cuac!','quack','duck','🐛'],['🐶','perro','¡Guau, guau!','woof','dog','🦴'],['🐱','gato','¡Miau!','meow','cat','🐟'],['🐐','chivo','¡Meee!','maa','goat','🍃']];
   let food=null, quiz=null;
-  addHTML(root, `<div class="abs" style="inset:0 0 70px 0;background:linear-gradient(#D6ECFA 0 30%,#CFE6B8 30%)"></div>
-    <div class="abs" style="right:14px;top:40px;font-size:70px">🏚️</div><div class="abs" style="left:16px;top:44px;font-size:46px">🌳</div>
-    <div id="fm" class="abs" style="left:8px;right:8px;top:30%;display:grid;grid-template-columns:repeat(3,1fr);gap:6px"></div>
+  addHTML(root, `<div class="abs" style="inset:0 0 var(--tbar-h) 0;background:linear-gradient(#D6ECFA 0 30%,#CFE6B8 30%)"></div>
+    <div class="abs" style="right:14px;top:40px;font-size:var(--fs-8xl)">🏚️</div><div class="abs" style="left:16px;top:44px;font-size:var(--fs-6xl)">🌳</div>
+    <div id="fm" class="abs" style="left:8px;right:8px;top:30%;display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s-2)"></div>
     <div class="tbar" id="ft"></div>`);
   const fm=root.querySelector('#fm'), ft=root.querySelector('#ft');
-  fm.innerHTML=A.map((a,i)=>`<button data-a="${i}" style="font-size:56px;padding:6px;border-radius:20px;display:flex;flex-direction:column;align-items:center"><span>${a[0]}</span><small style="font-size:13px;font-weight:800">${lv===3?a[4]:a[1]}</small></button>`).join('');
-  ft.innerHTML = lv===1 ? `<span class="muted" style="font-weight:800;padding:0 8px">Toca un animal 🔊</span>` : lv===2 ? A.map(a=>`<button data-f="${a[5]}">${a[5]}</button>`).join('') : `<button id="q">❓ Which animal says…?</button>`;
+  fm.innerHTML=A.map((a,i)=>`<button data-a="${i}" style="font-size:var(--fs-7xl);padding:var(--s-2);border-radius:var(--r-md);display:flex;flex-direction:column;align-items:center"><span>${a[0]}</span><small style="font-size:var(--fs-xs);font-weight:800">${lv===3?a[4]:a[1]}</small></button>`).join('');
+  ft.innerHTML = lv===1 ? `<span class="muted" style="font-weight:800;padding:0 var(--s-2)">Toca un animal 🔊</span>` : lv===2 ? A.map(a=>`<button data-f="${a[5]}">${a[5]}</button>`).join('') : `<button id="q">❓ Which animal says…?</button>`;
   fm.querySelectorAll('[data-a]').forEach(b=>b.addEventListener('click',()=>{ const a=A[+b.dataset.a]; const s=b.querySelector('span'); s.style.animation='none'; void s.offsetWidth; s.style.animation='hop .7s';
     if (lv===2 && food){ if (food===a[5]){ win(`¡Ñam! A ${a[1]==='vaca'||a[1]==='gallina'||a[1]==='oveja'?'la':'el'} ${a[1]} le gusta ${food}`); sparks(b,6); } else tsay(`Hmm, ${a[1]==='vaca'||a[1]==='gallina'||a[1]==='oveja'?'la':'el'} ${a[1]} no come eso`); food=null; ft.querySelectorAll('[data-f]').forEach(x=>x.classList.remove('on')); return; }
     if (lv===3 && quiz){ if (a===quiz){ win(`Yes! The ${a[4]} says ${a[3]}!`); quiz=null; } else { speak(`No, the ${a[4]} says ${a[3]}`,'en-US'); } return; }
@@ -86,8 +86,8 @@ function toyClock(root){
     if (m===0) return `${art(h)} en punto`; if (m===15) return `${art(h)} y cuarto`; if (m===30) return `${art(h)} y media`;
     if (m===45) return `${art(h%12+1)} menos cuarto`; return `${art(h)} y ${m}`; }
   const dig=t=>{ const [h,m]=hm(t); return `${h}:${String(m).padStart(2,'0')}`; };
-  addHTML(root, `<div class="abs" style="inset:0 0 70px 0;background:linear-gradient(#E3F0FA,#FBF8F3)"></div>
-    <div id="dg" class="abs" style="left:0;right:0;top:56px;text-align:center;font-size:40px;font-weight:800"></div>
+  addHTML(root, `<div class="abs" style="inset:0 0 var(--tbar-h) 0;background:linear-gradient(#E3F0FA,var(--bg))"></div>
+    <div id="dg" class="abs" style="left:0;right:0;top:56px;text-align:center;font-size:var(--fs-5xl);font-weight:800"></div>
     <svg id="ck" class="abs" viewBox="-14 -14 328 328" style="left:50%;top:52%;transform:translate(-50%,-50%);width:min(82%,340px);touch-action:none">
       <circle cx="150" cy="150" r="140" fill="#fff" stroke="#C9B8EE" stroke-width="10"/>
       ${times(60,i=>{const a=i/60*Math.PI*2; const r1=i%5?128:118; return `<line x1="${150+r1*Math.sin(a)}" y1="${150-r1*Math.cos(a)}" x2="${150+132*Math.sin(a)}" y2="${150-132*Math.cos(a)}" stroke="#C9C3B8" stroke-width="${i%5?2:4}"/>`;}).join('')}
@@ -96,11 +96,11 @@ function toyClock(root){
       <line id="hh" x1="150" y1="150" x2="150" y2="85" stroke="#4A4658" stroke-width="10" stroke-linecap="round"/>
       <line id="mh" x1="150" y1="150" x2="150" y2="40" stroke="#D9946C" stroke-width="7" stroke-linecap="round"/>
       <circle cx="150" cy="150" r="10" fill="#4A4658"/></svg>
-    <div class="tbar"><button id="hm">−1 h</button><button id="hp">+1 h</button><button id="say">🔊</button>${lv>0?'<button id="rt">🎯 Reto</button><button id="ok" style="background:#B9E3C6">✅ Listo</button>':''}</div>`);
+    <div class="tbar"><button id="hm">−1 h</button><button id="hp">+1 h</button><button id="say">🔊</button>${lv>0?'<button id="rt">🎯 Reto</button><button id="ok" style="background:var(--c-menta)">✅ Listo</button>':''}</div>`);
   const ck=root.querySelector('#ck'), dg=root.querySelector('#dg');
   function draw(){ const m=mins%60, h=(mins/60)%12; const ma=m/60*360, ha=h/12*360;
     root.querySelector('#mh').setAttribute('transform',`rotate(${ma} 150 150)`); root.querySelector('#hh').setAttribute('transform',`rotate(${ha} 150 150)`);
-    dg.innerHTML = goal ? `<span style="font-size:20px">${goal.txt}</span><br>${lv===1?'':dig(mins)}` : dig(mins); }
+    dg.innerHTML = goal ? `<span style="font-size:var(--fs-lg)">${goal.txt}</span><br>${lv===1?'':dig(mins)}` : dig(mins); }
   let drag=false, lastA=0;
   const ang=e=>{ const r=ck.getBoundingClientRect(); const x=e.clientX-r.left-r.width/2, y=e.clientY-r.top-r.height/2; return (Math.atan2(x,-y)*180/Math.PI+360)%360; };
   ck.addEventListener('pointerdown',e=>{ drag=true; lastA=ang(e); try{ck.setPointerCapture(e.pointerId);}catch(_){} });
@@ -126,7 +126,7 @@ function toyMaps(root){
   const BORDE='M166 36 L170 58 L162 82 L170 104 L160 126 L166 150 L160 176';
   const PL=[['Santo Domingo',258,154,1],['Santiago',220,62,1],['Punta Cana',376,128,1],['Pico Duarte',204,86,1],['Puerto Plata',236,40,2],['Samaná',318,66,2],['Lago Enriquillo',182,142,2],['Barahona',206,164,3],['La Romana',310,148,3],['Haití',80,120,3]];
   const CONT=[['América del Norte','M30 30 Q70 10 130 26 Q150 50 120 70 Q100 90 86 96 Q60 70 30 60Z',80,52],['América del Sur','M110 104 Q140 100 150 124 Q140 170 122 200 Q108 160 104 130Z',126,140],['Europa','M184 34 Q206 24 222 34 Q218 56 196 60 Q182 50 184 34Z',202,46],['África','M188 74 Q226 66 246 88 Q246 130 222 168 Q204 150 196 118 Q180 100 188 74Z',218,112],['Asia','M226 24 Q300 10 368 32 Q372 70 330 90 Q290 106 262 90 Q236 74 226 24Z',300,56],['Oceanía','M318 140 Q350 130 372 146 Q366 172 336 174 Q314 164 318 140Z',344,156],['Antártida','M60 208 Q200 196 340 208 Q200 222 60 208Z',200,209]];
-  addHTML(root, `<div class="abs" style="inset:0 0 70px 0;background:#E3F0FA"></div><div id="mp" class="abs" style="inset:0 0 70px 0"></div>
+  addHTML(root, `<div class="abs" style="inset:0 0 var(--tbar-h) 0;background:#E3F0FA"></div><div id="mp" class="abs" style="inset:0 0 var(--tbar-h) 0"></div>
     <div class="tbar"><button data-m="isla" class="on">🏝️ Mi isla</button><button data-m="mundo">🌎 El mundo</button><button id="rs">🔄</button></div>`);
   const mp=root.querySelector('#mp');
   function round(){
@@ -136,11 +136,11 @@ function toyMaps(root){
     if (isla) svg+=`<path d="${ISLA}" fill="#CFE6B8" stroke="#8AA368" stroke-width="2.5"/><path d="${BORDE}" stroke="#8AA368" stroke-width="2" stroke-dasharray="5 4" fill="none"/><text x="70" y="70" font-size="12" fill="#8AA368" font-weight="700" font-family="Nunito">HAITÍ</text><text x="230" y="110" font-size="12" fill="#6F8A55" font-weight="700" font-family="Nunito">REP. DOMINICANA</text><text x="300" y="20" font-size="11" fill="#6FA3CB" font-family="Nunito">Océano Atlántico</text><text x="230" y="214" font-size="11" fill="#6FA3CB" font-family="Nunito">Mar Caribe</text>`;
     else svg+=CONT.map(c=>`<path d="${c[1]}" fill="#CFE6B8" stroke="#8AA368" stroke-width="2"/>`).join('');
     if (lv<3) svg+=items.map(it=>{ const [x,y]=isla?[it[1],it[2]]:[it[2],it[3]]; return `<circle cx="${x}" cy="${y}" r="7" fill="#fff" stroke="#D9946C" stroke-width="3"/>`; }).join('');
-    svg+='</svg>'; mp.innerHTML=svg+`<div class="abs" style="left:0;right:0;top:${oy+224*sc+6}px;text-align:center;font-size:12px" class="muted">${isla?'Mapa simplificado de la isla La Española':'Mapa simplificado del mundo'}</div>`;
+    svg+='</svg>'; mp.innerHTML=svg+`<div class="abs" style="left:0;right:0;top:${oy+224*sc+6}px;text-align:center;font-size:var(--fs-2xs)" class="muted">${isla?'Mapa simplificado de la isla La Española':'Mapa simplificado del mundo'}</div>`;
     let left=items.length; const top0=oy+224*sc+30;
     shuffle(items).forEach((it,j)=>{ const name=it[0]; const [tx,ty]=isla?[it[1],it[2]]:[it[2],it[3]];
       const el=document.createElement('div'); el.className='abs'; el.textContent=(isla?'📍 ':'')+name;
-      const x0=8+(j%2)*(W/2-4), y0=top0+Math.floor(j/2)*42; el.style.cssText=`left:${x0}px;top:${y0}px;background:#fff;border:2px solid var(--line);border-radius:14px;padding:6px 10px;font-weight:800;font-size:14px;z-index:3;transition:left .3s,top .3s;white-space:nowrap`;
+      const x0=8+(j%2)*(W/2-4), y0=top0+Math.floor(j/2)*42; el.style.cssText=`left:${x0}px;top:${y0}px;background:var(--card);border:var(--bw) solid var(--line);border-radius:var(--r-sm);padding:var(--s-2) var(--s-3);font-weight:800;font-size:var(--fs-xs);z-index:3;transition:left .3s,top .3s;white-space:nowrap`;
       mp.appendChild(el); el.dataset.x=x0; el.dataset.y=y0;
       dragify(el, mp, {start:()=>speak(name), drop:(el,px,py)=>{ const gx=ox+tx*sc, gy=oy+ty*sc;
         if (Math.hypot(px-gx,py-gy) < (isla?30:46)*Math.max(1,sc)){ el.dataset.lock=1; el.style.left=(gx-12)+'px'; el.style.top=(gy-14)+'px'; el.style.fontSize='11px'; el.style.padding='2px 6px'; el.style.background='#F8EFC9'; note(784,.2,'sine',.12); left--;
@@ -162,8 +162,8 @@ function toyBody(root){
     organos:[['cerebro','El cerebro controla todo el cuerpo',`<ellipse cx="100" cy="38" rx="24" ry="17"/>`],['pulmones','Los pulmones toman el oxígeno del aire',`<ellipse cx="82" cy="112" rx="14" ry="24"/><ellipse cx="118" cy="112" rx="14" ry="24"/>`],['corazón','El corazón bombea la sangre',`<path d="M102 108 q7 -9 14 0 q-2 11 -14 18 q-12 -7 -14 -18 q7 -9 14 0Z"/>`],['hígado','El hígado limpia la sangre y produce bilis',`<path d="M70 142 Q96 134 104 148 Q90 160 72 156Z"/>`],['estómago','El estómago mezcla y deshace los alimentos',`<ellipse cx="116" cy="150" rx="14" ry="11"/>`],['intestinos','Los intestinos absorben los nutrientes',`<rect x="80" y="164" width="40" height="30" rx="12"/>`]]
   };
   const COLOR={piel:'#F7D1B5',musculos:'#E88A8A',huesos:'#F3EEE2',organos:'#F2A2B4'};
-  addHTML(root, `<div class="abs" style="inset:0 0 70px 0;background:#F6F2FB"></div><svg id="bd" class="abs" viewBox="0 0 200 350" style="left:50%;top:44px;transform:translateX(-50%);height:calc(100% - 200px);max-width:92%"></svg>
-    <div id="inf" class="abs" style="left:12px;right:12px;bottom:84px;min-height:48px;background:#fff;border:2px solid var(--line);border-radius:16px;padding:8px 12px;font-weight:700;text-align:center"></div>
+  addHTML(root, `<div class="abs" style="inset:0 0 var(--tbar-h) 0;background:var(--paper-lav)"></div><svg id="bd" class="abs" viewBox="0 0 200 350" style="left:50%;top:44px;transform:translateX(-50%);height:calc(100% - 200px);max-width:92%"></svg>
+    <div id="inf" class="abs" style="left:12px;right:12px;bottom:84px;min-height:48px;background:var(--card);border:var(--bw) solid var(--line);border-radius:var(--r-md);padding:var(--s-2) var(--s-3);font-weight:700;text-align:center"></div>
     <div class="tbar"><button data-l="piel" class="on">🧍 Piel</button><button data-l="musculos">💪 Músculos</button><button data-l="huesos">🦴 Huesos</button><button data-l="organos">🫀 Órganos</button>${lv===3?'<button id="qz">❓ Reto</button>':''}</div>`);
   const bd=root.querySelector('#bd'), inf=root.querySelector('#inf');
   const silo=`<g fill="${'#FBE6D6'}" stroke="#E2C2A8" stroke-width="2">${PARTS.piel.map(p=>p[2]).join('')}</g>`;
@@ -184,23 +184,23 @@ function toyBody(root){
 /* ---------- Laboratorio ---------- */
 function toyLab(root){
   const lv=LV(); let mode='flota', cleanup=[];
-  addHTML(root, `<div id="lb" class="abs" style="inset:0 0 70px 0;background:#FFFBF4;overflow:hidden"></div>
+  addHTML(root, `<div id="lb" class="abs" style="inset:0 0 var(--tbar-h) 0;background:var(--paper);overflow:hidden"></div>
     <div class="tbar"><button data-m="flota" class="on">🛁 ¿Flota o se hunde?</button><button data-m="iman">🧲 Imanes</button><button data-m="volcan">🌋 Volcán</button></div>`);
   const lb=root.querySelector('#lb');
   function flota(){
     const OB=[['🪵','madera',1],['🪨','piedra',0],['🍎','manzana',1],['🔑','llave',0],['🦆','pato de goma',1],['⚓','ancla',0],['🧽','esponja',1],['🔩','tornillo',0],['🏐','pelota',1],['🥄','cuchara',0]];
     const W=lb.clientWidth, H=lb.clientHeight, wt=H*.42;
     lb.innerHTML=`<div class="abs" style="left:6%;right:6%;top:${wt}px;bottom:16px;background:linear-gradient(#A9D3F0cc,#6FA3CBcc);border:4px solid #CFE3F1;border-top:none;border-radius:0 0 26px 26px"></div>
-      <div class="abs" style="left:10px;right:10px;top:14px;display:flex;flex-wrap:wrap;gap:6px;justify-content:center">${OB.map((o,i)=>`<button data-o="${i}" style="font-size:34px;background:#fff;border:2px solid var(--line);border-radius:14px;padding:2px 6px">${o[0]}</button>`).join('')}</div>
+      <div class="abs" style="left:10px;right:10px;top:14px;display:flex;flex-wrap:wrap;gap:var(--s-2);justify-content:center">${OB.map((o,i)=>`<button data-o="${i}" style="font-size:var(--fs-4xl);background:var(--card);border:var(--bw) solid var(--line);border-radius:var(--r-sm);padding:2px var(--s-2)">${o[0]}</button>`).join('')}</div>
       <div id="pq" class="abs" style="left:0;right:0;top:${wt-60}px;text-align:center"></div>`;
     const drop=(o,i)=>{ const el=document.createElement('div'); el.className='abs'; el.textContent=o[0]; const x=rnd(14,76);
-      el.style.cssText=`left:${x}%;top:${wt-70}px;font-size:42px;transition:top 1.4s cubic-bezier(.3,.7,.4,1)`; lb.appendChild(el);
+      el.style.cssText=`left:${x}%;top:${wt-70}px;font-size:var(--fs-5xl);transition:top 1.4s cubic-bezier(.3,.7,.4,1)`; lb.appendChild(el);
       requestAnimationFrame(()=>requestAnimationFrame(()=>{ el.style.top=(o[2]?wt-28:H-70)+'px'; })); setTimeout(splashS,500);
       if (o[2]) setTimeout(()=>el.style.animation='bob 2s ease-in-out infinite',1500);
       setTimeout(()=>speak(`${o[1]}: ${o[2]?'¡flota!':'¡se hunde!'}`),900); };
     lb.querySelectorAll('[data-o]').forEach(b=>b.addEventListener('click',()=>{ const o=OB[+b.dataset.o]; b.disabled=true; b.style.opacity=.35;
       if (lv===1){ drop(o); return; }
-      const pq=lb.querySelector('#pq'); pq.innerHTML=`<div class="bubble" style="display:inline-block;font-size:16px">¿${o[0]} flota o se hunde?<br><button class="chip" data-a="1">🛟 Flota</button> <button class="chip" data-a="0">⬇️ Se hunde</button></div>`;
+      const pq=lb.querySelector('#pq'); pq.innerHTML=`<div class="bubble" style="display:inline-block;font-size:var(--fs-sm)">¿${o[0]} flota o se hunde?<br><button class="chip" data-a="1">🛟 Flota</button> <button class="chip" data-a="0">⬇️ Se hunde</button></div>`;
       speak(`¿La ${o[1]} flota o se hunde?`.replace('La pato','El pato').replace('La tornillo','El tornillo'));
       pq.querySelectorAll('[data-a]').forEach(a=>a.addEventListener('click',()=>{ pq.innerHTML=''; drop(o); const ok=+a.dataset.a===o[2];
         setTimeout(()=>{ if(ok) win('¡Lo predijiste bien!'); else tsay(lv===3?(o[2]?'Flota porque es menos densa que el agua':'Se hunde porque es más densa que el agua'):'¡Sorpresa! Mira qué pasó'); },1700); })); }));
@@ -208,9 +208,9 @@ function toyLab(root){
   function iman(){
     const OB=[['📎','clip',1],['🔩','tornillo',1],['🧷','imperdible',1],['✂️','tijeras',1],['🪛','destornillador',1],['🪵','madera',0],['🧸','peluche',0],['✏️','lápiz',0],['🧦','media',0],['🍎','manzana',0],['🎈','globo',0]];
     const W=lb.clientWidth, H=lb.clientHeight; const items=OB.map((o,i)=>{ const el=document.createElement('div'); el.className='abs'; el.textContent=o[0]; const x=rnd(10,W-60), y=rnd(H*.35,H-60);
-      el.style.cssText=`left:${x}px;top:${y}px;font-size:36px;transition:left .25s,top .25s`; lb.appendChild(el); return {o,el,stuck:false,x,y}; });
-    lb.insertAdjacentHTML('afterbegin',`<p class="muted" style="text-align:center;font-weight:800;margin:14px 40px 0">Arrastra el imán 🧲 cerca de las cosas</p>`);
-    const mg=document.createElement('div'); mg.className='abs'; mg.textContent='🧲'; mg.style.cssText=`left:${W/2-30}px;top:60px;font-size:60px;z-index:5`; lb.appendChild(mg);
+      el.style.cssText=`left:${x}px;top:${y}px;font-size:var(--fs-4xl);transition:left .25s,top .25s`; lb.appendChild(el); return {o,el,stuck:false,x,y}; });
+    lb.insertAdjacentHTML('afterbegin',`<p class="muted" style="text-align:center;font-weight:800;margin:var(--s-4) 40px 0">Arrastra el imán 🧲 cerca de las cosas</p>`);
+    const mg=document.createElement('div'); mg.className='abs'; mg.textContent='🧲'; mg.style.cssText=`left:${W/2-30}px;top:60px;font-size:var(--fs-7xl);z-index:5`; lb.appendChild(mg);
     let found=0; const total=OB.filter(o=>o[2]).length;
     const tick=()=>{ const mx=parseFloat(mg.style.left)+30, my=parseFloat(mg.style.top)+40;
       items.forEach((it,k)=>{ if (it.stuck){ it.el.style.left=(mx-20+((k%3)-1)*22)+'px'; it.el.style.top=(my+10+Math.floor(k/3)%2*14)+'px'; return; }
@@ -222,13 +222,13 @@ function toyLab(root){
     let bic=0, vin=0, col=false;
     lb.innerHTML=`<svg class="abs" viewBox="0 0 300 260" style="left:50%;bottom:14px;transform:translateX(-50%);width:min(90%,340px)"><path d="M20 250 L120 70 L180 70 L280 250Z" fill="#C9A27E" stroke="#A9825E" stroke-width="4"/><ellipse cx="150" cy="70" rx="30" ry="9" fill="#7A5A3E"/></svg>
       <div id="fx" class="abs" style="inset:0;pointer-events:none"></div>
-      <div class="abs" style="left:0;right:0;top:16px;display:flex;justify-content:center;gap:8px;flex-wrap:wrap"><button class="chip" id="b1">🥄 Bicarbonato</button><button class="chip" id="b2">🧴 Vinagre</button><button class="chip" id="b3">🎨 Colorante</button><button class="chip" id="b4">🔄</button></div>
+      <div class="abs" style="left:0;right:0;top:16px;display:flex;justify-content:center;gap:var(--s-2);flex-wrap:wrap"><button class="chip" id="b1">🥄 Bicarbonato</button><button class="chip" id="b2">🧴 Vinagre</button><button class="chip" id="b3">🎨 Colorante</button><button class="chip" id="b4">🔄</button></div>
       <div id="vs" class="abs" style="left:0;right:0;top:112px;text-align:center;font-weight:800"></div>`;
     const vs=lb.querySelector('#vs'), fx=lb.querySelector('#fx');
     const st=()=>vs.innerHTML=`Bicarbonato: ${'🥄'.repeat(bic)||'—'} · Vinagre: ${'🧴'.repeat(vin)||'—'}`; st();
     const erupt=()=>{ const n=Math.min(bic,vin)*30+20; const r=lb.getBoundingClientRect(), v=lb.querySelector('svg').getBoundingClientRect(); const cx=v.left-r.left+v.width/2, cy=v.top-r.top+v.height*.27;
       for(let i=0;i<n;i++){ const b=document.createElement('span'); b.className='abs'; const s=rnd(10,26);
-        b.style.cssText=`left:${cx-s/2}px;top:${cy}px;width:${s}px;height:${s}px;border-radius:50%;background:${col?'#F4A6A6':'#FFF7EE'};border:2px solid ${col?'#E88A8A':'#E8DCCB'};transition:transform ${1+Math.random()}s cubic-bezier(.2,.8,.4,1),opacity 1.6s;opacity:1`;
+        b.style.cssText=`left:${cx-s/2}px;top:${cy}px;width:${s}px;height:${s}px;border-radius:50%;background:${col?'#F4A6A6':'#FFF7EE'};border:var(--bw) solid ${col?'#E88A8A':'#E8DCCB'};transition:transform ${1+Math.random()}s cubic-bezier(.2,.8,.4,1),opacity 1.6s;opacity:1`;
         fx.appendChild(b); requestAnimationFrame(()=>requestAnimationFrame(()=>{ b.style.transform=`translate(${rnd(-110,110)}px,${rnd(-160,90)}px)`; b.style.opacity=0; })); setTimeout(()=>b.remove(),2200); }
       noiseS(1.2,.15,400); confetti();
       win(lv===1?'¡Erupción!':'¡Erupción! El vinagre y el bicarbonato reaccionan y forman un gas, el dióxido de carbono, que hace la espuma');
@@ -248,7 +248,7 @@ function toyLab(root){
 /* ---------- Tangram ---------- */
 function toyTangram(root){
   const P=[['#F4A6A6',[[0,0],[4,0],[2,2]]],['#A9D3F0',[[0,0],[2,2],[0,4]]],['#F6E39A',[[2,4],[4,4],[4,2]]],['#B9E3C6',[[4,0],[4,2],[3,1]]],['#C9B8EE',[[2,2],[3,1],[4,2],[3,3]]],['#F7C59F',[[2,2],[3,3],[1,3]]],['#F5B8D0',[[0,4],[1,3],[3,3],[2,4]]]];
-  addHTML(root, `<div id="tg2" class="abs" style="inset:0 0 70px 0;background:#FFFBF4"></div><div class="tbar"><button id="rs">🔄 Mezclar</button><span class="muted" style="font-weight:800;padding:0 6px;white-space:nowrap" id="hint"></span></div>`);
+  addHTML(root, `<div id="tg2" class="abs" style="inset:0 0 var(--tbar-h) 0;background:var(--paper)"></div><div class="tbar"><button id="rs">🔄 Mezclar</button><span class="muted" style="font-weight:800;padding:0 var(--s-2);white-space:nowrap" id="hint"></span></div>`);
   const ar=root.querySelector('#tg2');
   function round(){
     const lv=LV(); ar.innerHTML=''; const W=ar.clientWidth, H=ar.clientHeight; const U=Math.min((W-40)/4, (H*.42)/4, 60); const ox=(W-U*4)/2, oy=24;

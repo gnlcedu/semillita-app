@@ -3,27 +3,11 @@
    CUENTOS · LECTURA EN VOZ ALTA · CÁLCULO MENTAL · MUNDO DE INGLÉS
    MODO AULA · REPORTE · LÍMITE DE TIEMPO
    ========================================================= */
-document.head.insertAdjacentHTML('beforeend',`<style>
-.mascot .body .crt{width:calc(var(--ms) * 1.2);height:calc(var(--ms) * 1.2);display:block;overflow:visible}
-.crt .eh,.crt .es,.crt .ez,.crt .mh,.crt .ms{display:none}
-.mascot.happy .crt .eo,.mascot.happy .crt .mo,.mascot.dance .crt .eo,.mascot.dance .crt .mo{display:none}
-.mascot.happy .crt .eh,.mascot.happy .crt .mh,.mascot.dance .crt .eh,.mascot.dance .crt .mh{display:inline}
-.mascot.sad .crt .eo,.mascot.sad .crt .mo{display:none}.mascot.sad .crt .es,.mascot.sad .crt .ms{display:inline}
-.mascot.talk .crt .mo{display:none}.mascot.talk .crt .mh{display:inline}
-.mascot.sleep .crt .eo{display:none}.mascot.sleep .crt .ez{display:inline}.mascot.sleep .body{animation:bob 4s ease-in-out infinite}
-.crt .blink{animation:blink 4.5s infinite;transform-box:fill-box;transform-origin:center}
-@keyframes blink{0%,93%,100%{transform:scaleY(1)}96%{transform:scaleY(.1)}}
-.keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-width:340px;margin:0 auto}
-.keypad button{background:#fff;border:2px solid var(--line);border-radius:16px;font-size:26px;font-weight:800;height:58px}
-.word{display:inline-block;padding:2px 3px;border-radius:6px;margin:1px 0;cursor:pointer}
-.word.err{background:var(--no);text-decoration:line-through}
-.story-scene{font-size:64px;text-align:center;letter-spacing:6px;margin:6px 0;min-height:80px;animation:popin .5s both}
-</style>`);
 window.VIEWS = window.VIEWS || {};
 VIEWS.friend = vFriend;
 const today = () => new Date().toISOString().slice(0,10);
 const lvlP = () => lvlOf(prof());
-function backTop(title, to='home'){ return `<div class="top"><button class="icon-btn" id="back">←</button><h2 style="font-size:21px;flex:1">${title}</h2><button class="chip vt" style="padding:6px 8px;font-size:15px"></button>${mascot(prof().avatar,46)}</div>`; }
+function backTop(title, to='home'){ return `<div class="top"><button class="icon-btn" id="back">←</button><h2>${title}</h2><button class="chip vt" style="padding:var(--s-2) var(--s-2);font-size:var(--fs-sm)"></button>${mascot(prof().avatar,46)}</div>`; }
 
 /* ---------- Cuentos interactivos ---------- */
 const STORIES=[
@@ -54,7 +38,7 @@ const STORIES=[
 VIEWS.story=function(){
   const p=prof(); const fill=s=>s.replace(/\{N\}/g,mname(p.avatar)).replace(/\{K\}/g,p.name);
   if (view.s===undefined){
-    app.innerHTML=backTop('📚 Cuentos')+speaker('Elige un cuento. ¡Tú decides qué pasa!',58)+`<div style="display:flex;flex-direction:column;gap:12px">${STORIES.map((s,i)=>`<button class="area bg-${['mint','rose','sky'][i]}" data-s="${i}" style="min-height:0;flex-direction:row;align-items:center;gap:14px"><span class="ic">${s.ic}</span><span><b>${s.t}</b><br><small>${s.v}</small></span></button>`).join('')}</div>`;
+    app.innerHTML=backTop('📚 Cuentos')+speaker('Elige un cuento. ¡Tú decides qué pasa!',58)+`<div style="display:flex;flex-direction:column;gap:var(--s-3)">${STORIES.map((s,i)=>`<button class="area bg-${['mint','rose','sky'][i]}" data-s="${i}" style="min-height:0;flex-direction:row;align-items:center;gap:var(--s-4)"><span class="ic">${s.ic}</span><span><b>${s.t}</b><br><small>${s.v}</small></span></button>`).join('')}</div>`;
     bind('#back',()=>go({name:'home'})); bind('[data-s]',el=>go({name:'story',s:+el.dataset.s,n:0})); return; }
   const S0=STORIES[view.s], nd=S0.n[view.n];
   if (view.n==='q'){
@@ -65,8 +49,8 @@ VIEWS.story=function(){
       if(ok){ confetti(); addXP(3); giveSticker(1); speak('¡Muy bien! Entendiste el cuento.'); setTimeout(()=>go({name:'story'}),2800); } else speak('Casi. Piensa en el cuento otra vez.'); });
     return; }
   const end=!nd[2];
-  app.innerHTML=backTop(S0.t)+`<div class="story-scene">${nd[0]}</div><div style="display:flex;justify-content:center;margin:-4px 0 6px">${mascot(p.avatar,72)}</div>
-    <div class="visual text" style="font-size:19px;animation:popin .4s both">${fill(nd[1])}${end?`<p style="margin:10px 0 0;font-weight:800">✨ FIN · ${S0.v}</p>`:''}</div>
+  app.innerHTML=backTop(S0.t)+`<div class="story-scene">${nd[0]}</div><div style="display:flex;justify-content:center;margin:-4px 0 var(--s-2)">${mascot(p.avatar,72)}</div>
+    <div class="visual text" style="font-size:var(--fs-lg);animation:popin .4s both">${fill(nd[1])}${end?`<p style="margin:var(--s-3) 0 0;font-weight:800">✨ FIN · ${S0.v}</p>`:''}</div>
     <div class="opts one">${end?`<button class="opt" id="q">❓ Responder una pregunta</button>`:nd[2].map(([t,nx])=>`<button class="opt" data-n="${nx}">${fill(t)}</button>`).join('')}</div>`;
   bind('#back',()=>go({name:'story'}));
   speak(fill(nd[1])+(end?'. Fin.':''));
@@ -81,11 +65,11 @@ VIEWS.fluency=function(){
   if (st==='pick'){
     const hist=(p.fluency||[]).slice(-5).reverse();
     app.innerHTML=backTop('📖 Lectura en voz alta')+speaker('Lee el texto en voz alta. Un adulto puede marcar las palabras que te cuesten.',56)+
-      `<div style="display:flex;flex-direction:column;gap:10px">${texts.map((t,i)=>`<button class="opt" data-i="${i}" style="text-align:left;font-size:16px">📄 ${t.slice(0,70)}…</button>`).join('')}</div>`+
-      (hist.length?`<h3 style="margin:22px 0 8px;font-size:17px">Mis lecturas</h3><table><tr><th>Fecha</th><th>Palabras/min</th><th>Correctas/min</th></tr>${hist.map(h=>`<tr><td>${h.d}</td><td>${h.wpm}</td><td>${h.wcpm}</td></tr>`).join('')}</table>`:'');
+      `<div style="display:flex;flex-direction:column;gap:var(--s-3)">${texts.map((t,i)=>`<button class="opt" data-i="${i}" style="text-align:left;font-size:var(--fs-sm)">📄 ${t.slice(0,70)}…</button>`).join('')}</div>`+
+      (hist.length?`<h3 style="margin:var(--s-6) 0 var(--s-2);font-size:var(--fs-md)">Mis lecturas</h3><table><tr><th>Fecha</th><th>Palabras/min</th><th>Correctas/min</th></tr>${hist.map(h=>`<tr><td>${h.d}</td><td>${h.wpm}</td><td>${h.wcpm}</td></tr>`).join('')}</table>`:'');
     bind('#back',()=>go({name:'home'})); bind('[data-i]',el=>go({name:'fluency',st:'read',i:+el.dataset.i})); return; }
   const t=texts[view.i], words=t.split(/\s+/);
-  app.innerHTML=backTop('📖 Lectura en voz alta')+`<div id="tm" style="text-align:center;font-size:34px;font-weight:800;margin-bottom:8px">0:00</div>
+  app.innerHTML=backTop('📖 Lectura en voz alta')+`<div id="tm" style="text-align:center;font-size:var(--fs-4xl);font-weight:800;margin-bottom:var(--s-2)">0:00</div>
     <div class="visual text" id="tx" style="font-size:${lv===1?24:20}px;line-height:1.7">${words.map((w,i)=>`<span class="word" data-w="${i}">${w}</span>`).join(' ')}</div>
     <p class="muted" id="hl" style="font-weight:700;text-align:center">Toca ▶️ y empieza a leer en voz alta</p>
     <button class="btn full" id="st">▶️ Empezar</button>`;
@@ -100,7 +84,7 @@ VIEWS.fluency=function(){
     clearInterval(iv); done=true; const sec=Math.max(1,(Date.now()-t0)/1000), errs=app.querySelectorAll('.word.err').length;
     const wpm=Math.round(words.length/sec*60), wcpm=Math.round((words.length-errs)/sec*60);
     p.fluency=p.fluency||[]; p.fluency.push({d:today(),wpm,wcpm,words:words.length,errs}); save(); addXP(3); giveSticker(.7);
-    document.getElementById('hl').innerHTML=`<b style="font-size:20px;color:var(--ink)">${wpm} palabras por minuto</b><br>${words.length} palabras · ${errs} con error · ${wcpm} correctas por minuto`;
+    document.getElementById('hl').innerHTML=`<b style="font-size:var(--fs-lg);color:var(--ink)">${wpm} palabras por minuto</b><br>${words.length} palabras · ${errs} con error · ${wcpm} correctas por minuto`;
     b.textContent='Volver'; confetti(); speak(`¡Muy bien! Leíste ${wpm} palabras por minuto`);
   });
 };
@@ -115,13 +99,13 @@ VIEWS.math=function(){
     return {txt:`${a} ${op} ${b}`, r}; };
   if (!view.go){
     app.innerHTML=backTop('⚡ Cálculo mental')+speaker('¿Cuántas operaciones puedes resolver en 1 minuto?',58)+
-      `<div class="card" style="text-align:center"><div style="font-size:44px">🔥 ${p.math.streak}</div><b>${p.math.streak===1?'día seguido':'días seguidos'}</b><p class="muted" style="font-weight:700;margin:8px 0 0">Mejor puntaje: ${p.math.best}${p.math.last===today()?' · Ya jugaste hoy ✅':''}</p></div>
-      <button class="btn full" id="go" style="margin-top:16px">▶️ ¡Empezar!</button>`;
+      `<div class="card" style="text-align:center"><div style="font-size:var(--fs-6xl)">🔥 ${p.math.streak}</div><b>${p.math.streak===1?'día seguido':'días seguidos'}</b><p class="muted" style="font-weight:700;margin:var(--s-2) 0 0">Mejor puntaje: ${p.math.best}${p.math.last===today()?' · Ya jugaste hoy ✅':''}</p></div>
+      <button class="btn full" id="go" style="margin-top:var(--s-4)">▶️ ¡Empezar!</button>`;
     bind('#back',()=>go({name:'home'})); bind('#go',()=>go({name:'math',go:1})); return; }
   let q=gen(), inp='', score=0, left=60, over=false;
-  app.innerHTML=backTop('⚡ Cálculo mental')+`<div class="row"><b id="sc" style="font-size:20px">⭐ 0</b><div class="sp"></div><b id="tl" style="font-size:20px">⏱️ 60</b></div>
-    <div class="bar" style="height:10px;background:var(--line);margin:8px 0 14px"><i id="tb3" class="fg-peach" style="width:100%;transition:width 1s linear"></i></div>
-    <div class="visual"><div class="expr" id="ex">${q.txt}</div><div id="an" style="font-size:38px;font-weight:800;min-height:48px;color:var(--peachD)">&nbsp;</div></div>
+  app.innerHTML=backTop('⚡ Cálculo mental')+`<div class="row"><b id="sc" style="font-size:var(--fs-lg)">⭐ 0</b><div class="sp"></div><b id="tl" style="font-size:var(--fs-lg)">⏱️ 60</b></div>
+    <div class="bar" style="height:10px;background:var(--line);margin:var(--s-2) 0 var(--s-4)"><i id="tb3" class="fg-peach" style="width:100%;transition:width 1s linear"></i></div>
+    <div class="visual"><div class="expr" id="ex">${q.txt}</div><div id="an" style="font-size:var(--fs-5xl);font-weight:800;min-height:48px;color:var(--peachD)">&nbsp;</div></div>
     <div class="keypad">${[1,2,3,4,5,6,7,8,9,'⌫',0,'✓'].map(k=>`<button data-k="${k}">${k}</button>`).join('')}</div>`;
   bind('#back',()=>{ clearInterval(iv); go({name:'math'}); });
   const an=document.getElementById('an'), ex=document.getElementById('ex');
@@ -153,10 +137,10 @@ VIEWS.eng=function(){
   const tabs=`<div class="tabs">${[['learn','📇 Learn'],['chant','🎵 Chant'],['talk','💬 Talk'],['play','🎮 Play']].map(([k,n])=>`<button class="chip ${k===st?'on':''}" data-st="${k}">${n}</button>`).join('')}</div>`;
   let body='';
   if (st==='learn') body=`<p class="muted" style="font-weight:700">Toca cada tarjeta para escucharla</p><div class="vocab">${V.map(([w,e])=>`<button data-w="${w}"><span>${e}</span>${w}</button>`).join('')}</div>`;
-  if (st==='chant') body=`<p class="muted" style="font-weight:700">Escucha el ritmo y repite cada línea en voz alta 🎶</p><button class="btn full" id="pl">▶️ Play chant</button><div class="vocab" style="margin-top:14px">${V.map(([w,e],i)=>`<button data-c="${i}" style="transition:transform .2s,background .2s"><span>${e}</span><small>${chantLine(t,i,w)}</small></button>`).join('')}</div>`;
+  if (st==='chant') body=`<p class="muted" style="font-weight:700">Escucha el ritmo y repite cada línea en voz alta 🎶</p><button class="btn full" id="pl">▶️ Play chant</button><div class="vocab" style="margin-top:var(--s-4)">${V.map(([w,e],i)=>`<button data-c="${i}" style="transition:transform .2s,background .2s"><span>${e}</span><small>${chantLine(t,i,w)}</small></button>`).join('')}</div>`;
   if (st==='talk'){ const k=view.k||0, D=DIALOG[t]; if (k>=D.length) body=`<div class="card" style="text-align:center"><h2>Great job! 🎉</h2><p class="muted" style="font-weight:700">Terminaste la conversación</p><button class="btn full" data-st="talk" id="again">Again</button></div>`;
     else { const [qq,ans]=D[k]; const fillK=s=>s.replace(/\{K\}/g,p.name); body=speaker(fillK(qq),64)+`<div class="opts one">${shuffle(ans.map((a,i)=>[a,i])).map(([a,i])=>`<button class="opt" data-a="${i}">${fillK(a)}</button>`).join('')}</div>`; } }
-  if (st==='play') body=`<div class="card" style="text-align:center"><p style="font-weight:700">Juega Listen & Choose y Memory con las palabras de este mundo</p><button class="btn full" id="g1">🎧 Listen & Choose</button><button class="btn soft full" id="g2" style="margin-top:10px">🃏 Memory</button></div>`;
+  if (st==='play') body=`<div class="card" style="text-align:center"><p style="font-weight:700">Juega Listen & Choose y Memory con las palabras de este mundo</p><button class="btn full" id="g1">🎧 Listen & Choose</button><button class="btn soft full" id="g2" style="margin-top:var(--s-3)">🃏 Memory</button></div>`;
   app.innerHTML=backTop(`${ENG_T[t-1][1]} ${ENG_T[t-1][0]}`)+tabs+body;
   bind('#back',()=>{ timers.forEach(clearTimeout); go({name:'eng'}); });
   bind('[data-st]',el=>{ timers.forEach(clearTimeout); go({name:'eng',t,st:el.dataset.st,k:0}); });
@@ -175,22 +159,22 @@ VIEWS.class=function(){
   const c=view.c;
   if (!c){
     let g=view.g||3, n=view.n||2; const choiceGames=GAMES.filter(G=>g>=G.grades[0]&&g<=G.grades[1]).filter(G=>{ try{ const d=G.gen(g,2); return Array.isArray(d)&&d[0]&&d[0].type==='choice'; }catch(e){ return false; } });
-    app.innerHTML=`<div class="top"><button class="icon-btn" id="back">←</button><h2 style="font-size:22px">🏫 Modo aula</h2></div><p class="muted" style="font-weight:700">Proyecta la pantalla. Los equipos responden por turnos y tú tocas la respuesta que dicen.</p>
+    app.innerHTML=`<div class="top"><button class="icon-btn" id="back">←</button><h2>🏫 Modo aula</h2></div><p class="muted" style="font-weight:700">Proyecta la pantalla. Los equipos responden por turnos y tú tocas la respuesta que dicen.</p>
       <label class="lb">Grado</label><div class="grades">${GRADES.map((x,i)=>`<button class="chip ${i+1===g?'on':''}" data-g="${i+1}">${x}</button>`).join('')}</div>
       <label class="lb">Equipos</label><div class="grades">${[2,3,4].map(k=>`<button class="chip ${k===n?'on':''}" data-n="${k}">${k} equipos</button>`).join('')}</div>
-      <label class="lb">Juego</label><div style="display:flex;flex-direction:column;gap:8px">${choiceGames.map(G=>`<button class="opt" data-gm="${G.id}" style="text-align:left">${G.icon} ${G.name} <small class="muted">· ${AREAS.find(a=>a.id===G.area).name}</small></button>`).join('')}</div>`;
+      <label class="lb">Juego</label><div style="display:flex;flex-direction:column;gap:var(--s-2)">${choiceGames.map(G=>`<button class="opt" data-gm="${G.id}" style="text-align:left">${G.icon} ${G.name} <small class="muted">· ${AREAS.find(a=>a.id===G.area).name}</small></button>`).join('')}</div>`;
     bind('#back',()=>go({name:'adults'})); bind('[data-g]',el=>go({name:'class',g:+el.dataset.g,n})); bind('[data-n]',el=>go({name:'class',g,n:+el.dataset.n}));
     bind('[data-gm]',el=>{ const G=GM[el.dataset.gm]; let qs=[]; while(qs.length<10) qs=qs.concat(G.gen(g,2)); const TEAMS=[['🦁','Leones'],['🐬','Delfines'],['🦜','Cotorras'],['🐢','Tortugas']].slice(0,n);
       go({name:'class',c:{G:G.id,g,qs:qs.slice(0,10),i:0,teams:TEAMS.map(t=>({e:t[0],n:t[1],s:0})),turn:0}}); });
     return; }
   if (c.i>=c.qs.length){ const sorted=c.teams.slice().sort((a,b)=>b.s-a.s);
-    app.innerHTML=`<div class="result"><h1 style="font-size:34px">🏆 ¡Ganan los ${sorted[0].n}!</h1><div style="font-size:90px;margin:14px 0">${sorted[0].e}</div>${sorted.map((t,i)=>`<div class="card" style="margin:8px 0;font-size:22px;font-weight:800">${['🥇','🥈','🥉','4️⃣'][i]} ${t.e} ${t.n}: ${t.s}</div>`).join('')}<button class="btn full" id="bk" style="margin-top:16px">Volver</button></div>`;
+    app.innerHTML=`<div class="result"><h1 style="font-size:var(--fs-4xl)">🏆 ¡Ganan los ${sorted[0].n}!</h1><div style="font-size:90px;margin:var(--s-4) 0">${sorted[0].e}</div>${sorted.map((t,i)=>`<div class="card" style="margin:var(--s-2) 0;font-size:var(--fs-xl);font-weight:800">${['🥇','🥈','🥉','4️⃣'][i]} ${t.e} ${t.n}: ${t.s}</div>`).join('')}<button class="btn full" id="bk" style="margin-top:var(--s-4)">Volver</button></div>`;
     confetti(); speak(`¡Ganan los ${sorted[0].n}!`); bind('#bk',()=>go({name:'class'})); return; }
   const q=c.qs[c.i], tm=c.teams[c.turn]; const opts=q._o||(q._o=shuffle(q.options));
-  app.innerHTML=`<div class="row" style="gap:8px;flex-wrap:wrap;margin-bottom:12px">${c.teams.map((t,i)=>`<div class="chip ${i===c.turn?'on':''}" style="font-size:18px">${t.e} ${t.n}: ${t.s}</div>`).join('')}<div class="sp"></div><button class="chip" id="x">✕</button></div>
-    <p class="muted" style="font-weight:800;font-size:18px;margin:0 0 6px">Pregunta ${c.i+1} de ${c.qs.length} · Turno: ${tm.e} ${tm.n}</p>
-    <div class="bubble" style="font-size:26px;margin-bottom:12px">${q.prompt}</div>${q.visual?`<div class="visual ${q.visualText?'text':''}" style="font-size:22px">${q.visual}</div>`:''}
-    <div class="opts ${q.big?'big':''}">${opts.map((o,i)=>`<button class="opt" style="font-size:24px" data-i="${i}">${o}</button>`).join('')}</div>`;
+  app.innerHTML=`<div class="row" style="gap:var(--s-2);flex-wrap:wrap;margin-bottom:var(--s-3)">${c.teams.map((t,i)=>`<div class="chip ${i===c.turn?'on':''}" style="font-size:var(--fs-md)">${t.e} ${t.n}: ${t.s}</div>`).join('')}<div class="sp"></div><button class="chip" id="x">✕</button></div>
+    <p class="muted" style="font-weight:800;font-size:var(--fs-md);margin:0 0 var(--s-2)">Pregunta ${c.i+1} de ${c.qs.length} · Turno: ${tm.e} ${tm.n}</p>
+    <div class="bubble" style="font-size:var(--fs-2xl);margin-bottom:var(--s-3)">${q.prompt}</div>${q.visual?`<div class="visual ${q.visualText?'text':''}" style="font-size:var(--fs-xl)">${q.visual}</div>`:''}
+    <div class="opts ${q.big?'big':''}">${opts.map((o,i)=>`<button class="opt" style="font-size:var(--fs-2xl)" data-i="${i}">${o}</button>`).join('')}</div>`;
   bind('#x',()=>go({name:'class'}));
   let done=false;
   bind('[data-i]',el=>{ if(done) return; done=true; const ok=opts[+el.dataset.i]===q.correct;
@@ -203,8 +187,8 @@ VIEWS.class=function(){
 /* ---------- Tiempo de juego y límite ---------- */
 VIEWS.rest=function(){
   const p=prof();
-  app.innerHTML=`<div class="result"><div style="display:flex;justify-content:center">${mascot(p.avatar,140,'msc','sleep')}</div><h2 style="margin-top:12px">¡Hora de descansar!</h2>
-    <p class="muted" style="font-size:18px;font-weight:700">Hoy jugaste ${Math.round(((p.time||{})[today()]||0)/60)} minutos. ${mname(p.avatar)} también necesita dormir. 💤<br>¡Mañana jugamos más!</p>
+  app.innerHTML=`<div class="result"><div style="display:flex;justify-content:center">${mascot(p.avatar,140,'msc','sleep')}</div><h2 style="margin-top:var(--s-3)">¡Hora de descansar!</h2>
+    <p class="muted" style="font-size:var(--fs-md);font-weight:700">Hoy jugaste ${Math.round(((p.time||{})[today()]||0)/60)} minutos. ${mname(p.avatar)} también necesita dormir. 💤<br>¡Mañana jugamos más!</p>
     <div class="btns"><button class="btn soft full" id="ad">👤 Zona de adultos</button><button class="btn soft full" id="sw">Cambiar de perfil</button></div></div>`;
   speak(`¡Hora de descansar! Mañana jugamos más.`);
   bind('#ad',()=>gate()); bind('#sw',()=>go({name:'profiles'}));
@@ -224,15 +208,15 @@ vAdults=function(){
   _vAdults();
   const fmtM=s=>`${Math.round((s||0)/60)} min`;
   const week=p=>{ let s=0; for(let i=0;i<7;i++){ s+=(p.time||{})[new Date(Date.now()-i*864e5).toISOString().slice(0,10)]||0; } return s; };
-  let html=`<div class="card" style="margin-bottom:14px"><h3 style="font-size:17px;margin-bottom:8px">⏱️ Tiempo de juego por día</h3>
+  let html=`<div class="card" style="margin-bottom:var(--s-4)"><h3 style="font-size:var(--fs-md);margin-bottom:var(--s-2)">⏱️ Tiempo de juego por día</h3>
     <div class="grades">${[0,15,30,45,60,90].map(m=>`<button class="chip ${(S.settings.limit||0)===m?'on':''}" data-lim="${m}">${m?m+' min':'Sin límite'}</button>`).join('')}</div>
-    <p class="muted" style="font-size:14px;margin:8px 0 0">Al llegar al límite, la app muestra la pantalla de descanso. Desde aquí puedes darle más tiempo hoy.</p>
-    ${S.profiles.map(p=>`<button class="chip" data-unl="${p.id}" style="margin-top:8px">➕ Más tiempo hoy para ${esc(p.name)}</button>`).join(' ')}
-    <button class="btn full" id="cls" style="margin-top:14px">🏫 Modo aula</button></div>`;
+    <p class="muted" style="font-size:var(--fs-xs);margin:var(--s-2) 0 0">Al llegar al límite, la app muestra la pantalla de descanso. Desde aquí puedes darle más tiempo hoy.</p>
+    ${S.profiles.map(p=>`<button class="chip" data-unl="${p.id}" style="margin-top:var(--s-2)">➕ Más tiempo hoy para ${esc(p.name)}</button>`).join(' ')}
+    <button class="btn full" id="cls" style="margin-top:var(--s-4)">🏫 Modo aula</button></div>`;
   S.profiles.forEach(p=>{ const tt=Object.entries(p.toyTime||{}).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([k,v])=>{ const T=TOYS.find(t=>t.id===k); return T?`${T.icon} ${T.name} (${fmtM(v)})`:''; }).filter(Boolean);
     const wins=Object.entries(S.toyWins||{}).filter(([k])=>k.startsWith(p.id+'|')).reduce((s,[,v])=>s+v,0); const fl=(p.fluency||[]).slice(-3); const lvl=xpLevel(p.xp||0);
-    html+=`<div class="card" style="margin-bottom:14px"><div class="row">${petMini(p,48)}<div><b style="font-size:18px">Reporte de ${esc(p.name)}</b><div class="muted">${p.age?p.age+' años · ':''}Nivel de juego ${lvlOf(p)}</div></div></div>
-      <table style="margin-top:10px"><tr><td>Tiempo hoy</td><td><b>${fmtM((p.time||{})[today()])}</b></td></tr><tr><td>Últimos 7 días</td><td><b>${fmtM(week(p))}</b></td></tr>
+    html+=`<div class="card" style="margin-bottom:var(--s-4)"><div class="row">${petMini(p,48)}<div><b style="font-size:var(--fs-md)">Reporte de ${esc(p.name)}</b><div class="muted">${p.age?p.age+' años · ':''}Nivel de juego ${lvlOf(p)}</div></div></div>
+      <table style="margin-top:var(--s-3)"><tr><td>Tiempo hoy</td><td><b>${fmtM((p.time||{})[today()])}</b></td></tr><tr><td>Últimos 7 días</td><td><b>${fmtM(week(p))}</b></td></tr>
       <tr><td>Juguetes favoritos</td><td>${tt.join('<br>')||'—'}</td></tr><tr><td>Retos ganados en juguetes</td><td><b>${wins}</b></td></tr>
       <tr><td>Su amigo</td><td>${LEVELN[lvl-1]} · ${p.xp||0} puntos</td></tr><tr><td>Stickers</td><td>${(p.stickers||[]).length} de ${STK.length}</td></tr>
       <tr><td>Cálculo mental</td><td>${p.math?`🔥 ${p.math.streak} días · récord ${p.math.best}`:'—'}</td></tr>

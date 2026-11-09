@@ -255,7 +255,7 @@ function genSilabas(g,l){
     const [e,w]=pick(SIL.filter(s=>s[1].split('-').length>=3)), parts=w.split('-'), i=rnd(0,parts.length-1), s=parts[i];
     const shown=parts.map((p,j)=>j===i?'___':p).join(' - ');
     const all=[...new Set(SIL.flatMap(x=>x[1].split('-')))];
-    return Q('¿Qué sílaba falta?', s, uniqOpts(s, shuffle(all.filter(x=>x!==s))), {visual:`<div class="egrid">${e}</div><div class="expr" style="font-size:28px">${shown}</div>`, explain:`La palabra es ${w.replace(/-/g,'')}.`});
+    return Q('¿Qué sílaba falta?', s, uniqOpts(s, shuffle(all.filter(x=>x!==s))), {visual:`<div class="egrid">${e}</div><div class="expr" style="font-size:var(--fs-3xl)">${shown}</div>`, explain:`La palabra es ${w.replace(/-/g,'')}.`});
   });
 }
 
@@ -459,7 +459,7 @@ const SETS=[['🍎','🍌','🍇','🍓'],['🔴','🔵','🟢','🟡'],['⭐','
 const ANALOG=[['Perro es a ladrar como gato es a...','maullar',['volar','nadar']],['Pez es a agua como pájaro es a...','aire',['tierra','arena']],['Día es a noche como frío es a...','calor',['hielo','invierno']],['Mano es a guante como pie es a...','zapato',['sombrero','anillo']],['Libro es a leer como canción es a...','cantar',['comer','dormir']],['Doctor es a hospital como maestro es a...','escuela',['mercado','playa']],['Semilla es a árbol como huevo es a...','pollito',['nido','plátano']],['3 es a 6 como 5 es a...','10',['8','15']],['Alto es a bajo como rápido es a...','lento',['veloz','corto']]];
 const INTRUSO=[[['🍎','🍌','🍇'],'🚗'],[['🐶','🐱','🐰'],'🌳'],[['✏️','📕','🎒'],'🍕'],[['🚗','🚌','🚲'],'🐟'],[['🌹','🌻','🌷'],'⚽'],[['☀️','🌙','⭐'],'👟']];
 function seqQ(arr, ans, rule){
-  return NQ('¿Qué número sigue?', ans, {visual:`<div class="expr" style="font-size:30px">${arr.join(', ')}, ?</div>`, explain:rule});
+  return NQ('¿Qué número sigue?', ans, {visual:`<div class="expr" style="font-size:var(--fs-3xl)">${arr.join(', ')}, ?</div>`, explain:rule});
 }
 function genPatrones(g,l){
   return times(8, () => {
@@ -637,8 +637,8 @@ const bind = (sel, fn) => app.querySelectorAll(sel).forEach(el=>el.addEventListe
 function vProfiles(){
   app.innerHTML = `
   <div class="row"><div class="logo">Semi<span>llita</span></div><div class="sp"></div><button class="chip" id="adults">👤 Adultos</button></div>
-  <p class="muted" style="font-size:17px;margin:8px 0 0">Aprende jugando · 1ro a 6to de Primaria</p>
-  <h2 style="margin-top:28px">¿Quién va a jugar?</h2>
+  <p class="muted" style="font-size:var(--fs-md);margin:var(--s-2) 0 0">Aprende jugando · 1ro a 6to de Primaria</p>
+  <h2 style="margin-top:var(--s-7)">¿Quién va a jugar?</h2>
   <div class="profiles">
     ${S.profiles.map(p=>`<button class="pcard" data-id="${p.id}"><div class="av" style="width:76px;height:76px;margin:0 auto">${petMini(p,76)}</div><b>${esc(p.name)}</b><span class="muted">${p.age?p.age+' años · ':''}${GRADES[p.grade-1]}</span></button>`).join('')}
     <button class="pcard add" id="add"><div class="av">＋</div><b>Nuevo perfil</b></button>
@@ -655,7 +655,7 @@ function vNewProfile(){
   <label class="lb">Edad</label><div class="grades">${[5,6,7,8,9,10,11,12].map(a=>`<button class="chip ${a===6?'on':''}" data-age="${a}">${a} años</button>`).join('')}</div>
   <label class="lb">Grado</label><div class="grades">${GRADES.map((g,i)=>`<button class="chip ${i===0?'on':''}" data-g="${i+1}">${g}</button>`).join('')}</div>
   <label class="lb">Elige tu animalito amigo</label><div class="avatars">${AVATARS.map((a,i)=>`<button class="${i===0?'on':''}" data-a="${a}"><span style="display:block;height:56px">${creature(SPECIES[a],{outfit:{hat:'brote'}})}</span><small>${MASCOTS[a]}</small></button>`).join('')}</div>
-  <div style="margin-top:26px"><button class="btn full" id="ok">Crear perfil</button></div>`;
+  <div style="margin-top:var(--s-7)"><button class="btn full" id="ok">Crear perfil</button></div>`;
   bind('#back', ()=>go({name:'profiles'}));
   bind('[data-g]', el=>{ gr=+el.dataset.g; app.querySelectorAll('[data-g]').forEach(b=>b.classList.toggle('on', b===el)); });
   bind('[data-age]', el=>{ age=+el.dataset.age; app.querySelectorAll('[data-age]').forEach(b=>b.classList.toggle('on', b===el)); gr=Math.max(1,Math.min(6,age-5)); app.querySelectorAll('[data-g]').forEach(b=>b.classList.toggle('on', +b.dataset.g===gr)); });
@@ -667,7 +667,7 @@ function vLearn(){
   const p=prof(); if(!p) return go({name:'profiles'});
   const total=Object.values(P(p.id)).reduce((s,x)=>s+(x.stars||0),0);
   app.innerHTML = `
-  <div class="top"><button class="icon-btn" id="switch">←</button><h2 style="font-size:22px;flex:1">🎒 Retos por grado</h2><span class="stars-pill">⭐ ${total}</span></div>
+  <div class="top"><button class="icon-btn" id="switch">←</button><h2>🎒 Retos por grado</h2><span class="stars-pill">⭐ ${total}</span></div>
   ${speaker(`Elige una ruta. ¡Yo te acompaño, ${esc(p.name)}!`,60)}
   <div class="areas">${AREAS.map(a=>{ const s=areaStats(p.id,a.id,p.grade); const pct=s.max?Math.round(s.got/s.max*100):0;
     return `<button class="area bg-${a.c}" data-a="${a.id}"><span class="ic">${a.icon}</span><b>${a.name}</b><small>⭐ ${s.got} / ${s.max}</small><div class="bar"><i class="fg-${a.c}" style="width:${pct}%"></i></div></button>`; }).join('')}</div>`;
@@ -676,7 +676,7 @@ function vLearn(){
 }
 function vRoute(){
   const p=prof(), A=AREAS.find(a=>a.id===view.area), g=view.g; const nodes=routeNodes(A.id,g);
-  let html=`<div class="top"><button class="icon-btn" id="back">←</button><span style="font-size:28px">${A.icon}</span><h2 style="font-size:22px">${A.name}</h2></div>
+  let html=`<div class="top"><button class="icon-btn" id="back">←</button><span style="font-size:var(--fs-3xl)">${A.icon}</span><h2>${A.name}</h2></div>
   <div class="tabs">${GRADES.map((x,i)=>`<button class="chip ${i+1===g?'on':''}" data-g="${i+1}">${x}</button>`).join('')}</div><div class="route">`;
   let cur=null;
   nodes.forEach((n,i)=>{
@@ -705,7 +705,7 @@ function startGame(gid,g,l,area){
 function vPlay(){
   const q=sess.qs[sess.i]; const G=GM[sess.gid];
   const dots = q.type==='memory' ? '' : sess.qs.map((_,i)=>`<i class="${sess.marks[i]||''} ${i===sess.i?'cur':''}"></i>`).join('');
-  app.innerHTML = `<div class="top"><button class="icon-btn" id="close" aria-label="Salir">✕</button><div class="dots">${dots||`<b>${G.icon} ${G.name}</b>`}</div><button class="icon-btn vt" style="margin-right:4px"></button><button class="icon-btn" id="say" aria-label="Escuchar">💬</button></div><div id="stage"></div>`;
+  app.innerHTML = `<div class="top"><button class="icon-btn" id="close" aria-label="Salir">✕</button><div class="dots">${dots||`<b>${G.icon} ${G.name}</b>`}</div><button class="icon-btn vt" style="margin-right:var(--s-1)"></button><button class="icon-btn" id="say" aria-label="Escuchar">💬</button></div><div id="stage"></div>`;
   bind('#close', ()=>go({name:'route', area:sess.area, g:sess.g}));
   const sayQ = () => speak(q.say || q.prompt, q.lang || 'es-ES');
   bind('#say', sayQ);
@@ -754,7 +754,7 @@ function playArrange(stage,q){
 function playMemory(stage,q){
   const cards = shuffle(q.pairs.flatMap(([w,e],k)=>[{k,face:e,t:'e'},{k,face:w,t:'w'}]));
   let open=[], matched=new Set(), moves=0, lock=false;
-  stage.innerHTML = speaker('Find the pairs! Encuentra las parejas',58)+`<p class="muted" id="mv" style="margin:-6px 0 12px;font-weight:700">Intentos: 0</p><div class="mem ${cards.length>10?'c4':''}">${cards.map((c,i)=>`<button class="mcard ${c.t}" data-i="${i}" aria-label="Carta"></button>`).join('')}</div>`;
+  stage.innerHTML = speaker('Find the pairs! Encuentra las parejas',58)+`<p class="muted" id="mv" style="margin:-6px 0 var(--s-3);font-weight:700">Intentos: 0</p><div class="mem ${cards.length>10?'c4':''}">${cards.map((c,i)=>`<button class="mcard ${c.t}" data-i="${i}" aria-label="Carta"></button>`).join('')}</div>`;
   const els=[...stage.querySelectorAll('.mcard')];
   els.forEach(el=>el.addEventListener('click',()=>{
     const i=+el.dataset.i, c=cards[i];
@@ -798,9 +798,9 @@ function vResult(){
   const nodes=routeNodes(sess.area,sess.g); const idx=nodes.findIndex(n=>n.gid===sess.gid&&n.l===sess.l); const next=nodes[idx+1];
   const msg = stars===3?'¡Fantástico!':stars===2?'¡Muy buen trabajo!':stars===1?'¡Vas muy bien!':'¡Practica otra vez, tú puedes!';
   app.innerHTML = `<div class="result">
-    ${mascot(prof().avatar,110,'msc',stars?'dance':'')}<h2 style="margin-top:8px">${msg}</h2>
+    ${mascot(prof().avatar,110,'msc',stars?'dance':'')}<h2 style="margin-top:var(--s-2)">${msg}</h2>
     <div class="big-stars">${'⭐'.repeat(stars)}${'<span style="opacity:.25">⭐</span>'.repeat(3-stars)}</div>
-    <p class="muted" style="font-size:18px;font-weight:700">${isMem?`${correct} parejas en ${total} intentos`:`${correct} de ${total} correctas`}</p>
+    <p class="muted" style="font-size:var(--fs-md);font-weight:700">${isMem?`${correct} parejas en ${total} intentos`:`${correct} de ${total} correctas`}</p>
     <div class="btns">
       ${next && stars>0 ? `<button class="btn full" id="nx">Siguiente: ${GM[next.gid].name} · ${LEVELS[next.l-1]}</button>`:''}
       <button class="btn soft full" id="again">Jugar otra vez</button>
@@ -816,7 +816,7 @@ function vResult(){
 function gate(){
   const a=rnd(6,9), b=rnd(6,9);
   const m=document.createElement('div'); m.className='modal';
-  m.innerHTML=`<div class="card stack"><h3>Zona para docentes y familias</h3><p class="muted" style="margin:6px 0 0">Para continuar, resuelve: <b>${a} × ${b}</b></p><input class="txt" id="gv" inputmode="numeric" autocomplete="off"><div class="row"><button class="btn soft" id="gc">Cancelar</button><div class="sp"></div><button class="btn" id="go">Entrar</button></div><p class="muted" id="ge" style="margin:0"></p></div>`;
+  m.innerHTML=`<div class="card stack"><h3>Zona para docentes y familias</h3><p class="muted" style="margin:var(--s-2) 0 0">Para continuar, resuelve: <b>${a} × ${b}</b></p><input class="txt" id="gv" inputmode="numeric" autocomplete="off"><div class="row"><button class="btn soft" id="gc">Cancelar</button><div class="sp"></div><button class="btn" id="go">Entrar</button></div><p class="muted" id="ge" style="margin:0"></p></div>`;
   document.body.appendChild(m); const inp=m.querySelector('#gv'); inp.focus();
   const tryIt=()=>{ if(+inp.value===a*b){ m.remove(); go({name:'adults'}); } else { m.querySelector('#ge').textContent='Respuesta incorrecta.'; inp.value=''; } };
   m.querySelector('#go').addEventListener('click',tryIt); inp.addEventListener('keydown',e=>{ if(e.key==='Enter') tryIt(); });
@@ -824,11 +824,11 @@ function gate(){
 }
 function vAdults(){
   const fmt=t=>t?new Date(t).toLocaleDateString('es-DO',{day:'numeric',month:'short'}):'—';
-  let html=`<div class="top"><button class="icon-btn" id="back">←</button><h2 style="font-size:22px">Panel de progreso</h2></div>
-  <div class="card" style="margin-bottom:14px">
+  let html=`<div class="top"><button class="icon-btn" id="back">←</button><h2>Panel de progreso</h2></div>
+  <div class="card" style="margin-bottom:var(--s-4)">
     <div class="toggle"><span>Voz y lectura en voz alta</span><button class="sw ${S.settings.voice?'on':''}" id="tv" aria-label="Voz"></button></div>
     <div class="toggle"><span>Desbloquear todos los niveles</span><button class="sw ${S.settings.unlockAll?'on':''}" id="tu" aria-label="Desbloquear"></button></div>
-    <button class="btn soft full" id="csv" style="margin-top:8px">Copiar progreso (CSV)</button><p class="muted" id="cmsg" style="margin:6px 0 0;font-size:14px"></p>
+    <button class="btn soft full" id="csv" style="margin-top:var(--s-2)">Copiar progreso (CSV)</button><p class="muted" id="cmsg" style="margin:var(--s-2) 0 0;font-size:var(--fs-xs)"></p>
   </div>`;
   if (!S.profiles.length) html+=`<p class="muted">Aún no hay perfiles.</p>`;
   S.profiles.forEach(p=>{
@@ -837,10 +837,10 @@ function vAdults(){
       const ent=Object.entries(pr).filter(([k])=>GM[k.split('|')[0]]?.area===a.id);
       const c=ent.reduce((x,[,v])=>x+v.correct,0), t=ent.reduce((x,[,v])=>x+v.total,0), last=Math.max(0,...ent.map(([,v])=>v.last||0));
       return `<tr><td>${a.icon} ${a.name}</td><td>${s.got}/${s.max}</td><td>${t?Math.round(c/t*100)+'%':'—'}</td><td>${fmt(last)}</td></tr>`; }).join('');
-    html+=`<div class="card" style="margin-bottom:14px"><div class="row">${petMini(p,44)}<div><b style="font-size:18px">${esc(p.name)}</b><div class="muted">${GRADES[p.grade-1]} grado</div></div><div class="sp"></div>
+    html+=`<div class="card" style="margin-bottom:var(--s-4)"><div class="row">${petMini(p,44)}<div><b style="font-size:var(--fs-md)">${esc(p.name)}</b><div class="muted">${GRADES[p.grade-1]} grado</div></div><div class="sp"></div>
       <select class="chip" data-age="${p.id}">${[5,6,7,8,9,10,11,12].map(a=>`<option value="${a}" ${p.age===a?'selected':''}>${a} años</option>`).join('')}</select> <select class="chip" data-gr="${p.id}">${GRADES.map((g,i)=>`<option value="${i+1}" ${p.grade===i+1?'selected':''}>${g}</option>`).join('')}</select></div>
-      <table style="margin-top:10px"><thead><tr><th>Ruta (grado actual)</th><th>Estrellas</th><th>Aciertos</th><th>Última vez</th></tr></thead><tbody>${rows}</tbody></table>
-      <div class="row" style="margin-top:10px"><div class="sp"></div><button class="chip" data-del="${p.id}">Eliminar perfil</button></div></div>`;
+      <table style="margin-top:var(--s-3)"><thead><tr><th>Ruta (grado actual)</th><th>Estrellas</th><th>Aciertos</th><th>Última vez</th></tr></thead><tbody>${rows}</tbody></table>
+      <div class="row" style="margin-top:var(--s-3)"><div class="sp"></div><button class="chip" data-del="${p.id}">Eliminar perfil</button></div></div>`;
   });
   app.innerHTML=html;
   bind('#back', ()=>go({name:'profiles'}));

@@ -15,7 +15,7 @@ function win(msg){
   if (streak>=3 && LV()<3){ streak=0; setLV(LV()+1); updLvChip(); setTimeout(()=>{ confetti(); tsay(`¡Subiste al nivel ${LV()}! Ahora será más difícil.`); },2000); return true; }
   return false;
 }
-const banner = (root,id='tg') => { addHTML(root, `<div id="${id}" class="abs" style="left:12px;top:12px;background:#fff;border:2px solid var(--line);border-radius:16px;padding:6px 12px;font-weight:800;z-index:5;max-width:70%"></div>`); return root.querySelector('#'+id); };
+const banner = (root,id='tg') => { addHTML(root, `<div id="${id}" class="abs" style="left:12px;top:12px;background:var(--card);border:var(--bw) solid var(--line);border-radius:var(--r-md);padding:var(--s-2) var(--s-3);font-weight:800;z-index:5;max-width:70%"></div>`); return root.querySelector('#'+id); };
 
 /* ---------- Burbujas (con objetivos por nivel) ---------- */
 function toyBubbles2(root){
@@ -23,7 +23,7 @@ function toyBubbles2(root){
   const ANIM=[['🐶','perro','dog'],['🐱','gato','cat'],['🐮','vaca','cow'],['🐷','cerdo','pig'],['🐸','rana','frog'],['🐵','mono','monkey'],['🦁','león','lion'],['🐔','gallina','hen'],['🐰','conejo','rabbit'],['🐴','caballo','horse']];
   const MIXES=[['verde','amarillo y azul'],['anaranjado','rojo y amarillo'],['morado','rojo y azul'],['rosado','rojo y blanco']];
   let mode='n', it, target=null, hits=0; const lv=LV(); const maxN = lv===1?10:lv===2?20:50;
-  addHTML(root, `<div id="bz" class="abs" style="inset:0 0 70px 0;background:linear-gradient(#EAF4FB,#FBF8F3);overflow:hidden"></div>
+  addHTML(root, `<div id="bz" class="abs" style="inset:0 0 var(--tbar-h) 0;background:linear-gradient(#EAF4FB,var(--bg));overflow:hidden"></div>
   <div class="tbar"><button data-m="n" class="on">123</button><button data-m="l">ABC</button><button data-m="c">🎨</button><button data-m="a">🐾</button></div>`);
   const bz=root.querySelector('#bz'); const tg=banner(root); tg.style.display='none';
   function content(forceKey){
@@ -75,7 +75,7 @@ function toySort2(root){
   };
   const lv=LV(); const avail=Object.entries(SETS).filter(([,v])=>v.lv<=lv && (lv===1||v.lv>=lv-1));
   let cur=avail[avail.length-1][0], left=0;
-  addHTML(root, `<div class="abs" style="inset:0 0 70px 0;background:#FFFBF4"></div><div id="ar" class="abs" style="inset:0 0 70px 0"></div>
+  addHTML(root, `<div class="abs" style="inset:0 0 var(--tbar-h) 0;background:var(--paper)"></div><div id="ar" class="abs" style="inset:0 0 var(--tbar-h) 0"></div>
   <div class="tbar">${avail.map(([k,v])=>`<button data-s="${k}" class="${k===cur?'on':''}">${v.n}</button>`).join('')}</div>`);
   const ar=root.querySelector('#ar');
   function round(){
@@ -83,12 +83,12 @@ function toySort2(root){
     const nb=Sx.b.length; const items=sample(Sx.it, nb>=4?10:nb===2?8:9); left=items.length;
     const W=ar.clientWidth, H=ar.clientHeight, bw=Math.min(130,(W-30)/nb-10);
     const baskets=Sx.b.map((b,i)=>{ const el=document.createElement('div'); el.className='abs';
-      el.style.cssText=`left:${(W/nb)*(i+.5)-bw/2}px;top:${H-140}px;width:${bw}px;height:120px;border-radius:20px 20px 34px 34px;background:#EAD8BF;border:4px solid #D7BE9C;display:flex;flex-direction:column;align-items:center;padding-top:6px;transition:transform .2s;overflow:hidden`;
-      el.innerHTML=`<span style="font-size:30px">${b[0]}</span><b style="font-size:13px">${b[1]}</b><div class="in" style="display:flex;flex-wrap:wrap;justify-content:center;font-size:14px;max-width:100%"></div>`; ar.appendChild(el); return el; });
+      el.style.cssText=`left:${(W/nb)*(i+.5)-bw/2}px;top:${H-140}px;width:${bw}px;height:120px;border-radius:20px 20px 34px 34px;background:#EAD8BF;border:4px solid #D7BE9C;display:flex;flex-direction:column;align-items:center;padding-top:var(--s-2);transition:transform .2s;overflow:hidden`;
+      el.innerHTML=`<span style="font-size:var(--fs-3xl)">${b[0]}</span><b style="font-size:var(--fs-xs)">${b[1]}</b><div class="in" style="display:flex;flex-wrap:wrap;justify-content:center;font-size:var(--fs-xs);max-width:100%"></div>`; ar.appendChild(el); return el; });
     const cols=3, rowsN=Math.ceil(items.length/cols), cw=(W-20)/cols, rh=Math.max(54,(H-150-60)/rowsN); const slots=shuffle(times(items.length,q=>q));
     items.forEach(([e,k],j)=>{ const el=document.createElement('div'); el.className='abs'; const isTxt=/^[\wáéíóúñ]+$/i.test(e); const q=slots[j];
       el.textContent=e; const x=Math.round(10+(q%cols)*cw+rnd(4,Math.max(5,cw-(isTxt?100:60)))), y=Math.round(56+Math.floor(q/cols)*rh+rnd(0,Math.max(1,rh-56)));
-      el.style.cssText=`left:${x}px;top:${y}px;font-size:${isTxt?22:46}px;font-weight:800;line-height:1;z-index:3;transition:left .35s,top .35s;animation:popin .4s ${j*.05}s both;${isTxt?'background:#fff;border:2px solid var(--line);border-radius:14px;padding:8px 12px':''}`;
+      el.style.cssText=`left:${x}px;top:${y}px;font-size:${isTxt?22:46}px;font-weight:800;line-height:1;z-index:3;transition:left .35s,top .35s;animation:popin .4s ${j*.05}s both;${isTxt?'background:var(--card);border:var(--bw) solid var(--line);border-radius:var(--r-sm);padding:var(--s-2) var(--s-3)':''}`;
       el.dataset.x=x; el.dataset.y=y; ar.appendChild(el);
       dragify(el, ar, {start:()=>{ popS(); if(isTxt) speak(e, cur==='eng'?'en-US':'es-ES'); }, drop:(el,px,py)=>{
         const a=ar.getBoundingClientRect(); const hit=baskets.findIndex(b=>{ const r=b.getBoundingClientRect(); return px>r.left-a.left-10 && px<r.right-a.left+10 && py>r.top-a.top-30 && py<r.bottom-a.top; });
@@ -105,12 +105,12 @@ function toySort2(root){
 function toyBeads2(root){
   const BC=['#E8505B','#4CAF6A','#F49AC1','#F7C948','#8FD3F4','#8E5BB5','#FFFFFF','#8B5E3C','#2E4C9B','#E2B13C'];
   const lv=LV(); let n=0, timers=[], target=null;
-  addHTML(root, `<div id="ar" class="abs" style="inset:0 0 70px 0;background:#FFFBF4;overflow:auto"></div>
+  addHTML(root, `<div id="ar" class="abs" style="inset:0 0 var(--tbar-h) 0;background:var(--paper);overflow:auto"></div>
   <div class="tbar"><button data-m="stair" class="${lv===1?'on':''}">🪜 Escalera</button><button data-m="mine">🧮 Mis cuentas</button><button data-m="goal" class="${lv>1?'on':''}">🎯 Forma el número</button></div>`);
   const ar=root.querySelector('#ar');
-  const bead=(c,s=22,extra='')=>`<span class="bd" style="display:inline-block;width:${s}px;height:${s}px;border-radius:50%;background:radial-gradient(circle at 35% 35%,rgba(255,255,255,.8) 0 18%,transparent 20%),${c};border:2px solid rgba(0,0,0,.15);${extra}"></span>`;
+  const bead=(c,s=22,extra='')=>`<span class="bd" style="display:inline-block;width:${s}px;height:${s}px;border-radius:50%;background:radial-gradient(circle at 35% 35%,rgba(255,255,255,.8) 0 18%,transparent 20%),${c};border:var(--bw) solid rgba(0,0,0,.15);${extra}"></span>`;
   function stair(){
-    timers.forEach(clearTimeout); ar.innerHTML=`<div style="padding:56px 14px 14px"><div id="big" style="text-align:center;font-size:64px;font-weight:800;height:76px"></div>${times(10,k=>`<button data-r="${k+1}" style="display:flex;align-items:center;gap:3px;margin:7px 0;padding:4px 8px;border-radius:16px;width:100%"><b style="width:28px;font-size:15px;color:var(--soft)">${k+1}</b>${times(k+1,()=>bead(BC[k],24)).join('')}</button>`).join('')}</div>`;
+    timers.forEach(clearTimeout); ar.innerHTML=`<div style="padding:56px var(--s-4) var(--s-4)"><div id="big" style="text-align:center;font-size:var(--fs-8xl);font-weight:800;height:76px"></div>${times(10,k=>`<button data-r="${k+1}" style="display:flex;align-items:center;gap:3px;margin:var(--s-2) 0;padding:var(--s-1) var(--s-2);border-radius:var(--r-md);width:100%"><b style="width:28px;font-size:var(--fs-sm);color:var(--soft)">${k+1}</b>${times(k+1,()=>bead(BC[k],24)).join('')}</button>`).join('')}</div>`;
     ar.querySelectorAll('[data-r]').forEach(b=>b.addEventListener('click',()=>{ timers.forEach(clearTimeout); timers=[]; const r=+b.dataset.r, beads=[...b.querySelectorAll('.bd')];
       const big=ar.querySelector('#big'); big.textContent='';
       beads.forEach((x,k)=>timers.push(setTimeout(()=>{ x.style.transition='transform .2s'; x.style.transform='translateY(-8px) scale(1.15)'; note(440+k*40,.18,'sine',.1); big.textContent=k+1; big.style.animation='none'; void big.offsetWidth; big.style.animation='popin .3s both'; },k*420)));
@@ -120,16 +120,16 @@ function toyBeads2(root){
     timers.forEach(clearTimeout);
     const tens=Math.floor(n/10), ones=n%10;
     ar.innerHTML=`<div style="padding:${goal?100:60}px 14px 14px;text-align:center"><div style="font-size:84px;font-weight:800;line-height:1">${n}</div>
-      <div class="muted" style="font-weight:800;margin:6px 0 14px">${tens?`${tens} ${tens===1?'decena':'decenas'}`:''}${tens&&ones?' y ':''}${ones||!tens?`${ones} ${ones===1?'unidad':'unidades'}`:''}</div>
-      <div style="display:flex;justify-content:center;align-items:flex-end;gap:8px;min-height:250px;flex-wrap:wrap">
-        ${times(tens,()=>`<div style="display:flex;flex-direction:column;gap:1px;padding:3px;background:#F3E3B8;border-radius:10px">${times(10,()=>bead('#E2B13C',20)).join('')}</div>`).join('')}
+      <div class="muted" style="font-weight:800;margin:var(--s-2) 0 var(--s-4)">${tens?`${tens} ${tens===1?'decena':'decenas'}`:''}${tens&&ones?' y ':''}${ones||!tens?`${ones} ${ones===1?'unidad':'unidades'}`:''}</div>
+      <div style="display:flex;justify-content:center;align-items:flex-end;gap:var(--s-2);min-height:250px;flex-wrap:wrap">
+        ${times(tens,()=>`<div style="display:flex;flex-direction:column;gap:1px;padding:3px;background:#F3E3B8;border-radius:var(--r-sm)">${times(10,()=>bead('#E2B13C',20)).join('')}</div>`).join('')}
         <div style="display:flex;flex-direction:column-reverse;gap:1px">${times(ones,()=>bead('#E2B13C',20,'animation:popin .3s both')).join('')}</div></div>
-      <div style="display:flex;justify-content:center;gap:10px;margin-top:16px;flex-wrap:wrap"><button id="mn" class="btn soft" style="font-size:24px;min-width:64px">−1</button><button id="pl" class="btn" style="font-size:24px;min-width:64px">+1</button>${lv>1?`<button id="p10" class="btn" style="font-size:24px;min-width:72px;background:#C2A548">+10</button><button id="m10" class="btn soft" style="font-size:24px;min-width:72px">−10</button>`:''}</div></div>`;
+      <div style="display:flex;justify-content:center;gap:var(--s-3);margin-top:var(--s-4);flex-wrap:wrap"><button id="mn" class="btn soft" style="font-size:var(--fs-2xl);min-width:64px">−1</button><button id="pl" class="btn" style="font-size:var(--fs-2xl);min-width:64px">+1</button>${lv>1?`<button id="p10" class="btn" style="font-size:var(--fs-2xl);min-width:72px;background:#C2A548">+10</button><button id="m10" class="btn soft" style="font-size:var(--fs-2xl);min-width:72px">−10</button>`:''}</div></div>`;
     const chg=d=>{ const nn=n+d; if(nn<0||nn>99) return; n=nn; note(520,.15,'sine',.1); builder(goal);
       if (goal && n===target){ win(`¡Formaste el ${n}!`); setTimeout(newGoal,2400); } else if (d===1 && n%10===0 && n) tsay(`¡10 cuentas forman una decena! Tienes ${n}`); else speak(String(n)); };
     ar.querySelector('#pl').addEventListener('click',()=>chg(1)); ar.querySelector('#mn').addEventListener('click',()=>chg(-1));
     if (lv>1){ ar.querySelector('#p10').addEventListener('click',()=>chg(10)); ar.querySelector('#m10').addEventListener('click',()=>chg(-10)); }
-    if (goal){ const g=document.createElement('div'); g.className='abs'; g.style.cssText='left:50%;top:12px;transform:translateX(-50%);background:#fff;border:2px solid var(--line);border-radius:16px;padding:6px 14px;font-weight:800;font-size:18px;white-space:nowrap';
+    if (goal){ const g=document.createElement('div'); g.className='abs'; g.style.cssText='left:50%;top:12px;transform:translateX(-50%);background:var(--card);border:var(--bw) solid var(--line);border-radius:var(--r-md);padding:var(--s-2) var(--s-4);font-weight:800;font-size:var(--fs-md);white-space:nowrap';
       g.innerHTML = lv===3 && target>20 ? `🎯 Forma: ${Math.floor(target/10)} decenas y ${target%10} unidades` : `🎯 Forma el número <b>${target}</b>`; ar.appendChild(g); }
   }
   function newGoal(){ target = lv===1?rnd(2,10): lv===2?rnd(11,40): rnd(41,99); n=0; builder(true); tsay(lv===3?`Forma ${Math.floor(target/10)} decenas y ${target%10} unidades`:`Forma el número ${target}`); }
@@ -146,18 +146,18 @@ function toyBeads2(root){
 function toyHanoi(root){
   const lv=LV(); let n=[3,4,5][lv-1], rods, sel=null, moves=0;
   const COL=['#F4A6A6','#F7C59F','#F6E39A','#B9E3C6','#A9D3F0','#C9B8EE'];
-  addHTML(root, `<div id="ar" class="abs" style="inset:0 0 70px 0;background:#FFFBF4"></div><div class="tbar"><button id="rs">🔄 Empezar de nuevo</button><span id="mv" style="font-weight:800;padding:0 8px"></span></div>`);
+  addHTML(root, `<div id="ar" class="abs" style="inset:0 0 var(--tbar-h) 0;background:var(--paper)"></div><div class="tbar"><button id="rs">🔄 Empezar de nuevo</button><span id="mv" style="font-weight:800;padding:0 var(--s-2)"></span></div>`);
   const ar=root.querySelector('#ar'), mv=root.querySelector('#mv'); const tg=banner(root); tg.innerHTML=`🎯 Pasa la torre a la última varilla`;
   function reset(){ rods=[times(n,i=>n-i),[],[]]; sel=null; moves=0; draw(); }
   function draw(){
     const W=ar.clientWidth, H=ar.clientHeight, base=H-60, rw=W/3, dh=Math.min(34,(H-220)/6);
-    let h=`<div class="abs" style="left:10px;right:10px;top:${base}px;height:16px;border-radius:8px;background:#D9C2A5"></div>`;
+    let h=`<div class="abs" style="left:10px;right:10px;top:${base}px;height:16px;border-radius:var(--r-xs);background:#D9C2A5"></div>`;
     rods.forEach((r,ri)=>{ const cx=rw*(ri+.5);
-      h+=`<button data-r="${ri}" class="abs" style="left:${cx-rw/2}px;top:${base-dh*7-30}px;width:${rw}px;height:${dh*7+46}px;border-radius:18px;${sel===ri?'background:rgba(249,239,201,.6)':''}"></button>`;
+      h+=`<button data-r="${ri}" class="abs" style="left:${cx-rw/2}px;top:${base-dh*7-30}px;width:${rw}px;height:${dh*7+46}px;border-radius:var(--r-md);${sel===ri?'background:rgba(249,239,201,.6)':''}"></button>`;
       h+=`<div class="abs" style="left:${cx-6}px;top:${base-dh*7-10}px;width:12px;height:${dh*7+10}px;border-radius:6px;background:#C9B79D;pointer-events:none"></div>`;
       r.forEach((d,k)=>{ const w=30+d*(rw-46)/6; const lift = sel===ri && k===r.length-1 ? 40 : 0;
-        h+=`<div class="abs" style="left:${cx-w/2}px;top:${base-dh*(k+1)-lift-(lift?dh*(6-k):0)}px;width:${w}px;height:${dh-3}px;border-radius:${dh/2}px;background:${COL[d-1]};border:2px solid rgba(0,0,0,.08);pointer-events:none;transition:top .25s"></div>`; });
-      if (ri===2) h+=`<div class="abs" style="left:${cx-14}px;top:${base+20}px;font-size:24px">🏁</div>`; });
+        h+=`<div class="abs" style="left:${cx-w/2}px;top:${base-dh*(k+1)-lift-(lift?dh*(6-k):0)}px;width:${w}px;height:${dh-3}px;border-radius:${dh/2}px;background:${COL[d-1]};border:var(--bw) solid rgba(0,0,0,.08);pointer-events:none;transition:top .25s"></div>`; });
+      if (ri===2) h+=`<div class="abs" style="left:${cx-14}px;top:${base+20}px;font-size:var(--fs-2xl)">🏁</div>`; });
     ar.innerHTML=h; mv.textContent=''; tg.innerHTML=`🎯 Pasa la torre a la 🏁<br><small class="muted">Movimientos: ${moves} · mínimo: ${2**n-1}</small>`;
     ar.querySelectorAll('[data-r]').forEach(b=>b.addEventListener('click',()=>tap(+b.dataset.r)));
   }
@@ -177,8 +177,8 @@ function toyHanoi(root){
 /* ---------- Sudoku de dibujos ---------- */
 function toySudoku(root){
   const lv=LV(); const SYM=['🍎','🍌','🍇','🍓'], blanks=[5,8,11][lv-1]; let sol, grid, fixed, cur=0;
-  addHTML(root, `<div id="ar" class="abs" style="inset:0 0 70px 0;background:#FFFBF4;display:flex;flex-direction:column;align-items:center;justify-content:center;padding-top:40px"></div>
-  <div class="tbar">${SYM.map((s,i)=>`<button data-s="${i}" class="${i?'':'on'}" style="font-size:30px">${s}</button>`).join('')}<button data-s="-1">🧽</button><span class="sep"></span><button id="nw">🔄</button></div>`);
+  addHTML(root, `<div id="ar" class="abs" style="inset:0 0 var(--tbar-h) 0;background:var(--paper);display:flex;flex-direction:column;align-items:center;justify-content:center;padding-top:40px"></div>
+  <div class="tbar">${SYM.map((s,i)=>`<button data-s="${i}" class="${i?'':'on'}" style="font-size:var(--fs-3xl)">${s}</button>`).join('')}<button data-s="-1">🧽</button><span class="sep"></span><button id="nw">🔄</button></div>`);
   const ar=root.querySelector('#ar');
   function gen(){
     const base=[[0,1,2,3],[2,3,0,1],[1,0,3,2],[3,2,1,0]];
@@ -191,7 +191,7 @@ function toySudoku(root){
     const br=r-r%2, bc=c-c%2; for(let i=br;i<br+2;i++) for(let j=bc;j<bc+2;j++) if((i!==r||j!==c)&&grid[i][j]===v) return true; return false; }
   function draw(){
     const S=Math.min(ar.clientWidth-40, ar.clientHeight-160, 360)/4;
-    ar.innerHTML=`<p class="muted" style="font-weight:800;margin:0 0 12px;text-align:center;max-width:320px">Cada fila, columna y cuadro de 4 debe tener los 4 dibujos, sin repetir</p><div style="display:grid;grid-template-columns:repeat(4,${S}px);gap:0;border:4px solid #C9B79D;border-radius:16px;overflow:hidden;background:#fff">${grid.map((row,r)=>row.map((v,c)=>`<button data-c="${r*4+c}" style="width:${S}px;height:${S}px;font-size:${S*.55}px;border-right:${c===1?4:1}px solid #C9B79D;border-bottom:${r===1?4:1}px solid #C9B79D;background:${fixed[r][c]?'#F6EFE4':conflict(r,c)?'#F8DADA':'#fff'}">${v<0?'':SYM[v]}</button>`).join('')).join('')}</div>`;
+    ar.innerHTML=`<p class="muted" style="font-weight:800;margin:0 0 var(--s-3);text-align:center;max-width:320px">Cada fila, columna y cuadro de 4 debe tener los 4 dibujos, sin repetir</p><div style="display:grid;grid-template-columns:repeat(4,${S}px);gap:0;border:4px solid #C9B79D;border-radius:var(--r-md);overflow:hidden;background:var(--card)">${grid.map((row,r)=>row.map((v,c)=>`<button data-c="${r*4+c}" style="width:${S}px;height:${S}px;font-size:${S*.55}px;border-right:${c===1?4:1}px solid #C9B79D;border-bottom:${r===1?4:1}px solid #C9B79D;background:${fixed[r][c]?'#F6EFE4':conflict(r,c)?'#F8DADA':'#fff'}">${v<0?'':SYM[v]}</button>`).join('')).join('')}</div>`;
     ar.querySelectorAll('[data-c]').forEach(b=>b.addEventListener('click',()=>{ const i=+b.dataset.c, r=Math.floor(i/4), c=i%4; if (fixed[r][c]){ note(220,.15,'sine',.08); return; }
       grid[r][c]=cur; popS(); draw(); if (grid.every((row,ri)=>row.every((v,ci)=>v===sol[ri][ci]) || false) || grid.every((row,ri)=>row.every((v,ci)=>v>=0&&!conflict(ri,ci)))){ confetti(); win('¡Sudoku resuelto!'); setTimeout(gen,2800); } }));
   }
@@ -203,7 +203,7 @@ function toySudoku(root){
 /* ---------- Laberinto ---------- */
 function toyMaze(root){
   let N, walls, pos, goal, cell, ox, oy;
-  addHTML(root, `<div id="ar" class="abs" style="inset:0 0 70px 0;background:#F3F9EE"></div>
+  addHTML(root, `<div id="ar" class="abs" style="inset:0 0 var(--tbar-h) 0;background:#F3F9EE"></div>
   <div class="tbar" style="justify-content:center"><button data-d="L">⬅️</button><button data-d="U">⬆️</button><button data-d="D">⬇️</button><button data-d="R">➡️</button><span class="sep"></span><button id="nw">🔄</button></div>`);
   const ar=root.querySelector('#ar');
   function gen(){
@@ -235,14 +235,14 @@ function toyMaze(root){
 /* ---------- Rompecabezas deslizante ---------- */
 function toySlide(root){
   let N, t, empty; const COL=['#F4A6A6','#F7C59F','#F6E39A','#B9E3C6','#A9D3F0','#C9B8EE','#F5B8D0','#BFE0D8'];
-  addHTML(root, `<div id="ar" class="abs" style="inset:0 0 70px 0;background:#FFFBF4;display:flex;flex-direction:column;align-items:center;justify-content:center;padding-top:40px"></div><div class="tbar"><button id="nw">🔄 Mezclar otra vez</button><span id="mv" style="font-weight:800;padding:0 8px;font-size:14px;white-space:nowrap"></span></div>`);
+  addHTML(root, `<div id="ar" class="abs" style="inset:0 0 var(--tbar-h) 0;background:var(--paper);display:flex;flex-direction:column;align-items:center;justify-content:center;padding-top:40px"></div><div class="tbar"><button id="nw">🔄 Mezclar otra vez</button><span id="mv" style="font-weight:800;padding:0 var(--s-2);font-size:var(--fs-xs);white-space:nowrap"></span></div>`);
   const ar=root.querySelector('#ar'); let moves=0;
   function gen(){ const lv=LV(); N=lv===3?4:3; t=times(N*N,i=>i<N*N-1?i+1:0); empty=N*N-1;
     let last=-1; for(let k=0;k<[12,40,90][lv-1];k++){ const nb=nbrs(empty).filter(x=>x!==last); const p=pick(nb); last=empty; swap(p); } moves=0; draw(); }
   const nbrs=e=>{ const x=e%N,y=Math.floor(e/N); return [[x-1,y],[x+1,y],[x,y-1],[x,y+1]].filter(([a,b])=>a>=0&&b>=0&&a<N&&b<N).map(([a,b])=>b*N+a); };
   const swap=p=>{ t[empty]=t[p]; t[p]=0; empty=p; };
   function draw(){ const S=Math.min(ar.clientWidth-40, ar.clientHeight-140, 360)/N;
-    ar.innerHTML=`<p class="muted" style="font-weight:800;margin:0 0 12px">Ordena los números del 1 al ${N*N-1}</p><div style="position:relative;width:${S*N+8}px;height:${S*N+8}px;background:#E9DFCF;border-radius:18px;padding:4px">${t.map((v,i)=>v?`<button data-i="${i}" class="abs" style="left:${4+(i%N)*S}px;top:${4+Math.floor(i/N)*S}px;width:${S-6}px;height:${S-6}px;margin:3px;border-radius:14px;background:${COL[(v-1)%8]};font-size:${S*.4}px;font-weight:800;box-shadow:inset 0 -5px 0 rgba(0,0,0,.08);transition:left .15s,top .15s">${v}</button>`:'').join('')}</div>`;
+    ar.innerHTML=`<p class="muted" style="font-weight:800;margin:0 0 var(--s-3)">Ordena los números del 1 al ${N*N-1}</p><div style="position:relative;width:${S*N+8}px;height:${S*N+8}px;background:#E9DFCF;border-radius:var(--r-md);padding:var(--s-1)">${t.map((v,i)=>v?`<button data-i="${i}" class="abs" style="left:${4+(i%N)*S}px;top:${4+Math.floor(i/N)*S}px;width:${S-6}px;height:${S-6}px;margin:3px;border-radius:var(--r-sm);background:${COL[(v-1)%8]};font-size:${S*.4}px;font-weight:800;box-shadow:inset 0 -5px 0 rgba(0,0,0,.08);transition:left .15s,top .15s">${v}</button>`:'').join('')}</div>`;
     root.querySelector('#mv').textContent=`Movimientos: ${moves}`;
     ar.querySelectorAll('[data-i]').forEach(b=>b.addEventListener('click',()=>{ const i=+b.dataset.i; if(!nbrs(empty).includes(i)){ note(200,.1,'sine',.06); return; } swap(i); moves++; popS(); draw();
       if (t.every((v,k)=>k===N*N-1?v===0:v===k+1)){ confetti(); win(`¡Ordenado en ${moves} movimientos!`); setTimeout(gen,2800); } })); }
@@ -254,8 +254,8 @@ function toySlide(root){
 function toyCode(root){
   let N, rocks, start, goal, prog=[], running=false, pos, cell, ox, oy, timers=[];
   const AR={U:'⬆️',D:'⬇️',L:'⬅️',R:'➡️'};
-  addHTML(root, `<div id="ar" class="abs" style="inset:0 0 70px 0;background:#F6F2FB"></div>
-  <div class="tbar">${Object.entries(AR).map(([k,v])=>`<button data-d="${k}">${v}</button>`).join('')}<span class="sep"></span><button id="go" style="background:#B9E3C6">▶️</button><button id="bk">⌫</button><button id="nw">🔄</button></div>`);
+  addHTML(root, `<div id="ar" class="abs" style="inset:0 0 var(--tbar-h) 0;background:var(--paper-lav)"></div>
+  <div class="tbar">${Object.entries(AR).map(([k,v])=>`<button data-d="${k}">${v}</button>`).join('')}<span class="sep"></span><button id="go" style="background:var(--c-menta)">▶️</button><button id="bk">⌫</button><button id="nw">🔄</button></div>`);
   const ar=root.querySelector('#ar');
   function bfs(){ const q=[start], seen=new Map([[start,null]]); while(q.length){ const c=q.shift(); if(c===goal) return true;
       for(const n of nb(c)) if(!seen.has(n)&&!rocks.has(n)){ seen.set(n,c); q.push(n); } } return false; }
@@ -264,9 +264,9 @@ function toyCode(root){
     prog=[]; pos=start; draw(); tsay(lv===1?'Toca las flechas para darme órdenes y luego ▶️':'Escribe todo el camino con flechas y luego toca ▶️'); }
   function draw(){
     const W=ar.clientWidth, H=ar.clientHeight; cell=Math.floor(Math.min((W-24)/N,(H-190)/N)); ox=(W-cell*N)/2; oy=60;
-    let h=''; for(let i=0;i<N*N;i++){ const x=ox+(i%N)*cell, y=oy+Math.floor(i/N)*cell; h+=`<div class="abs" style="left:${x}px;top:${y}px;width:${cell-4}px;height:${cell-4}px;margin:2px;border-radius:10px;background:${(i+Math.floor(i/N))%2?'#ECE5F7':'#E2DAF2'};display:grid;place-items:center;font-size:${cell*.6}px">${rocks.has(i)?'🪨':i===goal?'🍎':''}</div>`; }
+    let h=''; for(let i=0;i<N*N;i++){ const x=ox+(i%N)*cell, y=oy+Math.floor(i/N)*cell; h+=`<div class="abs" style="left:${x}px;top:${y}px;width:${cell-4}px;height:${cell-4}px;margin:2px;border-radius:var(--r-sm);background:${(i+Math.floor(i/N))%2?'#ECE5F7':'#E2DAF2'};display:grid;place-items:center;font-size:${cell*.6}px">${rocks.has(i)?'🪨':i===goal?'🍎':''}</div>`; }
     h+=`<span id="me" class="abs" style="left:${ox+(pos%N)*cell}px;top:${oy+Math.floor(pos/N)*cell}px;width:${cell}px;height:${cell}px;display:grid;place-items:center;transition:left .3s,top .3s;z-index:2">${petMini(prof(),cell*.95)}</span>`;
-    h+=`<div class="abs" style="left:12px;right:12px;top:${oy+cell*N+14}px;background:#fff;border:2px dashed var(--line);border-radius:16px;min-height:56px;padding:8px;display:flex;flex-wrap:wrap;gap:4px;font-size:24px">${prog.length?prog.map((d,k)=>`<span id="p${k}" style="padding:2px;border-radius:8px">${AR[d]}</span>`).join(''):'<span class="muted" style="font-size:15px;font-weight:700">Mi programa: toca las flechas</span>'}</div>`;
+    h+=`<div class="abs" style="left:12px;right:12px;top:${oy+cell*N+14}px;background:var(--card);border:2px dashed var(--line);border-radius:var(--r-md);min-height:56px;padding:var(--s-2);display:flex;flex-wrap:wrap;gap:var(--s-1);font-size:var(--fs-2xl)">${prog.length?prog.map((d,k)=>`<span id="p${k}" style="padding:2px;border-radius:var(--r-xs)">${AR[d]}</span>`).join(''):'<span class="muted" style="font-size:var(--fs-sm);font-weight:700">Mi programa: toca las flechas</span>'}</div>`;
     ar.innerHTML=h; }
   function run(){
     if (running||!prog.length) return; running=true; pos=start; draw(); let k=0;
@@ -289,8 +289,8 @@ function toyCode(root){
 /* ---------- Balanza ---------- */
 function toyBalance(root){
   const lv=LV(); const WTS=lv===1?[1,2,5]:[1,2,5,10]; let target, right=[], obj;
-  addHTML(root, `<div id="ar" class="abs" style="inset:0 0 70px 0;background:#FFFBF4"></div>
-  <div class="tbar">${WTS.map(w=>`<button data-w="${w}" style="font-size:18px">${w} kg</button>`).join('')}<span class="sep"></span><button id="bk">⌫</button><button id="nw">🔄</button></div>`);
+  addHTML(root, `<div id="ar" class="abs" style="inset:0 0 var(--tbar-h) 0;background:var(--paper)"></div>
+  <div class="tbar">${WTS.map(w=>`<button data-w="${w}" style="font-size:var(--fs-md)">${w} kg</button>`).join('')}<span class="sep"></span><button id="bk">⌫</button><button id="nw">🔄</button></div>`);
   const ar=root.querySelector('#ar'); const tg=banner(root);
   function gen(){ target= lv===1?rnd(2,10): lv===2?rnd(8,35): rnd(13,60); obj=pick(['🍉','🎃','🐶','🎁','🧺','🐱']); right=[];
     tg.innerHTML = lv===3 ? `🎯 ¿Cuánto pesa ${obj}? Equilibra la balanza` : `🎯 Equilibra: ${obj} pesa ${target} kg`; draw();
@@ -299,14 +299,14 @@ function toyBalance(root){
     const sum=right.reduce((a,b)=>a+b,0), diff=sum-target, ang=Math.max(-18,Math.min(18,diff*(lv===3?1.2:2.5)));
     const W=ar.clientWidth, H=ar.clientHeight, cx=W/2, cy=H*.42, arm=Math.min(150,(W-140)/2);
     const rad=ang*Math.PI/180, lx=cx-arm*Math.cos(rad), ly=cy-arm*Math.sin(rad), rx=cx+arm*Math.cos(rad), ry=cy+arm*Math.sin(rad);
-    const pan=(x,y,content)=>`<div class="abs" style="left:${x-62}px;top:${y}px;width:124px;transition:all .5s"><div style="height:${60}px;border-left:2px solid #B9A88E;border-right:2px solid #B9A88E;margin:0 18px"></div><div style="height:16px;border-radius:0 0 60px 60px;background:#D9C2A5"></div><div style="position:absolute;bottom:18px;left:0;right:0;display:flex;flex-wrap:wrap-reverse;justify-content:center;gap:2px">${content}</div></div>`;
-    ar.innerHTML=`<div class="abs" style="left:${cx-8}px;top:${cy}px;width:16px;height:${H*.4}px;background:#C9B79D;border-radius:8px"></div>
-      <div class="abs" style="left:${cx-60}px;top:${cy+H*.4-10}px;width:120px;height:18px;background:#C9B79D;border-radius:9px"></div>
+    const pan=(x,y,content)=>`<div class="abs" style="left:${x-62}px;top:${y}px;width:124px;transition:all .5s"><div style="height:${60}px;border-left:var(--bw) solid #B9A88E;border-right:var(--bw) solid #B9A88E;margin:0 var(--s-5)"></div><div style="height:16px;border-radius:0 0 60px 60px;background:#D9C2A5"></div><div style="position:absolute;bottom:18px;left:0;right:0;display:flex;flex-wrap:wrap-reverse;justify-content:center;gap:2px">${content}</div></div>`;
+    ar.innerHTML=`<div class="abs" style="left:${cx-8}px;top:${cy}px;width:16px;height:${H*.4}px;background:#C9B79D;border-radius:var(--r-xs)"></div>
+      <div class="abs" style="left:${cx-60}px;top:${cy+H*.4-10}px;width:120px;height:18px;background:#C9B79D;border-radius:var(--r-xs)"></div>
       <div class="abs" style="left:${cx-arm}px;top:${cy-5}px;width:${arm*2}px;height:10px;background:#B9A88E;border-radius:5px;transform:rotate(${ang}deg);transition:transform .5s"></div>
       <div class="abs" style="left:${cx-12}px;top:${cy-12}px;width:24px;height:24px;border-radius:50%;background:#8C7B63"></div>
-      ${pan(lx,ly,`<span style="font-size:48px;line-height:1">${obj}</span>${lv<3?`<b style="width:100%;text-align:center">${target} kg</b>`:''}`)}
-      ${pan(rx,ry,right.map(w=>`<span style="display:inline-grid;place-items:center;width:${22+w*2}px;height:${22+w*2}px;border-radius:6px 6px 10px 10px;background:#9BA6B5;color:#fff;font-size:11px;font-weight:800">${w}</span>`).join(''))}
-      <div class="abs" style="left:0;right:0;bottom:16px;text-align:center;font-weight:800;font-size:18px">${lv<3||diff===0?`Pesas: ${right.join(' + ')||'0'} = ${sum} kg`:(diff<0?'⬅️ Pesa más el objeto':'➡️ Pesan más las pesas')}</div>`;
+      ${pan(lx,ly,`<span style="font-size:var(--fs-6xl);line-height:1">${obj}</span>${lv<3?`<b style="width:100%;text-align:center">${target} kg</b>`:''}`)}
+      ${pan(rx,ry,right.map(w=>`<span style="display:inline-grid;place-items:center;width:${22+w*2}px;height:${22+w*2}px;border-radius:6px 6px 10px 10px;background:#9BA6B5;color:var(--white);font-size:var(--fs-2xs);font-weight:800">${w}</span>`).join(''))}
+      <div class="abs" style="left:0;right:0;bottom:16px;text-align:center;font-weight:800;font-size:var(--fs-md)">${lv<3||diff===0?`Pesas: ${right.join(' + ')||'0'} = ${sum} kg`:(diff<0?'⬅️ Pesa más el objeto':'➡️ Pesan más las pesas')}</div>`;
   }
   root.querySelectorAll('[data-w]').forEach(b=>b.addEventListener('click',()=>{ right.push(+b.dataset.w); plopS(); draw(); const sum=right.reduce((a,b)=>a+b,0);
     if (sum===target){ confetti(); win(lv===3?`¡Equilibrada! ${obj} pesa ${target} kilos`:`¡Equilibrada! ${right.join(' más ')} es igual a ${target}`); setTimeout(gen,3200); } }));

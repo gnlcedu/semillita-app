@@ -34,6 +34,14 @@ function dragify(el, area, o={}){
   });
 }
 function addHTML(root, html){ root.insertAdjacentHTML('beforeend', html); }
+/* Barras de herramientas: los botones que solo tienen un emoji llevan la clase .e (ícono grande);
+   los que tienen texto usan letra normal. Solo presentación. */
+(function(){
+  const mark=b=>b.classList.toggle('e', !/[\p{L}\p{N}]/u.test(b.textContent));
+  const scan=n=>{ if(n.nodeType!==1) return; if(n.matches('.tbar button,.prow button')) mark(n); n.querySelectorAll?.('.tbar button,.prow button').forEach(mark); const b=n.closest?.('.tbar button,.prow button'); if(b) mark(b); };
+  new MutationObserver(ms=>ms.forEach(m=>{ m.addedNodes.forEach(scan); if(m.type==='childList'&&m.target.nodeType===1) { const b=m.target.closest('.tbar button,.prow button'); if(b) mark(b); } }))
+    .observe(document.documentElement,{childList:true,subtree:true});
+})();
 function sparkAt(root,x,y){ const r=root.getBoundingClientRect(); const d=document.createElement('div'); d.style.cssText=`position:fixed;left:${r.left+x}px;top:${r.top+y}px;width:1px;height:1px`; document.body.appendChild(d); sparks(d,7); setTimeout(()=>d.remove(),1000); }
 
 /* ---------- 1. Pintar ---------- */
@@ -41,7 +49,7 @@ function toyPaint(root){
   const COLS=[['#E8505B','rojo'],['#F28C38','anaranjado'],['#F7C948','amarillo'],['#4CAF6A','verde'],['#3D8BD9','azul'],['#8E5BB5','morado'],['#F49AC1','rosado'],['#8B5E3C','marrón'],['#4A4658','gris']];
   const STAMPS=['⭐','🌸','🐟','❤️','🦋','☀️','🌈','🐞','🌴'];
   let col=COLS[0][0], size=12, mode='pen', st=0;
-  addHTML(root, `<canvas id="cv" style="position:absolute;left:0;top:0;width:100%;height:calc(100% - 70px);background:#fff;touch-action:none"></canvas>
+  addHTML(root, `<canvas id="cv" style="position:absolute;left:0;top:0;width:100%;height:calc(100% - var(--tbar-h));background:var(--card);touch-action:none"></canvas>
   <div class="tbar">${COLS.map((c,i)=>`<button class="sw-c ${i?'':'on'}" data-c="${i}" style="background:${c[0]}" aria-label="${c[1]}"></button>`).join('')}<span class="sep"></span>
   <button id="sz">✏️</button><button id="stp">${STAMPS[0]}</button><button id="er">🧽</button><button id="cl">🗑️</button></div>`);
   const cv=root.querySelector('#cv'), ctx=cv.getContext('2d'), dpr=window.devicePixelRatio||1;
@@ -73,12 +81,12 @@ function toyMix(root){
     else if(R){n='rojo';c=POTS.r[1];} else if(Y){n='amarillo';c=POTS.y[1];} else if(B){n='azul';c=POTS.b[1];} else if(cnt.w){n='blanco';c='#FFFFFF';}
     if (cnt.w && n && n!=='blanco'){ c=lighten(c,Math.min(.65,cnt.w*.22)); n={rojo:'rosado',azul:'celeste',morado:'lila',verde:'verde claro',anaranjado:'salmón',amarillo:'amarillo claro','marrón':'beige'}[n]; }
     return [n,c]; }
-  addHTML(root, `<div style="position:absolute;inset:0 0 70px 0;display:flex;flex-direction:column;align-items:center;justify-content:space-around;padding:50px 10px 10px">
+  addHTML(root, `<div style="position:absolute;inset:0 0 var(--tbar-h) 0;display:flex;flex-direction:column;align-items:center;justify-content:space-around;padding:50px var(--s-3) var(--s-3)">
     <div style="position:relative;width:220px;height:150px"><div id="liq" style="position:absolute;left:14px;right:14px;bottom:14px;height:0;border-radius:0 0 100px 100px;background:#F4EFE8;transition:height .5s,background .7s"></div>
       <div style="position:absolute;inset:0;border:6px solid #D9D2C7;border-top:none;border-radius:0 0 110px 110px"></div></div>
-    <div style="text-align:center;min-height:62px"><div id="nm" style="font-size:30px;font-weight:800"></div><div id="en" class="muted" style="font-weight:700"></div></div>
-    <div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center">${Object.entries(POTS).map(([k,[n,c]])=>`<button data-k="${k}" style="display:flex;flex-direction:column;align-items:center;gap:6px;font-weight:800"><span style="width:64px;height:78px;border-radius:14px 14px 20px 20px;background:${c};border:3px solid rgba(0,0,0,.08);box-shadow:inset 0 10px 0 rgba(255,255,255,.35)"></span>${n}</button>`).join('')}</div></div>
-    <div id="goal" class="abs" style="left:12px;top:12px;background:#fff;border:2px solid var(--line);border-radius:16px;padding:6px 12px;font-weight:800;display:none"></div>
+    <div style="text-align:center;min-height:62px"><div id="nm" style="font-size:var(--fs-3xl);font-weight:800"></div><div id="en" class="muted" style="font-weight:700"></div></div>
+    <div style="display:flex;gap:var(--s-4);flex-wrap:wrap;justify-content:center">${Object.entries(POTS).map(([k,[n,c]])=>`<button data-k="${k}" style="display:flex;flex-direction:column;align-items:center;gap:var(--s-2);font-weight:800"><span style="width:64px;height:78px;border-radius:14px 14px 20px 20px;background:${c};border:3px solid rgba(0,0,0,.08);box-shadow:inset 0 10px 0 rgba(255,255,255,.35)"></span>${n}</button>`).join('')}</div></div>
+    <div id="goal" class="abs" style="left:12px;top:12px;background:var(--card);border:var(--bw) solid var(--line);border-radius:var(--r-md);padding:var(--s-2) var(--s-3);font-weight:800;display:none"></div>
     <div class="tbar"><button id="em">🔄 Vaciar</button></div>`);
   const liq=root.querySelector('#liq');
   const GOALS = LV()===2 ? ['anaranjado','verde','morado','marrón'] : ['anaranjado','verde','morado','marrón','rosado','celeste','lila','verde claro','salmón'];
@@ -93,7 +101,7 @@ function toyMix(root){
   root.querySelectorAll('[data-k]').forEach(b=>b.addEventListener('click',()=>{
     const k=b.dataset.k; if (cnt.r+cnt.y+cnt.b+cnt.w>=7){ tsay('¡El tazón está lleno! Toca Vaciar.'); return; }
     const a=b.getBoundingClientRect(), t=liq.parentElement.getBoundingClientRect(), r=root.getBoundingClientRect();
-    const d=document.createElement('div'); d.className='abs'; d.style.cssText=`left:${a.left-r.left+a.width/2-12}px;top:${a.top-r.top}px;width:24px;height:30px;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;background:${POTS[k][1]};border:2px solid rgba(0,0,0,.1);transition:transform .55s cubic-bezier(.5,0,.7,1);z-index:4`;
+    const d=document.createElement('div'); d.className='abs'; d.style.cssText=`left:${a.left-r.left+a.width/2-12}px;top:${a.top-r.top}px;width:24px;height:30px;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;background:${POTS[k][1]};border:var(--bw) solid rgba(0,0,0,.1);transition:transform .55s cubic-bezier(.5,0,.7,1);z-index:4`;
     root.appendChild(d); requestAnimationFrame(()=>requestAnimationFrame(()=>{ d.style.transform=`translate(${t.left-a.left+t.width/2-a.width/2}px,${t.top-a.top+60}px)`; }));
     setTimeout(()=>{ d.remove(); plopS(); cnt[k]++; upd(); },560);
   }));
@@ -105,7 +113,7 @@ function toyMusic(root){
   const N=[[523.25,'do'],[587.33,'re'],[659.25,'mi'],[698.46,'fa'],[783.99,'sol'],[880,'la'],[987.77,'si'],[1046.5,'do']];
   const C=['#F4A6A6','#F7C59F','#F6E39A','#B9E3C6','#A9D3F0','#9FB7EE','#C9B8EE','#F5B8D0'];
   let rec=null, recStart=0, timers=[];
-  addHTML(root, `<div style="position:absolute;inset:60px 8px 80px 8px;display:flex;gap:6px;align-items:center;justify-content:center">${N.map((n,i)=>`<button data-i="${i}" style="flex:1;max-width:70px;height:${92-i*5}%;border-radius:16px;background:${C[i]};border:3px solid rgba(0,0,0,.06);display:flex;flex-direction:column;justify-content:space-between;align-items:center;padding:12px 0;font-weight:800;font-size:15px;position:relative"><span style="width:12px;height:12px;border-radius:50%;background:rgba(0,0,0,.18)"></span>${n[1]}<span style="width:12px;height:12px;border-radius:50%;background:rgba(0,0,0,.18)"></span></button>`).join('')}</div>
+  addHTML(root, `<div style="position:absolute;inset:60px 8px 80px 8px;display:flex;gap:var(--s-2);align-items:center;justify-content:center">${N.map((n,i)=>`<button data-i="${i}" style="flex:1;max-width:70px;height:${92-i*5}%;border-radius:var(--r-md);background:${C[i]};border:3px solid rgba(0,0,0,.06);display:flex;flex-direction:column;justify-content:space-between;align-items:center;padding:var(--s-3) 0;font-weight:800;font-size:var(--fs-sm);position:relative"><span style="width:12px;height:12px;border-radius:50%;background:rgba(0,0,0,.18)"></span>${n[1]}<span style="width:12px;height:12px;border-radius:50%;background:rgba(0,0,0,.18)"></span></button>`).join('')}</div>
   <div class="tbar"><button id="rc">⏺️ Grabar</button><button id="pl">▶️ Mi canción</button><button id="tw">⭐ Estrellita</button><button id="sc">🎵 Escala</button><button id="sm">🧠 Repite</button></div>`);
   let simon=null;
   const bars=[...root.querySelectorAll('[data-i]')];
@@ -113,7 +121,7 @@ function toyMusic(root){
     const f=N[i][0]; note(f,1.5,'sine',.22); note(f*2,.5,'triangle',.05);
     const b=bars[i]; b.style.animation='none'; void b.offsetWidth; b.style.animation='hit .35s ease';
     const r=root.getBoundingClientRect(), a=b.getBoundingClientRect(); const m=document.createElement('span'); m.className='abs'; m.textContent=pick(['🎵','🎶','♪']);
-    m.style.cssText=`left:${a.left-r.left+a.width/2-10}px;top:${a.top-r.top-10}px;font-size:24px;animation:up 1.1s ease-out forwards;z-index:4;pointer-events:none`; root.appendChild(m); setTimeout(()=>m.remove(),1100);
+    m.style.cssText=`left:${a.left-r.left+a.width/2-10}px;top:${a.top-r.top-10}px;font-size:var(--fs-2xl);animation:up 1.1s ease-out forwards;z-index:4;pointer-events:none`; root.appendChild(m); setTimeout(()=>m.remove(),1100);
     dance(); if (user && rec) rec.push([i, performance.now()-recStart]);
     if (user && simon && simon.active){
       if (i===simon.seq[simon.pos]){ simon.pos++; if (simon.pos===simon.seq.length){ simon.active=false; const L=simon.seq.length; win(`¡Perfecto! Repetiste ${L} notas`); setTimeout(()=>startSimon(L+1),2400); } }
@@ -135,14 +143,14 @@ function toyMusic(root){
 
 /* ---------- 4. Bloques ---------- */
 function toyBlocks(root){
-  const SH={cuadrado:{w:70,h:70,css:'border-radius:10px'},rectángulo:{w:140,h:46,css:'border-radius:10px'},torre:{w:46,h:120,css:'border-radius:10px'},triángulo:{w:84,h:72,css:'clip-path:polygon(50% 0,100% 100%,0 100%)'},arco:{w:104,h:52,css:'border-radius:52px 52px 6px 6px'},círculo:{w:66,h:66,css:'border-radius:50%'}};
+  const SH={cuadrado:{w:70,h:70,css:'border-radius:var(--r-sm)'},rectángulo:{w:140,h:46,css:'border-radius:var(--r-sm)'},torre:{w:46,h:120,css:'border-radius:var(--r-sm)'},triángulo:{w:84,h:72,css:'clip-path:polygon(50% 0,100% 100%,0 100%)'},arco:{w:104,h:52,css:'border-radius:52px 52px 6px 6px'},círculo:{w:66,h:66,css:'border-radius:50%'}};
   const ICON={cuadrado:'🟧',rectángulo:'▬',torre:'▮',triángulo:'🔺',arco:'🌙',círculo:'🔵'};
   const blocks=[];
   addHTML(root, `<div id="gr" style="position:absolute;left:0;right:0;bottom:70px;height:34px;background:#DCE8C8;border-top:3px solid #C3D6A6"></div>
   <div class="tbar">${Object.keys(SH).map(k=>`<button data-s="${k}">${ICON[k]}</button>`).join('')}<button data-s="amigo">${petMini(prof(),36)}</button><span class="sep"></span><button id="cl">🗑️</button></div>`);
   const W=()=>root.clientWidth, groundY=()=>root.clientHeight-70-34;
   let goalN = LV()===1?0:LV()===2?4:7, reached=false;
-  addHTML(root, `<div id="bg" class="abs" style="left:12px;top:12px;background:#fff;border:2px solid var(--line);border-radius:16px;padding:6px 12px;font-weight:800;display:${goalN?'block':'none'}">🎯 Torre de ${goalN} bloques</div>`);
+  addHTML(root, `<div id="bg" class="abs" style="left:12px;top:12px;background:var(--card);border:var(--bw) solid var(--line);border-radius:var(--r-md);padding:var(--s-2) var(--s-3);font-weight:800;display:${goalN?'block':'none'}">🎯 Torre de ${goalN} bloques</div>`);
   function settle(){
     const order=blocks.slice().sort((a,b)=>(b.y+b.h)-(a.y+a.h)); const done=[];
     order.forEach(b=>{ let land=groundY(), sup=null; done.forEach(s=>{ if (b.x < s.x+s.w-6 && b.x+b.w > s.x+6 && s.y<land){ land=s.y; sup=s; } });
@@ -156,7 +164,7 @@ function toyBlocks(root){
     let s=SH[kind], el=document.createElement('div'); const isF=kind==='amigo';
     if (isF) s={w:64,h:64,css:''};
     const b={el,w:s.w,h:s.h,x:Math.max(8,Math.min(W()-s.w-8, W()/2-s.w/2+rnd(-60,60))),y:10};
-    el.className='abs'; el.style.cssText=`left:${b.x}px;top:10px;width:${s.w}px;height:${s.h}px;${isF?'font-size:56px;line-height:64px;text-align:center':`background:${pick(PAST)};box-shadow:inset 0 -6px 0 rgba(0,0,0,.08);${s.css}`};transition:top .45s cubic-bezier(.5,0,.6,1.3),left .2s;z-index:2`;
+    el.className='abs'; el.style.cssText=`left:${b.x}px;top:10px;width:${s.w}px;height:${s.h}px;${isF?'font-size:var(--fs-7xl);line-height:64px;text-align:center':`background:${pick(PAST)};box-shadow:inset 0 -6px 0 rgba(0,0,0,.08);${s.css}`};transition:top .45s cubic-bezier(.5,0,.6,1.3),left .2s;z-index:2`;
     if (isF) el.innerHTML=petMini(prof(),64);
     root.appendChild(el); blocks.push(b);
     dragify(el, root, {drop:(e)=>{ b.x=Math.max(0,Math.min(W()-b.w, parseFloat(e.style.left))); b.y=parseFloat(e.style.top); settle(); plopS(); }});
@@ -171,15 +179,15 @@ function toyBlocks(root){
 function toyGarden(root){
   const SEEDS=[['🌻','girasol'],['🌷','tulipán'],['🍅','tomate'],['🌽','maíz'],['🍓','fresa'],['🌺','cayena']];
   let tool='s0', harvest=0; const plots=[];
-  addHTML(root, `<div style="position:absolute;inset:0 0 70px 0;background:linear-gradient(#DDEFFB 0%,#F3F9FD 55%,#E6D3BC 55%,#D9C2A5 100%)"></div>
-  <div class="abs" style="top:22px;left:22px;font-size:54px;animation:bob 4s ease-in-out infinite">☀️</div>
-  <div class="abs" style="top:40px;left:52%;font-size:40px;opacity:.85;animation:drift 40s linear infinite">☁️</div>
-  <div class="abs" id="bk" style="top:18px;right:16px;font-size:34px;background:#fff;border-radius:18px;padding:4px 12px;border:2px solid var(--line);font-weight:800">🧺 <span id="hv" style="font-size:20px">0</span></div>
+  addHTML(root, `<div style="position:absolute;inset:0 0 var(--tbar-h) 0;background:linear-gradient(#DDEFFB 0%,#F3F9FD 55%,#E6D3BC 55%,#D9C2A5 100%)"></div>
+  <div class="abs" style="top:22px;left:22px;font-size:var(--fs-7xl);animation:bob 4s ease-in-out infinite">☀️</div>
+  <div class="abs" style="top:40px;left:52%;font-size:var(--fs-5xl);opacity:.85;animation:drift 40s linear infinite">☁️</div>
+  <div class="abs" id="bk" style="top:18px;right:16px;font-size:var(--fs-4xl);background:var(--card);border-radius:var(--r-md);padding:var(--s-1) var(--s-3);border:var(--bw) solid var(--line);font-weight:800">🧺 <span id="hv" style="font-size:var(--fs-lg)">0</span></div>
   <div id="pl" class="abs" style="left:0;right:0;bottom:110px;display:flex;justify-content:space-evenly;align-items:flex-end"></div>
   <div class="tbar">${SEEDS.map((s,i)=>`<button data-t="s${i}" class="${i?'':'on'}">${s[0]}</button>`).join('')}<span class="sep"></span><button data-t="w">💧</button><button data-t="h">🧺</button></div>`);
   const row=root.querySelector('#pl');
   for (let i=0;i<5;i++){ const p=document.createElement('button'); p.style.cssText='position:relative;width:17%;max-width:90px;height:130px;display:flex;flex-direction:column;justify-content:flex-end;align-items:center';
-    p.innerHTML='<span class="pt" style="font-size:52px;line-height:1;transform-origin:50% 100%"></span><span style="width:100%;height:26px;border-radius:50% 50% 12px 12px;background:#9C7556"></span>';
+    p.innerHTML='<span class="pt" style="font-size:var(--fs-7xl);line-height:1;transform-origin:50% 100%"></span><span style="width:100%;height:26px;border-radius:50% 50% 12px 12px;background:#9C7556"></span>';
     row.appendChild(p); plots.push({el:p,type:null,stage:0}); p.addEventListener('click',()=>tap(plots[i])); }
   const show=(pl)=>{ const s=pl.el.querySelector('.pt'); s.style.animation='none'; void s.offsetWidth; s.style.animation='popin .5s both';
     s.textContent= pl.type===null?'':pl.stage===0?'🟤':pl.stage===1?'🌱':pl.stage===2?'🌿':SEEDS[pl.type][0]; s.style.fontSize=pl.stage===0?'20px':'52px'; };
@@ -187,13 +195,13 @@ function toyGarden(root){
     if (tool[0]==='s'){ if (pl.type!==null){ tsay(pl.stage<3?'Ahora riégala con 💧':'¡Ya creció! Cosecha con 🧺'); return; }
       pl.type=+tool.slice(1); pl.stage=0; show(pl); plopS(); tsay(`Sembraste ${SEEDS[pl.type][1]}. ¡Ahora riégala!`); return; }
     if (tool==='w'){ if (pl.type===null){ tsay('Primero siembra una semilla'); return; } if (pl.stage>=3){ tsay('¡Ya está grande!'); return; }
-      for (let k=0;k<6;k++){ const d=document.createElement('span'); d.textContent='💧'; d.style.cssText=`position:absolute;left:${10+k*14}%;top:-70px;font-size:16px;animation:drop 1s ease-in ${k*.08}s forwards;opacity:.9`; pl.el.appendChild(d); setTimeout(()=>d.remove(),900); }
+      for (let k=0;k<6;k++){ const d=document.createElement('span'); d.textContent='💧'; d.style.cssText=`position:absolute;left:${10+k*14}%;top:-70px;font-size:var(--fs-sm);animation:drop 1s ease-in ${k*.08}s forwards;opacity:.9`; pl.el.appendChild(d); setTimeout(()=>d.remove(),900); }
       setTimeout(()=>{ pl.stage++; show(pl); note(600+pl.stage*120,.3,'sine',.1);
         if (pl.stage===3){ tsay(`¡Creció ${SEEDS[pl.type][1]}! Las plantas necesitan agua y sol.`); react('happy'); sparks(pl.el,8); butterfly(); } }, 700); return; }
     if (tool==='h'){ if (pl.stage<3){ tsay('Todavía no está lista'); return; }
       flyTo(pl.el.querySelector('.pt'),'bk'); harvest++; root.querySelector('#hv').textContent=harvest; pl.type=null; pl.stage=0; show(pl); popS(); tsay(`Tienes ${harvest} en la canasta`); }
   }
-  function butterfly(){ const b=document.createElement('div'); b.className='abs'; b.textContent=pick(['🦋','🐝','🐞']); b.style.cssText=`left:${rnd(10,60)}%;top:${rnd(18,35)}%;font-size:32px;animation:flutter ${rnd(5,8)}s ease-in-out infinite;z-index:3`; root.appendChild(b); }
+  function butterfly(){ const b=document.createElement('div'); b.className='abs'; b.textContent=pick(['🦋','🐝','🐞']); b.style.cssText=`left:${rnd(10,60)}%;top:${rnd(18,35)}%;font-size:var(--fs-4xl);animation:flutter ${rnd(5,8)}s ease-in-out infinite;z-index:3`; root.appendChild(b); }
   root.querySelectorAll('[data-t]').forEach(b=>b.addEventListener('click',()=>{ tool=b.dataset.t; root.querySelectorAll('[data-t]').forEach(x=>x.classList.toggle('on',x===b));
     tsay(tool==='w'?'Regadera: toca una planta':tool==='h'?'Canasta: toca una planta grande':`Semilla de ${SEEDS[+tool.slice(1)][1]}`); }));
 }
@@ -202,15 +210,15 @@ function toyGarden(root){
 function toyAquarium(root){
   const FISH=[['🐟','pez'],['🐠','pez tropical'],['🐡','pez globo'],['🐙','pulpo'],['🦀','cangrejo'],['🐢','tortuga'],['🐬','delfín'],['🦈','tiburón']];
   const fish=[], food=[]; let raf, bub;
-  addHTML(root, `<div id="tk" class="abs" style="inset:0 0 70px 0;background:linear-gradient(#CFE8F6,#8FC3E6);overflow:hidden">
+  addHTML(root, `<div id="tk" class="abs" style="inset:0 0 var(--tbar-h) 0;background:linear-gradient(#CFE8F6,#8FC3E6);overflow:hidden">
     <div class="abs" style="left:0;right:0;bottom:0;height:40px;background:#EBD9B4;border-radius:50% 50% 0 0/20px 20px 0 0"></div>
-    ${[8,26,62,84].map(x=>`<span class="abs" style="left:${x}%;bottom:22px;font-size:46px;transform-origin:50% 100%;animation:palm 4s ease-in-out ${-x/20}s infinite">🌿</span>`).join('')}
-    <span class="abs" style="left:44%;bottom:24px;font-size:34px">🪸</span><span class="abs" style="left:72%;bottom:26px;font-size:28px">🐚</span></div>
+    ${[8,26,62,84].map(x=>`<span class="abs" style="left:${x}%;bottom:22px;font-size:var(--fs-6xl);transform-origin:50% 100%;animation:palm 4s ease-in-out ${-x/20}s infinite">🌿</span>`).join('')}
+    <span class="abs" style="left:44%;bottom:24px;font-size:var(--fs-4xl)">🪸</span><span class="abs" style="left:72%;bottom:26px;font-size:var(--fs-3xl)">🐚</span></div>
   <div class="tbar">${FISH.map((f,i)=>`<button data-f="${i}">${f[0]}</button>`).join('')}</div>`);
   const tk=root.querySelector('#tk');
   const Wt=()=>tk.clientWidth, Ht=()=>tk.clientHeight;
   function add(i){ if (fish.length>=16){ tsay('¡El acuario está lleno!'); return; }
-    const el=document.createElement('span'); el.className='abs'; el.textContent=FISH[i][0]; el.style.cssText='left:0;top:0;font-size:42px;will-change:transform';
+    const el=document.createElement('span'); el.className='abs'; el.textContent=FISH[i][0]; el.style.cssText='left:0;top:0;font-size:var(--fs-5xl);will-change:transform';
     tk.appendChild(el); const f={el,x:rnd(20,Wt()-60),y:rnd(30,Ht()-110),tx:0,ty:0,sp:.6+Math.random()*.9,dir:1,crab:i===4}; newT(f); fish.push(f);
     plopS(); tsay(`¡Hay ${fish.length} ${fish.length===1?'animalito':'animalitos'}!`); }
   const newT=f=>{ f.tx=rnd(10,Wt()-60); f.ty=f.crab?Ht()-80:rnd(20,Ht()-110); };
@@ -226,7 +234,7 @@ function toyAquarium(root){
       else if (!tf && d<6) newT(f);
       f.el.style.transform=`translate(${f.x}px,${f.y}px) scaleX(${f.crab?1:f.dir})`; });
     raf=requestAnimationFrame(loop); }
-  bub=setInterval(()=>{ const b=document.createElement('span'); b.className='abs'; b.style.cssText=`left:${rnd(5,95)}%;bottom:30px;width:${rnd(8,16)}px;aspect-ratio:1;border-radius:50%;border:2px solid rgba(255,255,255,.8);animation:rise2 ${rnd(5,8)}s linear forwards`; tk.appendChild(b); setTimeout(()=>b.remove(),8000); },700);
+  bub=setInterval(()=>{ const b=document.createElement('span'); b.className='abs'; b.style.cssText=`left:${rnd(5,95)}%;bottom:30px;width:${rnd(8,16)}px;aspect-ratio:1;border-radius:50%;border:var(--bw) solid rgba(255,255,255,.8);animation:rise2 ${rnd(5,8)}s linear forwards`; tk.appendChild(b); setTimeout(()=>b.remove(),8000); },700);
   root.querySelectorAll('[data-f]').forEach(b=>b.addEventListener('click',()=>add(+b.dataset.f)));
   add(0); add(1); loop();
   const hint=setTimeout(()=>tsay('Toca el agua para darles comida'),2600);
@@ -239,7 +247,7 @@ function toyBubbles(root){
   const COLS=[['rojo','#F4A6A6'],['azul','#A9D3F0'],['amarillo','#F6E39A'],['verde','#B9E3C6'],['morado','#C9B8EE'],['rosado','#F5B8D0'],['anaranjado','#F7C59F']];
   const ANIM=[['🐶','perro','dog'],['🐱','gato','cat'],['🐮','vaca','cow'],['🐷','cerdo','pig'],['🐸','rana','frog'],['🐵','mono','monkey'],['🦁','león','lion'],['🐔','gallina','hen'],['🐰','conejo','rabbit'],['🐴','caballo','horse']];
   let mode='n', it;
-  addHTML(root, `<div id="bz" class="abs" style="inset:0 0 70px 0;background:linear-gradient(#EAF4FB,#FBF8F3);overflow:hidden"></div>
+  addHTML(root, `<div id="bz" class="abs" style="inset:0 0 var(--tbar-h) 0;background:linear-gradient(#EAF4FB,var(--bg));overflow:hidden"></div>
   <div class="tbar"><button data-m="n" class="on">123</button><button data-m="l">ABC</button><button data-m="c">🎨</button><button data-m="a">🐾</button></div>`);
   const bz=root.querySelector('#bz');
   function spawn(){ if (bz.children.length>9) return;
@@ -251,7 +259,7 @@ function toyBubbles(root){
     b.className='abs'; b.innerHTML=`<span style="display:grid;place-items:center;width:100%;height:100%;animation:sway ${rnd(3,5)}s ease-in-out infinite">${txt}</span>`;
     b.style.cssText=`left:${rnd(2,80)}%;bottom:-120px;width:${sz}px;height:${sz}px;border-radius:50%;font-size:${mode==='a'?40:34}px;font-weight:800;color:var(--ink);background:radial-gradient(circle at 30% 30%,rgba(255,255,255,.95) 0 12%,transparent 13%),${bg};border:3px solid rgba(255,255,255,.9);box-shadow:inset -6px -8px 14px rgba(140,170,210,.35);animation:rise2 ${rnd(8,12)}s linear forwards`;
     b.addEventListener('pointerdown',e=>{ e.preventDefault(); popS(); speak(sayT,lang); b.style.transition='transform .2s,opacity .2s'; b.style.animationPlayState='paused'; b.style.transform+=' scale(1.5)'; b.style.opacity='0';
-      if (mode==='l'){ const r=bz.getBoundingClientRect(),a=b.getBoundingClientRect(); const em=document.createElement('span'); em.className='abs'; em.textContent=LETRAS[txt][1]; em.style.cssText=`left:${a.left-r.left+sz/2-20}px;top:${a.top-r.top}px;font-size:40px;animation:up 1.2s ease-out forwards`; bz.appendChild(em); setTimeout(()=>em.remove(),1200); }
+      if (mode==='l'){ const r=bz.getBoundingClientRect(),a=b.getBoundingClientRect(); const em=document.createElement('span'); em.className='abs'; em.textContent=LETRAS[txt][1]; em.style.cssText=`left:${a.left-r.left+sz/2-20}px;top:${a.top-r.top}px;font-size:var(--fs-5xl);animation:up 1.2s ease-out forwards`; bz.appendChild(em); setTimeout(()=>em.remove(),1200); }
       setTimeout(()=>b.remove(),220); });
     b.addEventListener('animationend',ev=>{ if(ev.animationName==='rise2') b.remove(); });
     bz.appendChild(b); }
@@ -265,8 +273,8 @@ function toyBubbles(root){
 function toyDress(root){
   const CAT={hat:{top:-58,left:50,fs:84,it:['🎩','👒','🧢','👑','🎓','⛑️','🪖']},eyes:{top:46,left:50,fs:64,it:['👓','🕶️','🥽']},neck:{top:132,left:50,fs:54,it:['🎀','🧣','👔','📿']},hand:{top:96,left:96,fs:56,it:['🎈','🌂','🍭','🪄','🌻','⚽']}};
   const on={};
-  addHTML(root, `<div class="abs" style="inset:0 0 70px 0;background:radial-gradient(circle at 50% 60%,#FFF6E8,#F6E7F0)"></div>
-  <div id="fl" class="abs" style="inset:0;background:#fff;opacity:0;pointer-events:none;z-index:7"></div>
+  addHTML(root, `<div class="abs" style="inset:0 0 var(--tbar-h) 0;background:radial-gradient(circle at 50% 60%,#FFF6E8,#F6E7F0)"></div>
+  <div id="fl" class="abs" style="inset:0;background:var(--card);opacity:0;pointer-events:none;z-index:7"></div>
   <div id="dm" class="abs" style="left:50%;top:52%;width:180px;height:180px;transform:translate(-50%,-50%)"><span class="abs" style="inset:0;font-size:164px;line-height:180px;text-align:center">${prof().avatar}</span></div>
   <div class="tbar">${Object.entries(CAT).map(([k,c])=>c.it.map(e=>`<button data-k="${k}" data-e="${e}">${e}</button>`).join('')).join('<span class="sep"></span>')}<span class="sep"></span><button id="ph">📸</button><button id="cl">🔄</button></div>`);
   const dm=root.querySelector('#dm');
@@ -277,12 +285,12 @@ function toyDress(root){
   root.querySelector('#ph').addEventListener('click',()=>{ const f=root.querySelector('#fl'); f.style.animation='none'; void f.offsetWidth; f.style.animation='flash .6s'; note(1200,.1,'square',.06); confetti(); tsay('¡Clic! ¡Qué foto tan linda!'); });
   root.querySelector('#cl').addEventListener('click',()=>{ Object.values(on).forEach(o=>o.el.remove()); Object.keys(on).forEach(k=>delete on[k]); root.querySelectorAll('[data-e]').forEach(x=>x.classList.remove('on')); tsay('Ropa guardada'); });
   if (LV()>=2){
-    addHTML(root, `<div id="md" class="abs" style="left:12px;top:12px;background:#fff;border:2px solid var(--line);border-radius:18px;padding:8px 12px;font-weight:800;z-index:5;max-width:150px"></div>`);
+    addHTML(root, `<div id="md" class="abs" style="left:12px;top:12px;background:var(--card);border:var(--bw) solid var(--line);border-radius:var(--r-md);padding:var(--s-2) var(--s-3);font-weight:800;z-index:5;max-width:150px"></div>`);
     const md=root.querySelector('#md'); let model=null, hid=false;
     const newModel=()=>{ const ks=sample(Object.keys(CAT), LV()===2?2:4); model=Object.fromEntries(ks.map(k=>[k,pick(CAT[k].it)])); hid=false;
-      md.innerHTML=`🎯 Copia este look:<div style="font-size:34px;margin-top:4px">${Object.values(model).join(' ')}</div>`;
+      md.innerHTML=`🎯 Copia este look:<div style="font-size:var(--fs-4xl);margin-top:var(--s-1)">${Object.values(model).join(' ')}</div>`;
       if (LV()===3) setTimeout(()=>{ hid=true; md.innerHTML='🎯 ¿Lo recuerdas? 🤔<br><small class="muted">Toca aquí para verlo</small>'; },4500); };
-    md.addEventListener('click',()=>{ if(hid&&model){ md.innerHTML=`<div style="font-size:34px">${Object.values(model).join(' ')}</div>`; setTimeout(()=>{ if(model) md.innerHTML='🎯 ¿Lo recuerdas? 🤔<br><small class="muted">Toca aquí para verlo</small>'; },1500); } });
+    md.addEventListener('click',()=>{ if(hid&&model){ md.innerHTML=`<div style="font-size:var(--fs-4xl)">${Object.values(model).join(' ')}</div>`; setTimeout(()=>{ if(model) md.innerHTML='🎯 ¿Lo recuerdas? 🤔<br><small class="muted">Toca aquí para verlo</small>'; },1500); } });
     const check=()=>{ if(!model) return; const ok=Object.keys(CAT).every(k=> (model[k]||null) === (on[k]?on[k].e:null)); if(ok){ model=null; win('¡Igualito! Copiaste el look'); setTimeout(newModel,2600); } };
     root.querySelectorAll('[data-e]').forEach(b=>b.addEventListener('click',()=>setTimeout(check,50)));
     setTimeout(newModel,2800);
@@ -293,15 +301,15 @@ function toyDress(root){
 function toyPizza(root){
   const ING=[['🧀','queso','quesos'],['🍄','champiñón','champiñones'],['🫑','ají','ajíes'],['🍍','piña','piñas'],['🌽','maíz','maíces'],['🫒','aceituna','aceitunas'],['🍅','tomate','tomates']];
   let cnt={}, baked=false, eaten=0, sauce=false;
-  addHTML(root, `<div class="abs" style="inset:0 0 70px 0;background:repeating-linear-gradient(45deg,#FFF7EE 0 22px,#FBEFE3 22px 44px)"></div>
+  addHTML(root, `<div class="abs" style="inset:0 0 var(--tbar-h) 0;background:repeating-linear-gradient(45deg,var(--paper-2) 0 22px,#FBEFE3 22px 44px)"></div>
   <div id="pz" class="abs" style="left:50%;top:46%;width:270px;height:270px;transform:translate(-50%,-50%);border-radius:50%;background:#F1D39A;box-shadow:inset 0 0 0 16px #E4B871,0 10px 0 rgba(0,0,0,.06);transition:filter 1s">
     <div id="sc" class="abs" style="inset:18px;border-radius:50%;background:#E8705B;opacity:0;transition:opacity .5s"></div>
     <svg id="sl" class="abs" viewBox="0 0 270 270" style="inset:0;width:100%;height:100%;z-index:3;pointer-events:none"></svg></div>
-  <div id="ct" class="abs" style="left:0;right:0;top:14px;text-align:center;font-weight:800;font-size:18px;opacity:0"></div>
+  <div id="ct" class="abs" style="left:0;right:0;top:14px;text-align:center;font-weight:800;font-size:var(--fs-md);opacity:0"></div>
   <div class="tbar"><button id="sa">🥫</button>${ING.map((x,i)=>`<button data-i="${i}">${x[0]}</button>`).join('')}<span class="sep"></span><button id="hn">🔥 Hornear</button><button id="eat">😋</button><button id="nw">🔄</button></div>`);
   const pz=root.querySelector('#pz'), sl=root.querySelector('#sl');
   let order=null, eatGoal=0;
-  addHTML(root, `<div id="od" class="abs" style="left:12px;top:12px;background:#fff;border:2px solid var(--line);border-radius:16px;padding:8px 12px;font-weight:800;z-index:5;display:none"></div>`);
+  addHTML(root, `<div id="od" class="abs" style="left:12px;top:12px;background:var(--card);border:var(--bw) solid var(--line);border-radius:var(--r-md);padding:var(--s-2) var(--s-3);font-weight:800;z-index:5;display:none"></div>`);
   const od=root.querySelector('#od');
   const newOrder=()=>{ if (LV()<2) return; const ks=sample(ING.map((_,i)=>i), LV()===2?2:3); order=Object.fromEntries(ks.map(i=>[i, LV()===2?rnd(1,3):rnd(2,5)]));
     od.style.display='block'; od.innerHTML='🧾 Pedido:<br>'+Object.entries(order).map(([i,n])=>`${n} ${ING[i][0]}`).join('&nbsp; ');
@@ -310,7 +318,7 @@ function toyPizza(root){
   root.querySelector('#sa').addEventListener('click',()=>{ if(baked) return; sauce=true; root.querySelector('#sc').style.opacity='1'; plopS(); tsay('Salsa de tomate'); });
   root.querySelectorAll('[data-i]').forEach(b=>b.addEventListener('click',()=>{ if (baked){ tsay('Ya está horneada. ¡Hagamos otra! 🔄'); return; }
     const i=+b.dataset.i, [e,s,p]=ING[i]; const a=Math.random()*Math.PI*2, r=Math.sqrt(Math.random())*96;
-    const el=document.createElement('span'); el.className='abs top'; el.textContent=e; el.style.cssText=`left:${135+Math.cos(a)*r-15}px;top:${135+Math.sin(a)*r-15}px;font-size:30px;animation:popin .35s both;z-index:2;transform:rotate(${rnd(-30,30)}deg)`;
+    const el=document.createElement('span'); el.className='abs top'; el.textContent=e; el.style.cssText=`left:${135+Math.cos(a)*r-15}px;top:${135+Math.sin(a)*r-15}px;font-size:var(--fs-3xl);animation:popin .35s both;z-index:2;transform:rotate(${rnd(-30,30)}deg)`;
     pz.appendChild(el); cnt[i]=(cnt[i]||0)+1; popS(); tsay(`${cnt[i]} ${cnt[i]===1?s:p}`); }));
   root.querySelector('#hn').addEventListener('click',()=>{ if (baked) return; baked=true; tsay('Al horno... ¡3, 2, 1!'); pz.style.filter='brightness(.75) saturate(.6)';
     setTimeout(()=>{ pz.style.filter='sepia(.25) saturate(1.3)'; let h=''; for(let k=0;k<8;k++){ const a0=k/8*Math.PI*2-Math.PI/2, a1=(k+1)/8*Math.PI*2-Math.PI/2;
@@ -334,17 +342,17 @@ function toySort(root){
     tipo:{b:[['🍽️','comida'],['🧸','juguetes']], it:[['🍎',0],['🍌',0],['🍕',0],['🥕',0],['🧀',0],['🍪',0],['⚽',1],['🪀',1],['🧸',1],['🎈',1],['🪁',1],['🚂',1]]}
   };
   let cur='color', left=0;
-  addHTML(root, `<div class="abs" style="inset:0 0 70px 0;background:#FFFBF4"></div><div id="ar" class="abs" style="inset:0 0 70px 0"></div>
+  addHTML(root, `<div class="abs" style="inset:0 0 var(--tbar-h) 0;background:var(--paper)"></div><div id="ar" class="abs" style="inset:0 0 var(--tbar-h) 0"></div>
   <div class="tbar"><button data-s="color" class="on">🎨 Colores</button><button data-s="casa">🏠 ¿Dónde vive?</button><button data-s="tipo">🧺 Comida o juguete</button></div>`);
   const ar=root.querySelector('#ar');
   function round(){
     ar.innerHTML=''; const S=SETS[cur]; const items=sample(S.it, S.b.length===2?8:9); left=items.length;
     const W=ar.clientWidth, H=ar.clientHeight, bw=Math.min(130,(W-40)/S.b.length-12);
     const baskets=S.b.map((b,i)=>{ const el=document.createElement('div'); el.className='abs';
-      el.style.cssText=`left:${(W/S.b.length)*(i+.5)-bw/2}px;top:${H-140}px;width:${bw}px;height:120px;border-radius:20px 20px 34px 34px;background:#EAD8BF;border:4px solid #D7BE9C;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:6px;transition:transform .2s`;
-      el.innerHTML=`<span style="font-size:34px">${b[0]}</span><b style="font-size:14px">${b[1]}</b><div class="in" style="display:flex;flex-wrap:wrap;justify-content:center;font-size:18px;max-width:100%"></div>`; ar.appendChild(el); return el; });
+      el.style.cssText=`left:${(W/S.b.length)*(i+.5)-bw/2}px;top:${H-140}px;width:${bw}px;height:120px;border-radius:20px 20px 34px 34px;background:#EAD8BF;border:4px solid #D7BE9C;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:var(--s-2);transition:transform .2s`;
+      el.innerHTML=`<span style="font-size:var(--fs-4xl)">${b[0]}</span><b style="font-size:var(--fs-xs)">${b[1]}</b><div class="in" style="display:flex;flex-wrap:wrap;justify-content:center;font-size:var(--fs-md);max-width:100%"></div>`; ar.appendChild(el); return el; });
     items.forEach(([e,k],j)=>{ const el=document.createElement('div'); el.className='abs'; el.textContent=e;
-      const x=rnd(10,W-70), y=rnd(60,Math.max(70,H-230)); el.style.cssText=`left:${x}px;top:${y}px;font-size:46px;line-height:1;z-index:3;transition:left .35s,top .35s;animation:popin .4s ${j*.05}s both`;
+      const x=rnd(10,W-70), y=rnd(60,Math.max(70,H-230)); el.style.cssText=`left:${x}px;top:${y}px;font-size:var(--fs-6xl);line-height:1;z-index:3;transition:left .35s,top .35s;animation:popin .4s ${j*.05}s both`;
       el.dataset.x=x; el.dataset.y=y; ar.appendChild(el);
       dragify(el, ar, {start:()=>popS(), drop:(el,px,py)=>{
         const hit=baskets.findIndex(b=>{ const r=b.getBoundingClientRect(), a=ar.getBoundingClientRect(); return px>r.left-a.left-10 && px<r.right-a.left+10 && py>r.top-a.top-30 && py<r.bottom-a.top; });
@@ -370,12 +378,12 @@ function shapeSVG(t, fill, stroke, dash=''){
 }
 function toyShapes(root){
   const ALL=[['círculo','#F4A6A6','#D97B7B'],['cuadrado','#A9D3F0','#6FA3CB'],['triángulo','#F6E39A','#C2A548'],['estrella','#C9B8EE','#8F82C6'],['corazón','#F5B8D0','#C97F97'],['hexágono','#B9E3C6','#6FAF8F'],['rombo','#F7C59F','#D9946C'],['luna','#BFE0D8','#7FB0A3']];
-  const ar=document.createElement('div'); ar.className='abs'; ar.style.cssText='inset:0;background:#FFFBF4'; root.appendChild(ar);
+  const ar=document.createElement('div'); ar.className='abs'; ar.style.cssText='inset:0;background:var(--paper)'; root.appendChild(ar);
   addHTML(root, `<div class="tbar"><button id="nx">🔄 Otras figuras</button></div>`);
   ar.style.bottom='70px';
   function round(){
     const NN=[4,6,8][LV()-1], C=NN===4?2:NN===6?3:4; ar.innerHTML=''; const set=sample(ALL,NN), W=ar.clientWidth, H=ar.clientHeight, S=Math.min(86,(W-40)/C-14); let left=NN;
-    const board=document.createElement('div'); board.className='abs'; board.style.cssText=`left:12px;right:12px;top:54px;height:${S*2+48}px;background:#F3E7D6;border-radius:24px;border:3px solid #E5D3B8`; ar.appendChild(board);
+    const board=document.createElement('div'); board.className='abs'; board.style.cssText=`left:12px;right:12px;top:54px;height:${S*2+48}px;background:#F3E7D6;border-radius:var(--r-lg);border:3px solid #E5D3B8`; ar.appendChild(board);
     const holes=shuffle(set).map((s,i)=>{ const x=12+((W-24)/C)*(i%C+.5)-S/2, y=54+16+Math.floor(i/C)*(S+16);
       const h=document.createElement('div'); h.className='abs'; h.style.cssText=`left:${x}px;top:${y}px;width:${S}px;height:${S}px`; h.innerHTML=shapeSVG(s[0],'#E4D5C0','#C9B79D','6 5'); ar.appendChild(h); return {t:s[0],x,y}; });
     const top0=54+S*2+66, rowH=Math.max(S+12,(H-top0-10)/2); const slots=shuffle(times(NN,k=>[12+((W-24)/C)*(k%C+.5)-S/2+rnd(-6,6), top0+Math.floor(k/C)*rowH+rnd(0,Math.max(0,rowH-S-8))]));
@@ -393,18 +401,18 @@ function toyShapes(root){
 /* ---------- 12. ¿Qué tiempo hace? ---------- */
 function toyWeather(root){
   let rainT=null, night=false;
-  addHTML(root, `<div id="sk" class="abs" style="inset:0 0 70px 0;background:linear-gradient(#BFE1F7,#EAF6FD);transition:background 1.2s;overflow:hidden">
+  addHTML(root, `<div id="sk" class="abs" style="inset:0 0 var(--tbar-h) 0;background:linear-gradient(#BFE1F7,#EAF6FD);transition:background 1.2s;overflow:hidden">
     <div id="st" class="abs" style="inset:0;opacity:0;transition:opacity 1.2s">${times(24,()=>`<span class="abs" style="left:${rnd(2,96)}%;top:${rnd(2,45)}%;font-size:${rnd(10,18)}px;animation:twinkle ${rnd(2,4)}s ${Math.random()*2}s infinite">✦</span>`).join('')}</div>
-    <div id="sun" class="abs" style="right:12%;top:8%;font-size:70px;transition:top 1.2s,opacity 1.2s">☀️</div>
-    <div id="moon" class="abs" style="right:14%;top:60%;font-size:60px;opacity:0;transition:top 1.2s,opacity 1.2s">🌙</div>
+    <div id="sun" class="abs" style="right:12%;top:8%;font-size:var(--fs-8xl);transition:top 1.2s,opacity 1.2s">☀️</div>
+    <div id="moon" class="abs" style="right:14%;top:60%;font-size:var(--fs-7xl);opacity:0;transition:top 1.2s,opacity 1.2s">🌙</div>
     <div id="rb" class="abs" style="left:-10%;top:12%;font-size:220px;opacity:0;transition:opacity 1.2s;pointer-events:none">🌈</div>
-    <div id="cl" class="abs" style="left:0;right:0;top:4%;opacity:.0;transition:opacity 1s;font-size:64px;white-space:nowrap">☁️☁️☁️☁️☁️</div>
+    <div id="cl" class="abs" style="left:0;right:0;top:4%;opacity:.0;transition:opacity 1s;font-size:var(--fs-8xl);white-space:nowrap">☁️☁️☁️☁️☁️</div>
     <div id="rn" class="abs" style="inset:0"></div>
     <div class="abs" style="left:0;right:0;bottom:0;height:30%;background:#CFE6B8;border-radius:50% 50% 0 0/30px 30px 0 0"></div>
     <div id="palm" class="abs" style="left:8%;bottom:18%;font-size:110px;transform-origin:50% 100%;transition:transform .5s">🌴</div>
     <div class="abs" style="left:56%;bottom:20%;font-size:84px">🏡</div>
-    <div class="abs" style="left:36%;bottom:12%;text-align:center"><span id="ac" style="position:absolute;left:52px;top:-18px;font-size:34px"></span><span style="display:inline-block;animation:bob 2.6s ease-in-out infinite">${petMini(prof(),80)}</span></div>
-    <div id="fl" class="abs" style="inset:0;background:#fff;opacity:0;pointer-events:none"></div></div>
+    <div class="abs" style="left:36%;bottom:12%;text-align:center"><span id="ac" style="position:absolute;left:52px;top:-18px;font-size:var(--fs-4xl)"></span><span style="display:inline-block;animation:bob 2.6s ease-in-out infinite">${petMini(prof(),80)}</span></div>
+    <div id="fl" class="abs" style="inset:0;background:var(--card);opacity:0;pointer-events:none"></div></div>
   <div class="tbar"><button data-w="dia">☀️</button><button data-w="noche">🌙</button><button data-w="nubes">☁️</button><button data-w="lluvia">🌧️</button><button data-w="tormenta">⛈️</button><button data-w="arcoiris">🌈</button><button data-w="viento">💨</button></div>`);
   const $r=id=>root.querySelector('#'+id);
   const rain=(on,heavy)=>{ clearInterval(rainT); $r('rn').innerHTML=''; if(!on) return; rainT=setInterval(()=>{ for(let k=0;k<(heavy?4:2);k++){ const d=document.createElement('span'); d.className='abs';
@@ -420,7 +428,7 @@ function toyWeather(root){
     if (w==='lluvia'){ $r('cl').style.opacity=1; rain(true); $r('ac').textContent='☂️'; tsay('¡Está lloviendo! It is rainy.'); }
     if (w==='tormenta'){ $r('cl').style.opacity=1; rain(true,true); $r('ac').textContent='😮'; const f=$r('fl'); f.style.animation='none'; void f.offsetWidth; f.style.animation='flash .9s'; setTimeout(()=>note(55,1.4,'sawtooth',.12),300); tsay('¡Una tormenta! Primero se ve el rayo y luego se oye el trueno.'); }
     if (w==='arcoiris'){ rain(false); $r('cl').style.opacity=0; $r('rb').style.opacity=.9; tsay('¡Un arcoíris! Sale cuando hay sol y gotitas de lluvia. Rainbow.'); react('happy'); }
-    if (w==='viento'){ $r('palm').style.animation='palm .6s ease-in-out infinite'; for(let k=0;k<8;k++){ const l=document.createElement('span'); l.className='abs'; l.textContent='🍃'; l.style.cssText=`left:-30px;top:${rnd(20,70)}%;font-size:24px;transition:transform ${rnd(2,3)}s linear`; $r('sk').appendChild(l);
+    if (w==='viento'){ $r('palm').style.animation='palm .6s ease-in-out infinite'; for(let k=0;k<8;k++){ const l=document.createElement('span'); l.className='abs'; l.textContent='🍃'; l.style.cssText=`left:-30px;top:${rnd(20,70)}%;font-size:var(--fs-2xl);transition:transform ${rnd(2,3)}s linear`; $r('sk').appendChild(l);
       setTimeout(()=>{ l.style.transform=`translate(${root.clientWidth+80}px,${rnd(-60,60)}px) rotate(540deg)`; },k*180+30); setTimeout(()=>l.remove(),4200); } tsay('¡Hace viento! It is windy.'); }
   }
   root.querySelectorAll('[data-w]').forEach(b=>b.addEventListener('click',()=>{ root.querySelectorAll('[data-w]').forEach(x=>x.classList.toggle('on',x===b)); set(b.dataset.w); }));
@@ -431,8 +439,8 @@ function toyWeather(root){
 function toyTrace(root){
   const WRD=[['SOL','☀️'],['MAR','🌊'],['OSO','🐻'],['LUNA','🌙'],['CASA','🏠'],['GATO','🐱'],['PATO','🦆'],['FLOR','🌸'],['NUBE','☁️'],['MAMÁ','👩'],['PAPÁ','👨'],['PIÑA','🍍']];
   const lvT=LV(); const L= lvT===3 ? WRD.map(w=>w[0]) : Object.keys(LETRAS).concat(['1','2','3','4','5','6','7','8','9','0']); let i=0, low=lvT===2, done=false;
-  addHTML(root, `<canvas id="g" class="abs" style="left:0;top:0;width:100%;height:calc(100% - 70px)"></canvas><canvas id="u" class="abs" style="left:0;top:0;width:100%;height:calc(100% - 70px);touch-action:none"></canvas>
-  <div id="pr" class="abs" style="right:16px;top:16px;font-size:54px;opacity:0;transition:opacity .4s;text-align:center;font-weight:800;pointer-events:none"></div>
+  addHTML(root, `<canvas id="g" class="abs" style="left:0;top:0;width:100%;height:calc(100% - var(--tbar-h))"></canvas><canvas id="u" class="abs" style="left:0;top:0;width:100%;height:calc(100% - var(--tbar-h));touch-action:none"></canvas>
+  <div id="pr" class="abs" style="right:16px;top:16px;font-size:var(--fs-7xl);opacity:0;transition:opacity .4s;text-align:center;font-weight:800;pointer-events:none"></div>
   <div class="tbar"><button id="pv">◀</button><button id="nx">▶</button><button id="cs">Aa</button><button id="er">🧽</button><button id="hl">🔊</button></div>`);
   const g=root.querySelector('#g'), u=root.querySelector('#u'), gc=g.getContext('2d'), uc=u.getContext('2d'), dpr=window.devicePixelRatio||1; let pts=[], col;
   const ch=()=>{ const c=L[i]; return low&&isNaN(c)?c.toLowerCase():c; };
@@ -448,7 +456,7 @@ function toyTrace(root){
   function check(){ if (done||!pts.length) return; const d=uc.getImageData(0,0,u.width,u.height).data; const hit=pts.filter(k=>d[k+3]>0).length;
     if (hit/pts.length>=(lvT===3?.66:.72)){ done=true; const c=L[i];
       if (lvT===3){ const w=WRD[i]; const pr=root.querySelector('#pr'); pr.innerHTML=w[1]; pr.style.fontSize='54px'; pr.style.opacity=1; confetti(); win(`¡Escribiste ${w[0].toLowerCase()}!`); return; }
-      const isN=!isNaN(c); const pr=root.querySelector('#pr'); pr.innerHTML=isN?`${'⭐'.repeat(Math.min(+c||10,10)).replace(/(.{10})/g,'$1<br>')}`:`${LETRAS[c][1]}<div style="font-size:16px">${LETRAS[c][0]}</div>`;
+      const isN=!isNaN(c); const pr=root.querySelector('#pr'); pr.innerHTML=isN?`${'⭐'.repeat(Math.min(+c||10,10)).replace(/(.{10})/g,'$1<br>')}`:`${LETRAS[c][1]}<div style="font-size:var(--fs-sm)">${LETRAS[c][0]}</div>`;
       pr.style.fontSize=isN?'22px':'54px'; pr.style.opacity=1; confetti(); win(isN?`¡Muy bien! El número ${c}`:`¡Muy bien! ${c}, de ${LETRAS[c][0]}`); } }
   let dr=false, last;
   u.addEventListener('pointerdown',e=>{ e.preventDefault(); dr=true; last=rel(u,e); try{u.setPointerCapture(e.pointerId);}catch(_){} uc.beginPath(); uc.moveTo(last.x,last.y); uc.lineTo(last.x+.1,last.y); uc.stroke(); });
@@ -467,12 +475,12 @@ function toyTrace(root){
 function toyBeads(root){
   const BC=['#E8505B','#4CAF6A','#F49AC1','#F7C948','#8FD3F4','#8E5BB5','#FFFFFF','#8B5E3C','#2E4C9B','#E2B13C'];
   let n=0, timers=[], mode='stair';
-  addHTML(root, `<div id="ar" class="abs" style="inset:0 0 70px 0;background:#FFFBF4;overflow:auto"></div>
+  addHTML(root, `<div id="ar" class="abs" style="inset:0 0 var(--tbar-h) 0;background:var(--paper);overflow:auto"></div>
   <div class="tbar"><button data-m="stair" class="on">🪜 Escalera</button><button data-m="mine">🧮 Mis cuentas</button></div>`);
   const ar=root.querySelector('#ar');
-  const bead=(c,s=24,extra='')=>`<span style="display:inline-block;width:${s}px;height:${s}px;border-radius:50%;background:radial-gradient(circle at 35% 35%,rgba(255,255,255,.8) 0 18%,transparent 20%),${c};border:2px solid rgba(0,0,0,.15);${extra}"></span>`;
+  const bead=(c,s=24,extra='')=>`<span style="display:inline-block;width:${s}px;height:${s}px;border-radius:50%;background:radial-gradient(circle at 35% 35%,rgba(255,255,255,.8) 0 18%,transparent 20%),${c};border:var(--bw) solid rgba(0,0,0,.15);${extra}"></span>`;
   function stair(){
-    timers.forEach(clearTimeout); ar.innerHTML=`<div style="padding:56px 14px 14px"><div id="big" style="text-align:center;font-size:64px;font-weight:800;height:76px"></div>${times(10,k=>`<button data-r="${k+1}" style="display:flex;align-items:center;gap:3px;margin:7px 0;padding:4px 8px;border-radius:16px;width:100%"><b style="width:28px;font-size:15px;color:var(--soft)">${k+1}</b><span style="height:2px;width:6px;background:#999"></span>${times(k+1,()=>bead(BC[k])).join('')}<span style="height:2px;width:6px;background:#999"></span></button>`).join('')}</div>`;
+    timers.forEach(clearTimeout); ar.innerHTML=`<div style="padding:56px var(--s-4) var(--s-4)"><div id="big" style="text-align:center;font-size:var(--fs-8xl);font-weight:800;height:76px"></div>${times(10,k=>`<button data-r="${k+1}" style="display:flex;align-items:center;gap:3px;margin:var(--s-2) 0;padding:var(--s-1) var(--s-2);border-radius:var(--r-md);width:100%"><b style="width:28px;font-size:var(--fs-sm);color:var(--soft)">${k+1}</b><span style="height:2px;width:6px;background:#999"></span>${times(k+1,()=>bead(BC[k])).join('')}<span style="height:2px;width:6px;background:#999"></span></button>`).join('')}</div>`;
     ar.querySelectorAll('[data-r]').forEach(b=>b.addEventListener('click',()=>{ timers.forEach(clearTimeout); timers=[]; const r=+b.dataset.r, beads=[...b.querySelectorAll('span[style*="border-radius:50%"]')];
       beads.forEach(x=>x.style.transform=''); const big=ar.querySelector('#big'); big.textContent='';
       beads.forEach((x,k)=>timers.push(setTimeout(()=>{ x.style.transition='transform .2s'; x.style.transform='translateY(-8px) scale(1.15)'; note(440+k*40,.18,'sine',.1); big.textContent=k+1; big.style.animation='none'; void big.offsetWidth; big.style.animation='popin .3s both'; },k*420)));
@@ -481,12 +489,12 @@ function toyBeads(root){
   function mine(){
     timers.forEach(clearTimeout);
     const tens=Math.floor(n/10), ones=n%10;
-    ar.innerHTML=`<div style="padding:60px 14px 14px;text-align:center"><div style="font-size:84px;font-weight:800;line-height:1;animation:popin .3s both">${n}</div>
-      <div class="muted" style="font-weight:800;margin:6px 0 18px">${tens?`${tens} ${tens===1?'decena':'decenas'}`:''}${tens&&ones?' y ':''}${ones||!tens?`${ones} ${ones===1?'unidad':'unidades'}`:''}</div>
-      <div style="display:flex;justify-content:center;align-items:flex-end;gap:10px;min-height:280px;flex-wrap:wrap">
-        ${times(tens,()=>`<div style="display:flex;flex-direction:column;gap:1px;padding:4px;background:#F3E3B8;border-radius:12px;animation:popin .4s both">${times(10,()=>bead('#E2B13C',22)).join('')}</div>`).join('')}
+    ar.innerHTML=`<div style="padding:60px var(--s-4) var(--s-4);text-align:center"><div style="font-size:84px;font-weight:800;line-height:1;animation:popin .3s both">${n}</div>
+      <div class="muted" style="font-weight:800;margin:var(--s-2) 0 var(--s-5)">${tens?`${tens} ${tens===1?'decena':'decenas'}`:''}${tens&&ones?' y ':''}${ones||!tens?`${ones} ${ones===1?'unidad':'unidades'}`:''}</div>
+      <div style="display:flex;justify-content:center;align-items:flex-end;gap:var(--s-3);min-height:280px;flex-wrap:wrap">
+        ${times(tens,()=>`<div style="display:flex;flex-direction:column;gap:1px;padding:var(--s-1);background:#F3E3B8;border-radius:var(--r-sm);animation:popin .4s both">${times(10,()=>bead('#E2B13C',22)).join('')}</div>`).join('')}
         <div style="display:flex;flex-direction:column-reverse;gap:1px">${times(ones,()=>bead('#E2B13C',22,'animation:popin .3s both')).join('')}</div></div>
-      <div style="display:flex;justify-content:center;gap:16px;margin-top:18px"><button id="mn" class="btn soft" style="font-size:28px;width:80px">−</button><button id="pl" class="btn" style="font-size:28px;width:80px">+</button></div></div>`;
+      <div style="display:flex;justify-content:center;gap:var(--s-4);margin-top:var(--s-5)"><button id="mn" class="btn soft" style="font-size:var(--fs-3xl);width:80px">−</button><button id="pl" class="btn" style="font-size:var(--fs-3xl);width:80px">+</button></div></div>`;
     ar.querySelector('#pl').addEventListener('click',()=>{ if(n>=40){ tsay('¡Muchas cuentas! Hasta 40'); return; } n++; note(520,.15,'sine',.1);
       if (n%10===0){ mine(); react('happy'); tsay(`¡10 cuentas forman una decena! Tienes ${n}`); } else { mine(); speak(String(n)); } });
     ar.querySelector('#mn').addEventListener('click',()=>{ if(n>0){ n--; mine(); speak(String(n)); } });
@@ -518,7 +526,7 @@ function vToy(){
   if (toyCleanup){ toyCleanup(); toyCleanup=null; }
   const T=TOYS.find(t=>t.id===view.toy), p=prof();
   streak=0;
-  app.innerHTML=`<div class="toyhead"><button class="icon-btn" id="back" aria-label="Volver">←</button><h2>${T.icon} ${T.name}</h2><button class="chip vt" style="padding:6px 8px;font-size:15px"></button><button class="chip" id="lv" style="padding:6px 10px;font-size:13px"></button>${mascot(p.avatar,46)}</div><div class="toy" id="toy"><div class="tbub" id="tb"></div></div>`;
+  app.innerHTML=`<div class="toyhead"><button class="icon-btn" id="back" aria-label="Volver">←</button><h2>${T.icon} ${T.name}</h2><button class="chip vt"></button><button class="chip" id="lv"></button>${mascot(p.avatar,44)}</div><div class="toy" id="toy"><div class="tbub" id="tb"></div></div>`;
   bind('#back',()=>go({name:'home'}));
   updLvChip();
   bind('#lv',()=>{ setLV(LV()%3+1); go({name:'toy',toy:T.id}); setTimeout(()=>tsay(`Nivel ${LV()}: ${['fácil','medio','difícil'][LV()-1]}`),350); });
@@ -533,14 +541,14 @@ function vHome(){
   const p=prof(); if(!p) return go({name:'profiles'});
   const total=Object.values(P(p.id)).reduce((s,x)=>s+(x.stars||0),0);
   const hi=`¡Hola, ${esc(p.name)}! Soy ${mname(p.avatar)}. ¿A qué jugamos hoy?`;
-  app.innerHTML=`<div class="row" style="margin-bottom:6px"><div class="logo" style="font-size:24px">Semi<span>llita</span></div><div class="sp"></div><button class="chip" id="switch">👤 Cambiar</button></div>
+  app.innerHTML=`<div class="row" style="margin-bottom:var(--s-2)"><div class="logo" style="font-size:var(--fs-2xl)">Semi<span>llita</span></div><div class="sp"></div><button class="chip" id="switch">👤 Cambiar</button></div>
   <div class="hero">${mascot(p.avatar,92)}<div class="bubble">${hi}</div></div>
-  <h2 style="font-size:22px;margin-bottom:12px">Sala de juegos</h2>
+  <h2 class="h-sec first">Sala de juegos</h2>
   <div class="toys">${TOYS.filter(t=>!t.brain).map((t,i)=>`<button class="toytile bg-${t.c}" data-t="${t.id}" style="animation-delay:${i*.03}s"><span class="ic">${t.icon}</span><b>${t.name}</b></button>`).join('')}</div>
-  <h2 style="font-size:22px;margin:28px 0 4px">Retos de ingenio 🧠</h2><p class="muted" style="margin:0 0 12px;font-weight:600">Para pensar, planear y resolver</p>
+  <h2 class="h-sec" style="margin-bottom:var(--s-1)">Retos de ingenio 🧠</h2><p class="muted" style="margin:0 0 var(--s-3);font-weight:600">Para pensar, planear y resolver</p>
   <div class="toys">${TOYS.filter(t=>t.brain).map((t,i)=>`<button class="toytile bg-${t.c}" data-t="${t.id}" style="animation-delay:${i*.03}s"><span class="ic">${t.icon}</span><b>${t.name}</b></button>`).join('')}</div>
-  <h2 style="font-size:22px;margin:28px 0 12px">Aventuras para aprender</h2>
-  <button class="area bg-lav" id="learn" style="width:100%;min-height:0;flex-direction:row;align-items:center;gap:14px"><span class="ic">🎒</span><span><b>Retos por grado</b><br><small>20 juegos de 1ro a 6to · ⭐ ${total}</small></span></button>`;
+  <h2 class="h-sec">Aventuras para aprender</h2>
+  <button class="area bg-lav" id="learn" style="width:100%;min-height:0;flex-direction:row;align-items:center;gap:var(--s-4)"><span class="ic">🎒</span><span><b>Retos por grado</b><br><small>20 juegos de 1ro a 6to · ⭐ ${total}</small></span></button>`;
   bind('[data-t]', el=>go({name:'toy', toy:el.dataset.t}));
   bind('#learn', ()=>go({name:'learn'}));
   bind('#switch', ()=>{ greeted=false; go({name:'profiles'}); });

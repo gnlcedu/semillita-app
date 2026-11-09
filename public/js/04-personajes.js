@@ -84,7 +84,7 @@ const petMini = (p,s=40)=>`<span style="display:inline-block;width:${s}px;height
 const STK=['🦄','🐙','🦖','🐳','🦒','🦩','🐧','🦔','🐞','🦋','🍉','🍍','🍩','🧁','🍓','🥭','🚀','🪐','🌙','⭐','☄️','🛸','🌈','⛅','🌴','🌺','🐚','🏝️','🌋','🌻','🎸','🥁','🎺','🎻','🪇','🎨','⚽','🏀','⚾','🛼','🪁','🎈','👑','💎','🧸','🪀','🎁','🏆'];
 const STK_PAGES=[['Animales',0],['Frutas y dulces',10],['Espacio y cielo',16],['Naturaleza',23],['Música y arte',30],['Juegos y premios',36]];
 function toast(html){
-  let t=document.getElementById('toast'); if(!t){ t=document.createElement('div'); t.id='toast'; t.style.cssText='position:fixed;left:50%;top:14px;transform:translate(-50%,-140%);background:#fff;border:2px solid var(--line);border-radius:20px;padding:10px 18px;font-weight:800;z-index:60;transition:transform .35s;box-shadow:0 8px 24px rgba(0,0,0,.08);white-space:nowrap'; document.body.appendChild(t); }
+  let t=document.getElementById('toast'); if(!t){ t=document.createElement('div'); t.id='toast'; t.style.cssText='position:fixed;left:50%;top:14px;transform:translate(-50%,-140%);background:var(--card);border:var(--bw) solid var(--line);border-radius:var(--r-md);padding:var(--s-3) var(--s-5);font-weight:800;z-index:60;transition:transform .35s;box-shadow:var(--sh-2);white-space:nowrap'; document.body.appendChild(t); }
   t.innerHTML=html; requestAnimationFrame(()=>t.style.transform='translate(-50%,0)'); clearTimeout(t._t); t._t=setTimeout(()=>t.style.transform='translate(-50%,-140%)',2600);
 }
 function addXP(n){
@@ -96,7 +96,7 @@ function addXP(n){
 function giveSticker(prob=1){
   const p=prof(); if(!p || Math.random()>prob) return; p.stickers=p.stickers||[];
   const free=STK.filter(s=>!p.stickers.includes(s)); const s = free.length ? pick(free) : pick(STK); if (free.length) p.stickers.push(s); save();
-  setTimeout(()=>{ toast(`🎁 ¡Nuevo sticker! <span style="font-size:26px;vertical-align:middle">${s}</span>`); note(1320,.15,'sine',.1); }, 1400);
+  setTimeout(()=>{ toast(`🎁 ¡Nuevo sticker! <span style="font-size:var(--fs-2xl);vertical-align:middle">${s}</span>`); note(1320,.15,'sine',.1); }, 1400);
 }
 /* conectar con juegos existentes */
 const _win=win; win=function(msg){ addXP(2); giveSticker(.45); return _win(msg); };
@@ -110,23 +110,23 @@ function vFriend(){
   let body='';
   if (tab==='ropa'){
     const SL=[['hat','Cabeza'],['eyes','Ojos'],['neck','Cuello'],['hand','Mano'],['back','Espalda']];
-    body=SL.map(([s,n])=>`<h3 style="font-size:16px;margin:14px 0 8px">${n}</h3><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">`+
+    body=SL.map(([s,n])=>`<h3 style="font-size:var(--fs-sm);margin:var(--s-4) 0 var(--s-2)">${n}</h3><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s-2)">`+
       Object.entries(ACC).filter(([,a])=>a[0]===s).map(([k,a])=>{ const locked=a[2]>lvl, on=o.outfit[s]===k;
-        return `<button data-acc="${k}" ${locked?'data-lock="1"':''} style="background:${on?'var(--butter)':'#fff'};border:2px solid ${on?'var(--ink)':'var(--line)'};border-radius:16px;padding:6px 4px;position:relative">
-          <span style="display:block;height:58px;${locked?'opacity:.25;filter:grayscale(1)':''}">${creature(o.sp,{...o,outfit:{[s]:k}})}</span><small style="font-weight:700;font-size:11px">${locked?`🔒 Nivel ${a[2]}`:a[1]}</small></button>`; }).join('')+`</div>`).join('');
+        return `<button data-acc="${k}" ${locked?'data-lock="1"':''} style="background:${on?'var(--butter)':'#fff'};border:var(--bw) solid ${on?'var(--ink)':'var(--line)'};border-radius:var(--r-md);padding:var(--s-2) var(--s-1);position:relative">
+          <span style="display:block;height:58px;${locked?'opacity:.25;filter:grayscale(1)':''}">${creature(o.sp,{...o,outfit:{[s]:k}})}</span><small style="font-weight:700;font-size:var(--fs-2xs)">${locked?`🔒 Nivel ${a[2]}`:a[1]}</small></button>`; }).join('')+`</div>`).join('');
   } else if (tab==='color'){
-    body=`<p class="muted" style="font-weight:700">Elige el color de ${mname(p.avatar)}</p><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px"><button data-col="" style="border:2px solid ${!p.color?'var(--ink)':'var(--line)'};border-radius:16px;background:#fff;padding:4px"><span style="display:block;height:70px">${creature(o.sp,{...o,color:null})}</span><small style="font-weight:700">Original</small></button>${COLOR_OPTS.map(c=>`<button data-col="${c}" style="border:2px solid ${p.color===c?'var(--ink)':'var(--line)'};border-radius:16px;background:#fff;padding:4px"><span style="display:block;height:70px">${creature(o.sp,{...o,color:c})}</span></button>`).join('')}</div>`;
+    body=`<p class="muted" style="font-weight:700">Elige el color de ${mname(p.avatar)}</p><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s-3)"><button data-col="" style="border:var(--bw) solid ${!p.color?'var(--ink)':'var(--line)'};border-radius:var(--r-md);background:var(--card);padding:var(--s-1)"><span style="display:block;height:70px">${creature(o.sp,{...o,color:null})}</span><small style="font-weight:700">Original</small></button>${COLOR_OPTS.map(c=>`<button data-col="${c}" style="border:var(--bw) solid ${p.color===c?'var(--ink)':'var(--line)'};border-radius:var(--r-md);background:var(--card);padding:var(--s-1)"><span style="display:block;height:70px">${creature(o.sp,{...o,color:c})}</span></button>`).join('')}</div>`;
   } else if (tab==='nivel'){
-    body=`<div class="card" style="text-align:center"><b style="font-size:20px">${LEVELN[lvl-1]}</b><div class="bar" style="height:14px;background:var(--line);margin:12px 0"><i class="fg-mint" style="width:${pct}%"></i></div><span class="muted" style="font-weight:700">${nextT?`${xp} / ${nextT} puntos para ${LEVELN[lvl]}`:'¡Nivel máximo!'}</span></div>
-      <p class="muted" style="font-weight:700;margin-top:14px">${mname(p.avatar)} gana puntos cuando juegas, completas retos, lees y resuelves cálculos.</p>
-      ${LEVELN.map((n,i)=>`<div class="row" style="padding:10px 0;border-bottom:1px solid var(--line);${i+1>lvl?'opacity:.45':''}"><b style="width:26px">${i+1>lvl?'🔒':'✅'}</b><b style="flex:1">${n}</b><small class="muted">${Object.values(ACC).filter(a=>a[2]===i+1).map(a=>a[1]).join(', ')}</small></div>`).join('')}`;
+    body=`<div class="card" style="text-align:center"><b style="font-size:var(--fs-lg)">${LEVELN[lvl-1]}</b><div class="bar" style="height:14px;background:var(--line);margin:var(--s-3) 0"><i class="fg-mint" style="width:${pct}%"></i></div><span class="muted" style="font-weight:700">${nextT?`${xp} / ${nextT} puntos para ${LEVELN[lvl]}`:'¡Nivel máximo!'}</span></div>
+      <p class="muted" style="font-weight:700;margin-top:var(--s-4)">${mname(p.avatar)} gana puntos cuando juegas, completas retos, lees y resuelves cálculos.</p>
+      ${LEVELN.map((n,i)=>`<div class="row" style="padding:var(--s-3) 0;border-bottom:1px solid var(--line);${i+1>lvl?'opacity:.45':''}"><b style="width:26px">${i+1>lvl?'🔒':'✅'}</b><b style="flex:1">${n}</b><small class="muted">${Object.values(ACC).filter(a=>a[2]===i+1).map(a=>a[1]).join(', ')}</small></div>`).join('')}`;
   } else {
     const have=p.stickers||[];
-    body=`<p style="font-weight:800;margin:4px 0 10px">${have.length} de ${STK.length} stickers</p>`+STK_PAGES.map(([n,st],pi)=>{ const end=(STK_PAGES[pi+1]||[0,STK.length])[1];
-      return `<h3 style="font-size:16px;margin:14px 0 8px">${n}</h3><div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px">${STK.slice(st,end).map(s=>`<div style="aspect-ratio:1;border-radius:16px;background:${have.includes(s)?'#fff':'#F1EDE6'};border:2px ${have.includes(s)?'solid':'dashed'} var(--line);display:grid;place-items:center;font-size:30px">${have.includes(s)?`<span style="animation:popin .4s both">${s}</span>`:'<span style="opacity:.25;font-size:20px">?</span>'}</div>`).join('')}</div>`; }).join('');
+    body=`<p style="font-weight:800;margin:var(--s-1) 0 var(--s-3)">${have.length} de ${STK.length} stickers</p>`+STK_PAGES.map(([n,st],pi)=>{ const end=(STK_PAGES[pi+1]||[0,STK.length])[1];
+      return `<h3 style="font-size:var(--fs-sm);margin:var(--s-4) 0 var(--s-2)">${n}</h3><div style="display:grid;grid-template-columns:repeat(5,1fr);gap:var(--s-2)">${STK.slice(st,end).map(s=>`<div style="aspect-ratio:1;border-radius:var(--r-md);background:${have.includes(s)?'#fff':'#F1EDE6'};border:2px ${have.includes(s)?'solid':'dashed'} var(--line);display:grid;place-items:center;font-size:var(--fs-3xl)">${have.includes(s)?`<span style="animation:popin .4s both">${s}</span>`:'<span style="opacity:.25;font-size:var(--fs-lg)">?</span>'}</div>`).join('')}</div>`; }).join('');
   }
-  app.innerHTML=`<div class="top"><button class="icon-btn" id="back">←</button><h2 style="font-size:22px;flex:1">Mi amigo ${mname(p.avatar)}</h2></div>
-    <div style="display:flex;justify-content:center;margin:4px 0 6px">${mascot(p.avatar,150,'msc','')}</div>
+  app.innerHTML=`<div class="top"><button class="icon-btn" id="back">←</button><h2>Mi amigo ${mname(p.avatar)}</h2></div>
+    <div style="display:flex;justify-content:center;margin:var(--s-1) 0 var(--s-2)">${mascot(p.avatar,150,'msc','')}</div>
     <div class="tabs" style="justify-content:center">${[['ropa','🎩 Ropa'],['color','🎨 Color'],['nivel','🌱 Nivel'],['album','📒 Álbum']].map(([k,n])=>`<button class="chip ${k===tab?'on':''}" data-tab="${k}">${n}</button>`).join('')}</div>
     <div>${body}</div>`;
   bind('#back',()=>go({name:'home'}));
@@ -145,16 +145,16 @@ vHome=function(){
   const hi=`¡Hola, ${esc(p.name)}! Soy ${mname(p.avatar)}. ¿A qué jugamos hoy?`;
   const tile=(t,i)=>`<button class="toytile bg-${t.c}" data-t="${t.id}" style="animation-delay:${i*.02}s"><span class="ic">${t.icon}</span><b>${t.name}</b></button>`;
   const adv=[['learn','🎒','Retos por grado','20 juegos de 1ro a 6to','lav'],['math','⚡','Cálculo mental','1 minuto al día','peach'],['fluency','📖','Lectura en voz alta','Mide tu velocidad lectora','rose'],['eng','🇺🇸','Mundo de inglés','Palabras, canciones y diálogos','sky'],['story','📚','Cuentos','Tú decides qué pasa','mint']];
-  app.innerHTML=`<div class="row" style="margin-bottom:6px"><div class="logo" style="font-size:24px">Semi<span>llita</span></div><div class="sp"></div><button class="chip vt" style="margin-right:6px"></button><button class="chip" id="switch">👤 Cambiar</button></div>
-  <div class="hero" style="align-items:center">${mascot(p.avatar,100)}<div style="flex:1"><div class="bubble" style="font-size:18px">${hi}</div>
-    <div class="row" style="margin-top:10px;gap:8px;flex-wrap:wrap"><button class="chip" id="friend">🎩 Mi amigo</button><button class="chip" id="album">📒 ${(p.stickers||[]).length}/${STK.length}</button></div>
-    <div style="margin-top:8px;font-size:13px;font-weight:800" class="muted">🌱 ${LEVELN[lvl-1]}</div><div class="bar" style="background:var(--line);height:8px;margin-top:4px"><i class="fg-mint" style="width:${pct}%"></i></div></div></div>
-  <h2 style="font-size:22px;margin-bottom:12px">Sala de juegos</h2>
+  app.innerHTML=`<div class="row" style="margin-bottom:var(--s-2)"><div class="logo" style="font-size:var(--fs-2xl)">Semi<span>llita</span></div><div class="sp"></div><button class="chip vt" style="margin-right:var(--s-2)"></button><button class="chip" id="switch">👤 Cambiar</button></div>
+  <div class="hero" style="align-items:center">${mascot(p.avatar,100)}<div style="flex:1"><div class="bubble" style="font-size:var(--fs-md)">${hi}</div>
+    <div class="row" style="margin-top:var(--s-3);gap:var(--s-2);flex-wrap:wrap"><button class="chip" id="friend">🎩 Mi amigo</button><button class="chip" id="album">📒 ${(p.stickers||[]).length}/${STK.length}</button></div>
+    <div style="margin-top:var(--s-2);font-size:var(--fs-xs);font-weight:800" class="muted">🌱 ${LEVELN[lvl-1]}</div><div class="bar" style="background:var(--line);height:8px;margin-top:var(--s-1)"><i class="fg-mint" style="width:${pct}%"></i></div></div></div>
+  <h2 class="h-sec first">Sala de juegos</h2>
   <div class="toys">${TOYS.filter(t=>!t.brain&&!t.hidden).map(tile).join('')}</div>
-  <h2 style="font-size:22px;margin:28px 0 4px">Retos de ingenio 🧠</h2><p class="muted" style="margin:0 0 12px;font-weight:600">Para pensar, planear y resolver</p>
+  <h2 class="h-sec" style="margin-bottom:var(--s-1)">Retos de ingenio 🧠</h2><p class="muted" style="margin:0 0 var(--s-3);font-weight:600">Para pensar, planear y resolver</p>
   <div class="toys">${TOYS.filter(t=>t.brain).map(tile).join('')}</div>
-  <h2 style="font-size:22px;margin:28px 0 12px">Aventuras para aprender</h2>
-  <div style="display:flex;flex-direction:column;gap:12px">${adv.map(([v,ic,n,d,c])=>`<button class="area bg-${c}" data-v="${v}" style="width:100%;min-height:0;flex-direction:row;align-items:center;gap:14px"><span class="ic">${ic}</span><span><b>${n}</b><br><small>${d}</small></span></button>`).join('')}</div>`;
+  <h2 class="h-sec">Aventuras para aprender</h2>
+  <div style="display:flex;flex-direction:column;gap:var(--s-3)">${adv.map(([v,ic,n,d,c])=>`<button class="area bg-${c}" data-v="${v}" style="width:100%;min-height:0;flex-direction:row;align-items:center;gap:var(--s-4)"><span class="ic">${ic}</span><span><b>${n}</b><br><small>${d}</small></span></button>`).join('')}</div>`;
   bind('[data-t]', el=>go({name:'toy', toy:el.dataset.t}));
   bind('[data-v]', el=>go({name:el.dataset.v}));
   bind('#friend', ()=>go({name:'friend'})); bind('#album', ()=>go({name:'friend',tab:'album'}));

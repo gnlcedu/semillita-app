@@ -12,8 +12,8 @@ Rama: `mejora-grafica` · Un commit al cerrar cada fase · Estado: marcar `[x]` 
 - Antes de editar una función, buscar si se redefine en un archivo posterior (`vHome`, `mascot`, `win`, `finish`, `vAdults`…).
 
 ## Estado general
-- [ ] Fase 0 · Preparar git
-- [ ] Fase 1 · Sistema visual unificado
+- [x] Fase 0 · Preparar git
+- [x] Fase 1 · Sistema visual unificado
 - [ ] Fase 2 · Biblioteca de ilustraciones SVG
 - [ ] Fase 3 · Íconos ilustrados del inicio
 - [ ] Fase 4 · Escenarios por capas
@@ -26,25 +26,32 @@ Rama: `mejora-grafica` · Un commit al cerrar cada fase · Estado: marcar `[x]` 
 
 ## Fase 0 · Preparar git
 La carpeta aún no es un repositorio.
-- [ ] `git init`, commit inicial con el código actual en `main` (v0.5 tal cual).
-- [ ] Crear y cambiar a la rama `mejora-grafica`.
-- [ ] Verificar que `npm run build` funciona antes de tocar nada (línea base).
+- [x] `git init`, commit inicial con el código actual en `main` (v0.5 tal cual).
+- [x] Crear y cambiar a la rama `mejora-grafica`.
+- [x] Verificar que `npm run build` funciona antes de tocar nada (línea base).
 
 ## Fase 1 · Sistema visual unificado
 **Archivos:** `public/css/styles.css`, los 7 `public/js/0X-*.js`, `docs/componentes.html` (nuevo).
-- [ ] Ampliar `:root` con tokens nuevos (mantener los de color existentes):
-  - Colores: los actuales + `--ink-line` (contorno), `--white`, `--shadow-c`.
-  - Radios: `--r-xs 10px`, `--r-sm 14px`, `--r-md 18px`, `--r-lg 24px`, `--r-pill 999px`.
-  - Sombras: `--sh-1` (suave), `--sh-2` (tarjeta), `--sh-press` (botón hundido).
+- [x] Ampliar `:root` con tokens nuevos (se mantienen los de color existentes):
+  - Colores: los actuales + `--white`, `--line-2`, `--paper`, `--paper-2`, `--paper-lav`, `--scrim` y la paleta de ilustración `--c-rosa` … `--c-rosado`.
+  - Radios: `--r-xs 8px`, `--r-sm 14px`, `--r-md 18px`, `--r-lg 24px`, `--r-xl 28px`, `--r-pill`.
+  - Sombras: `--sh-1`, `--sh-2` (tarjeta), `--sh-3` (flotante), `--sh-btn` (pie del botón), `--sh-press` (hundido), `--sh-drag`.
   - Contorno: `--bw 2px`, `--bw-ilu 3px`.
-  - Espacios: `--s-1 4px` … `--s-6 32px`.
-  - Letra: `--fs-xs 13px`, `--fs-sm 15px`, `--fs-md 17px`, `--fs-lg 20px`, `--fs-xl 24px`, `--fs-2xl 32px`.
+  - Espacios: `--s-1 4px` … `--s-7 32px`.
+  - Letra: `--fs-2xs 11px` … `--fs-8xl 64px` (texto y emojis).
+  - Interfaz: `--tap 48px`, `--tap-min 44px`, `--tbar-h 70px`.
   - Movimiento: `--t-fast .15s`, `--t-med .3s`, `--ease-pop`.
-- [ ] Clases de utilidad para lo que más se repite en línea (`.h2`, `.stack`, `.gap-*`, `.mt-*`, `.fs-*`).
-- [ ] Componentes unificados: `.btn` (primario/suave/peligro), `.chip`, `.icon-btn`, `.card`, `.tbar` (barra de herramientas de juguete), `.bubble` (burbuja de diálogo), `.toytile`, `.area`.
-- [ ] Reemplazar en los 7 JS los valores a mano (`font-size:22px`, `border-radius:…`, colores `#…`) por variables o clases. Solo presentación: no se tocan ids, `data-*` ni lógica.
-- [ ] `docs/componentes.html`: página de prueba con todos los componentes y la paleta (abrir con `npm run dev` → `/docs/componentes.html`).
-- [ ] Revisar 390 / 768 px · build · commit `Fase 1: sistema visual unificado`.
+- [x] Clases para lo que más se repetía en línea: `.h-sec` (título de sección), `.h-sub`, `.stage` (zona de juego) y `.top h2`.
+- [x] Componentes unificados: `.btn` (primario/suave/peligro), `.chip`, `.icon-btn`, `.card`, `.tbar` (barra de herramientas de juguete), `.bubble` (burbuja de diálogo), `.toytile`, `.area`.
+- [x] Reemplazar en los 7 JS los valores a mano (`font-size:22px`, `border-radius:…`, colores `#…`) por variables o clases. Solo presentación: no se tocan ids, `data-*` ni lógica.
+- [x] `docs/componentes.html`: página de prueba con todos los componentes y la paleta (abrir con `npm run dev` → `/docs/componentes.html`).
+- [x] Revisar 390 / 768 px · build · commit `Fase 1: sistema visual unificado`.
+- Notas de la fase 1:
+  - `--soft` pasó de #8C879A a #6F6A80 para cumplir contraste AA (5.2:1 sobre blanco).
+  - Los `<style>` que se inyectaban desde 06 y 07 ahora viven en `styles.css`.
+  - Botones de barra: con texto usan `--fs-md`; los de solo emoji reciben la clase `.e` automáticamente (observador en `02-juguetes.js`).
+  - Colores de canvas y atributos SVG siguen literales (no aceptan `var()`).
+  - Pendiente para fase 8: ventanas emergentes (.tbub) tapan parte del juego unos segundos; títulos largos en encabezado de juguete pasan a 2 líneas.
 
 ## Fase 2 · Biblioteca de ilustraciones SVG
 **Archivos:** `public/js/08-ilustraciones.js` (nuevo), `index.html`, `02/05/06-*.js`, `docs/catalogo.html` (nuevo).

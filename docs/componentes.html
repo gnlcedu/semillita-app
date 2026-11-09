@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Semillita · Componentes</title>
+<!-- Página de prueba del sistema visual. Abrir con `npm run dev` → /docs/componentes.html -->
+<link rel="stylesheet" href="/css/styles.css">
+<script type="module">
+import '@fontsource/nunito/400.css'; import '@fontsource/nunito/600.css';
+import '@fontsource/nunito/700.css'; import '@fontsource/nunito/800.css';
+</script>
+<style>
+  /* Solo para esta página de prueba */
+  body{padding:0}
+  .wrap{max-width:var(--w,760px);margin:0 auto;padding:var(--s-4) var(--s-4) 80px;transition:max-width .3s}
+  .sec{margin:var(--s-7) 0 var(--s-3);font-size:var(--fs-xl)}
+  .label{font-size:var(--fs-xs);font-weight:700;color:var(--soft);margin:var(--s-4) 0 var(--s-2)}
+  .grid{display:flex;flex-wrap:wrap;gap:var(--s-3);align-items:center}
+  .sw-box{width:86px;font-size:var(--fs-2xs);font-weight:700;color:var(--soft)}
+  .sw-box i{display:block;height:54px;border-radius:var(--r-sm);border:var(--bw) solid rgba(74,70,88,.08);margin-bottom:4px}
+  .rad{width:64px;height:64px;background:var(--lav);display:grid;place-items:center;font-size:var(--fs-2xs);font-weight:800}
+  .shd{width:110px;height:70px;background:var(--card);border-radius:var(--r-md);display:grid;place-items:center;font-size:var(--fs-xs);font-weight:800}
+  .spc{background:var(--mintD);height:16px;border-radius:3px}
+  .widths{position:sticky;top:0;z-index:30;background:var(--bg);padding:var(--s-2) 0;border-bottom:var(--bw) solid var(--line)}
+  .demo-toy{height:360px;min-height:0}
+</style>
+</head>
+<body>
+<div class="widths"><div class="row" style="max-width:760px;margin:0 auto;padding:0 var(--s-4)">
+  <b>Ancho:</b>
+  <button class="chip" data-w="390px">📱 390 px</button>
+  <button class="chip on" data-w="760px">📲 Tablet</button>
+</div></div>
+
+<div class="wrap">
+  <div class="logo">Semi<span>llita</span> · componentes</div>
+  <p class="muted" style="font-weight:700;margin:var(--s-1) 0 0">Sistema visual unificado. Todo sale de las variables de <code>public/css/styles.css</code>.</p>
+
+  <!-- ============ TOKENS ============ -->
+  <h2 class="sec">Colores</h2>
+  <div class="label">Superficies y texto</div>
+  <div class="grid" id="c-base"></div>
+  <div class="label">Tarjetas (claro / oscuro)</div>
+  <div class="grid" id="c-card"></div>
+  <div class="label">Ilustración (GUIA-ILUSTRACIONES.md)</div>
+  <div class="grid" id="c-ilu"></div>
+
+  <h2 class="sec">Radios de esquina</h2>
+  <div class="grid">
+    <div class="rad" style="border-radius:var(--r-xs)">xs</div><div class="rad" style="border-radius:var(--r-sm)">sm</div>
+    <div class="rad" style="border-radius:var(--r-md)">md</div><div class="rad" style="border-radius:var(--r-lg)">lg</div>
+    <div class="rad" style="border-radius:var(--r-xl)">xl</div><div class="rad" style="border-radius:var(--r-pill);width:96px">pill</div>
+  </div>
+
+  <h2 class="sec">Sombras</h2>
+  <div class="grid">
+    <div class="shd" style="box-shadow:var(--sh-1)">--sh-1</div><div class="shd" style="box-shadow:var(--sh-2)">--sh-2</div>
+    <div class="shd" style="box-shadow:var(--sh-3)">--sh-3</div><div class="shd" style="box-shadow:var(--sh-btn)">--sh-btn</div>
+    <div class="shd" style="box-shadow:var(--sh-press)">--sh-press</div>
+  </div>
+
+  <h2 class="sec">Espacios</h2>
+  <div class="stack" id="spaces"></div>
+
+  <h2 class="sec">Tamaños de letra</h2>
+  <div id="types"></div>
+
+  <!-- ============ COMPONENTES ============ -->
+  <h2 class="sec">Botones</h2>
+  <div class="grid">
+    <button class="btn">Comenzar</button>
+    <button class="btn soft">Más tarde</button>
+    <button class="btn" disabled>Desactivado</button>
+    <button class="icon-btn">←</button><button class="icon-btn">🔊</button>
+  </div>
+  <div class="label">Botón completo</div>
+  <button class="btn full">¡Vamos a jugar!</button>
+
+  <h2 class="sec">Chips</h2>
+  <div class="grid"><button class="chip">👤 Cambiar</button><button class="chip on">2do grado</button><button class="chip">🎩 Mi amigo</button><span class="stars-pill">⭐ 24</span></div>
+
+  <h2 class="sec">Tarjetas</h2>
+  <div class="card stack"><b style="font-size:var(--fs-lg)">Tarjeta</b><p class="muted" style="margin:0;font-weight:600">Contenido general, ajustes y zona de adultos.</p></div>
+  <div class="label">Perfiles</div>
+  <div class="profiles" style="margin:0"><div class="pcard"><span class="av">🐰</span><b>Ana</b><small class="muted">2do grado</small></div><div class="pcard add"><span class="av">＋</span><b>Nuevo</b></div></div>
+  <div class="label">Juguetes (inicio)</div>
+  <div class="toys">
+    <button class="toytile bg-mint"><span class="ic">🌻</span><b>Mi jardín</b></button>
+    <button class="toytile bg-peach"><span class="ic">🏪</span><b>Mi colmado</b></button>
+    <button class="toytile bg-sky"><span class="ic">🐠</span><b>Acuario</b></button>
+    <button class="toytile bg-lav"><span class="ic">🎹</span><b>Música</b></button>
+  </div>
+  <div class="label">Aventuras</div>
+  <button class="area bg-lav" style="width:100%;min-height:0;flex-direction:row;align-items:center;gap:var(--s-4)"><span class="ic">🎒</span><span><b>Retos por grado</b><br><small>20 juegos de 1ro a 6to</small></span></button>
+  <div class="label">Barra de progreso</div>
+  <div class="bar" style="background:var(--line)"><i class="fg-mint" style="width:62%"></i></div>
+
+  <h2 class="sec">Burbujas de diálogo</h2>
+  <div class="speaker"><div class="mascot" style="--ms:60px"><span class="body">🐰</span><span class="shadow"></span></div><div class="bubble">¡Hola, Ana! ¿A qué jugamos hoy?</div></div>
+  <div class="label">Burbuja dentro del juguete (.tbub) y barra de herramientas (.tbar)</div>
+  <div class="toy demo-toy">
+    <div class="stage"></div>
+    <div class="tbub show">Elige una semilla y riégala.</div>
+    <div class="fl"><button>🖼️</button><button class="on">🗂️</button></div>
+    <div class="tbar"><button class="on">🌰</button><button>💧</button><button>✂️</button><span class="sep"></span><button class="sw-c" style="background:var(--c-rosa)"></button><button class="sw-c" style="background:var(--c-cielo)"></button><button>🧺 3</button></div>
+  </div>
+  <div class="label">Panel de dos filas (.pbar / .prow)</div>
+  <div class="toy demo-toy" style="height:200px">
+    <div class="pbar"><div class="prow"><button class="on">🖌️</button><button>🪣</button><button>⭐</button><button class="cc on" style="background:var(--c-rosa)"></button><button class="cc" style="background:var(--c-menta)"></button></div><div class="prow"><button>↩️<small>Deshacer</small></button><button>🗑️<small>Borrar</small></button></div></div>
+  </div>
+
+  <h2 class="sec">Retos</h2>
+  <div class="prompt"><span>¿Cuánto es 3 + 4?</span></div>
+  <div class="visual"><div class="expr">3 + 4</div></div>
+  <div class="opts"><button class="opt">6</button><button class="opt ok">7</button><button class="opt no">8</button><button class="opt dim">9</button></div>
+  <div class="label">Fichas para ordenar</div>
+  <div class="slots"><span class="tile">ca</span><span class="tile">sa</span></div>
+  <div class="pool"><span class="tile">me</span><span class="tile">sa</span></div>
+  <div class="label">Memoria</div>
+  <div class="mem"><div class="mcard">?</div><div class="mcard up e">🍎</div><div class="mcard done">dog</div><div class="mcard">?</div></div>
+  <div class="label">Avance</div>
+  <div class="dots"><i class="ok"></i><i class="ok"></i><i class="no"></i><i class="cur"></i><i></i><i></i></div>
+
+  <h2 class="sec">Formularios</h2>
+  <label class="lb">Nombre</label><input class="txt" placeholder="Escribe tu nombre">
+  <div class="toggle"><span>Voz y lectura en voz alta</span><button class="sw on" id="t1" aria-label="Voz"></button></div>
+  <div class="label">Teclado</div>
+  <div class="keypad"><button>1</button><button>2</button><button>3</button><button>⌫</button><button>0</button><button>✓</button></div>
+
+  <h2 class="sec">Hoja inferior y aviso</h2>
+  <div class="toy demo-toy" style="height:300px"><div class="ov"><div class="sheet"><h3 style="margin-bottom:var(--s-3)">🌰 Elige una semilla</h3><div class="thumbs"><button><span style="font-size:var(--fs-5xl)">🌻</span>Girasol</button><button><span style="font-size:var(--fs-5xl)">🍅</span>Tomate</button><button><span style="font-size:var(--fs-5xl)">🌽</span>Maíz</button></div></div></div></div>
+  <div class="label">Aviso de respuesta (.fb)</div>
+  <div class="fb ok show" style="position:static;padding:0"><div class="in"><b>¡Muy bien!</b><p>3 + 4 = 7</p><button class="btn full">Siguiente</button></div></div>
+</div>
+
+<script>
+const css=getComputedStyle(document.documentElement), v=n=>css.getPropertyValue(n).trim();
+const sw=(id,names)=>document.getElementById(id).innerHTML=names.map(n=>`<div class="sw-box"><i style="background:var(${n})"></i>${n}<br>${v(n)}</div>`).join('');
+sw('c-base',['--bg','--card','--paper','--paper-2','--paper-lav','--line','--line-2','--soft','--ink']);
+sw('c-card',['peach','rose','mint','sky','lav','butter','sage','ok','no'].flatMap(c=>[`--${c}`,`--${c}D`]));
+sw('c-ilu',['--c-rosa','--c-durazno','--c-mantequilla','--c-menta','--c-cielo','--c-lavanda','--c-rosado']);
+document.getElementById('spaces').innerHTML=[1,2,3,4,5,6,7].map(i=>`<div class="row"><code style="width:60px">--s-${i}</code><div class="spc" style="width:var(--s-${i})"></div><small class="muted">${v('--s-'+i)}</small></div>`).join('');
+document.getElementById('types').innerHTML=['2xs','xs','sm','md','lg','xl','2xl','3xl','4xl','5xl'].map(t=>`<div class="row" style="margin:var(--s-1) 0"><code style="width:70px;font-size:var(--fs-xs)">--fs-${t}</code><span style="font-size:var(--fs-${t});font-weight:800">Semillita ${v('--fs-'+t)}</span></div>`).join('')
+ +`<div class="row" style="margin-top:var(--s-2);font-size:var(--fs-4xl)"><span style="font-size:var(--fs-4xl)">🌻</span><span style="font-size:var(--fs-6xl)">🌻</span><span style="font-size:var(--fs-7xl)">🌻</span><span style="font-size:var(--fs-8xl)">🌻</span><small class="muted" style="font-size:var(--fs-xs)">4xl · 6xl · 7xl · 8xl (íconos)</small></div>`;
+document.querySelectorAll('[data-w]').forEach(b=>b.onclick=()=>{ document.querySelector('.wrap').style.setProperty('--w',b.dataset.w); document.querySelectorAll('[data-w]').forEach(x=>x.classList.toggle('on',x===b)); });
+document.getElementById('t1').onclick=e=>e.target.classList.toggle('on');
+</script>
+</body>
+</html>
