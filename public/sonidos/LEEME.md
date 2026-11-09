@@ -1,0 +1,3 @@
+Coloca aquí los sonidos grabados (MP3 u OGG, menos de 200 KB cada uno).
+Nombres sugeridos: vaca.mp3, gallina.mp3, agua.mp3, pop.mp3, aplausos.mp3, piano-do.mp3…
+Usa solo sonidos propios o con licencia que permita su uso comercial.

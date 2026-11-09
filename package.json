@@ -1,0 +1,19 @@
+{
+  "name": "semillita",
+  "version": "0.5.0",
+  "private": true,
+  "description": "Semillita: sala de juegos Montessori y retos educativos para niños de 5 a 12 años",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host",
+    "build": "vite build",
+    "preview": "vite preview --host"
+  },
+  "dependencies": {
+    "@fontsource/nunito": "^5.0.0"
+  },
+  "devDependencies": {
+    "vite": "^5.4.0",
+    "vite-plugin-pwa": "^0.20.0"
+  }
+}
