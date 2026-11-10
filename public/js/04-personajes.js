@@ -54,26 +54,26 @@ function creature(sp, o={}){
     case 'pulpo': back=[40,64,92,120,148].map((x,i)=>`<path d="M${x+6} 160 q-8 22 6 32 q10 6 14 -6" stroke="${c}" stroke-width="14" fill="none" stroke-linecap="round"/>`).join(''); feet=false; break;
   }
   const out=o.outfit||{}, acc=s=>{ const k=out[s]; if(!k||!ACC[k]) return ''; return ACC[k][3].replace(/\{EL\}/g,100-ex).replace(/\{ER\}/g,100+ex).replace(/\{EY\}/g,ey).replace(/\{EL0\}/g,100-ex-15).replace(/\{ER0\}/g,100+ex-15).replace(/\{EY0\}/g,ey-10).replace(/\{BL\}/g,100-ex+14).replace(/\{BW\}/g,2*ex-28).replace(/\{MX0\}/g,100-ex-22).replace(/\{MQ\}/g,ex+22).replace(/\{MW\}/g,2*ex+44).replace(/\{MQ2\}/g,ex+22); };
-  const lvl=o.level||1, aura = lvl>=5 ? `<circle cx="100" cy="118" r="92" fill="url(#aura)"/>` : '';
+  const lvl=o.level||1, aura = lvl>=5 ? `<circle cx="100" cy="118" r="90" fill="#FBF1C8"/>` : '';
   const E=(cl,inner)=>`<g class="${cl}">${inner}</g>`;
-  const eyes = E('eo',`<g class="blink"><circle cx="${100-ex}" cy="${ey}" r="7.5" fill="${eyeFill}"/><circle cx="${100+ex}" cy="${ey}" r="7.5" fill="${eyeFill}"/><circle cx="${100-ex+2.5}" cy="${ey-2.5}" r="2.5" fill="${eyeFill==='#fff'?ink:'#fff'}"/><circle cx="${100+ex+2.5}" cy="${ey-2.5}" r="2.5" fill="${eyeFill==='#fff'?ink:'#fff'}"/></g>`)
+  const eyes = E('eo',`<g class="blink"><circle cx="${100-ex}" cy="${ey}" r="7.5" fill="${eyeFill}"/><circle cx="${100+ex}" cy="${ey}" r="7.5" fill="${eyeFill}"/></g>`)
     + E('eh',`<path d="M${100-ex-8} ${ey+3} Q${100-ex} ${ey-7} ${100-ex+8} ${ey+3} M${100+ex-8} ${ey+3} Q${100+ex} ${ey-7} ${100+ex+8} ${ey+3}" stroke="${eyeFill}" stroke-width="4" fill="none" stroke-linecap="round"/>`)
     + E('es',`<path d="M${100-ex-8} ${ey-2} Q${100-ex} ${ey+6} ${100-ex+8} ${ey-2} M${100+ex-8} ${ey-2} Q${100+ex} ${ey+6} ${100+ex+8} ${ey-2}" stroke="${eyeFill}" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M${100-ex-10} ${ey-14} l14 4 M${100+ex+10} ${ey-14} l-14 4" stroke="${ink}" stroke-width="3" stroke-linecap="round"/>`)
     + E('ez',`<path d="M${100-ex-8} ${ey} h16 M${100+ex-8} ${ey} h16" stroke="${eyeFill}" stroke-width="4" stroke-linecap="round"/>`)
     /* sorprendido: ojos grandes y redondos con cejas arriba */
     + E('ew',`<circle cx="${100-ex}" cy="${ey}" r="10" fill="#fff" stroke="${ink}" stroke-width="2.5"/><circle cx="${100+ex}" cy="${ey}" r="10" fill="#fff" stroke="${ink}" stroke-width="2.5"/><circle cx="${100-ex}" cy="${ey}" r="5" fill="${ink}"/><circle cx="${100+ex}" cy="${ey}" r="5" fill="${ink}"/><path d="M${100-ex-9} ${ey-17} q9 -6 18 0 M${100+ex-9} ${ey-17} q9 -6 18 0" stroke="${ink}" stroke-width="3" fill="none" stroke-linecap="round"/>`)
     /* pensando: mira hacia arriba, una ceja levantada */
-    + E('et',`<circle cx="${100-ex-2}" cy="${ey-3}" r="7" fill="${eyeFill}"/><circle cx="${100+ex-2}" cy="${ey-3}" r="7" fill="${eyeFill}"/><circle cx="${100-ex-4}" cy="${ey-6}" r="2.5" fill="${eyeFill==='#fff'?ink:'#fff'}"/><circle cx="${100+ex-4}" cy="${ey-6}" r="2.5" fill="${eyeFill==='#fff'?ink:'#fff'}"/><path d="M${100+ex-9} ${ey-18} l16 -5" stroke="${ink}" stroke-width="3" stroke-linecap="round"/>`);
+    + E('et',`<circle cx="${100-ex-2}" cy="${ey-3}" r="7" fill="${eyeFill}"/><circle cx="${100+ex-2}" cy="${ey-3}" r="7" fill="${eyeFill}"/><path d="M${100+ex-9} ${ey-18} l16 -5" stroke="${ink}" stroke-width="3" stroke-linecap="round"/>`);
   const mouths = !mouth ? '' : E('mo',`<path d="M92 ${my} Q100 ${my+8} 108 ${my}" stroke="${ink}" stroke-width="3.5" fill="none" stroke-linecap="round"/>`)+E('mh',`<path d="M89 ${my-2} Q100 ${my+16} 111 ${my-2}Z" fill="#E86A7A" stroke="${ink}" stroke-width="3" stroke-linejoin="round"/>`)+E('ms',`<path d="M92 ${my+6} Q100 ${my-1} 108 ${my+6}" stroke="${ink}" stroke-width="3.5" fill="none" stroke-linecap="round"/>`)
     +E('mw',`<ellipse cx="100" cy="${my+3}" rx="6" ry="7.5" fill="#E86A7A" stroke="${ink}" stroke-width="3"/>`)+E('mt',`<path d="M93 ${my+3} Q100 ${my+1} 107 ${my+4}" stroke="${ink}" stroke-width="3.5" fill="none" stroke-linecap="round"/>`);
-  return `<svg viewBox="-12 -12 224 224" class="crt" aria-hidden="true"><defs><radialGradient id="aura"><stop offset="60%" stop-color="#F6E39A" stop-opacity=".0"/><stop offset="80%" stop-color="#F6E39A" stop-opacity=".55"/><stop offset="100%" stop-color="#F6E39A" stop-opacity="0"/></radialGradient></defs>
+  return `<svg viewBox="-12 -12 224 224" class="crt" aria-hidden="true">
     ${aura}${acc('back')}${back}
     ${feet?`<ellipse cx="76" cy="178" rx="17" ry="9" fill="${dk}"/><ellipse cx="124" cy="178" rx="17" ry="9" fill="${dk}"/>`:''}
     <ellipse cx="38" cy="132" rx="11" ry="19" fill="${sp==='panda'&&!o.color?'#4A4658':c}" stroke="${dk}" stroke-width="3" transform="rotate(22 38 132)"/><ellipse cx="162" cy="132" rx="11" ry="19" fill="${sp==='panda'&&!o.color?'#4A4658':c}" stroke="${dk}" stroke-width="3" transform="rotate(-22 162 132)"/>
     <path d="M100 52 C150 52 168 90 168 122 C168 160 140 178 100 178 C60 178 32 160 32 122 C32 90 50 52 100 52Z" fill="${c}" stroke="${dk}" stroke-width="3"/>
-    <ellipse cx="100" cy="148" rx="40" ry="26" fill="${lt}" opacity=".75"/>
+    <ellipse cx="100" cy="148" rx="40" ry="26" fill="${shade(c,.45)}"/>
     ${front}${face}
-    <ellipse cx="${sp==='rana'?62:66}" cy="${sp==='rana'?112:124}" rx="9" ry="5.5" fill="#F6A5B5" opacity=".75"/><ellipse cx="${sp==='rana'?138:134}" cy="${sp==='rana'?112:124}" rx="9" ry="5.5" fill="#F6A5B5" opacity=".75"/>
+    <ellipse cx="${sp==='rana'?62:66}" cy="${sp==='rana'?112:124}" rx="9" ry="5.5" fill="#F7B3BF"/><ellipse cx="${sp==='rana'?138:134}" cy="${sp==='rana'?112:124}" rx="9" ry="5.5" fill="#F7B3BF"/>
     ${eyes}${mouths}${acc('neck')}${acc('eyes')}${acc('hat')}${acc('hand')}
   </svg>`;
 }
@@ -150,13 +150,13 @@ vHome=function(){
   const hi=`¡Hola, ${esc(p.name)}! Soy ${mname(p.avatar)}. ¿A qué jugamos hoy?`;
   const tile=(t,i)=>`<button class="toytile bg-${t.c}" data-t="${t.id}" style="animation-delay:${i*.02}s"><span class="ic">${toyIcon(t,'1.25em')}</span><b>${t.name}</b></button>`;
   const adv=[['learn','🎒','Retos por grado','20 juegos de 1ro a 6to','lav'],['math','⚡','Cálculo mental','1 minuto al día','peach'],['fluency','📖','Lectura en voz alta','Mide tu velocidad lectora','rose'],['eng','🇺🇸','Mundo de inglés','Palabras, canciones y diálogos','sky'],['story','📚','Cuentos','Tú decides qué pasa','mint']];
-  app.innerHTML=`<div class="row" style="margin-bottom:var(--s-2)"><div class="logo" style="font-size:var(--fs-2xl)">Semi<span>llita</span></div><div class="sp"></div><button class="chip vt" style="margin-right:var(--s-2)"></button><button class="chip" id="switch">👤 Cambiar</button></div>
+  app.innerHTML=`<div class="row" style="margin-bottom:var(--s-2)"><div class="logo" style="font-size:var(--fs-2xl)">Semi<span>llita</span></div><div class="sp"></div><button class="chip vt" style="margin-right:var(--s-2)"></button><button class="chip" id="switch">${ilu('ic_perfil','1.25em')} Cambiar</button></div>
   <div class="hero" style="align-items:center">${mascot(p.avatar,100)}<div style="flex:1"><div class="bubble" style="font-size:var(--fs-md)">${hi}</div>
-    <div class="row" style="margin-top:var(--s-3);gap:var(--s-2);flex-wrap:wrap"><button class="chip" id="friend">🎩 Mi amigo</button><button class="chip" id="album">📒 ${(p.stickers||[]).length}/${STK.length}</button></div>
-    <div style="margin-top:var(--s-2);font-size:var(--fs-xs);font-weight:800" class="muted">🌱 ${LEVELN[lvl-1]}</div><div class="bar" style="background:var(--line);height:8px;margin-top:var(--s-1)"><i class="fg-mint" style="width:${pct}%"></i></div></div></div>
+    <div class="row" style="margin-top:var(--s-3);gap:var(--s-2);flex-wrap:wrap"><button class="chip" id="friend">${ilu('ic_gorro','1.3em')} Mi amigo</button><button class="chip" id="album">${ilu('ic_album','1.25em')} ${(p.stickers||[]).length}/${STK.length}</button></div>
+    <div style="margin-top:var(--s-2);font-size:var(--fs-xs);font-weight:800" class="muted">${ilu('brote','1.5em')} ${LEVELN[lvl-1]}</div><div class="bar" style="background:var(--line);height:8px;margin-top:var(--s-1)"><i class="fg-mint" style="width:${pct}%"></i></div></div></div>
   <h2 class="h-sec first">Sala de juegos</h2>
   <div class="toys">${TOYS.filter(t=>!t.brain&&!t.hidden).map(tile).join('')}</div>
-  <h2 class="h-sec" style="margin-bottom:var(--s-1)">Retos de ingenio 🧠</h2><p class="muted" style="margin:0 0 var(--s-3);font-weight:600">Para pensar, planear y resolver</p>
+  <h2 class="h-sec" style="margin-bottom:var(--s-1)">Retos de ingenio ${ilu('ic_idea','1.1em')}</h2><p class="muted" style="margin:0 0 var(--s-3);font-weight:600">Para pensar, planear y resolver</p>
   <div class="toys">${TOYS.filter(t=>t.brain).map(tile).join('')}</div>
   <h2 class="h-sec">Aventuras para aprender</h2>
   <div style="display:flex;flex-direction:column;gap:var(--s-3)">${adv.map(([v,ic,n,d,c])=>`<button class="area bg-${c}" data-v="${v}" style="width:100%;min-height:0;flex-direction:row;align-items:center;gap:var(--s-4)"><span class="ic">${toyIcon(v,'1.35em')||ic}</span><span><b>${n}</b><br><small>${d}</small></span></button>`).join('')}</div>`;

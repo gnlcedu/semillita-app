@@ -193,7 +193,7 @@ window.emo=(e,tam='1.1em')=> EMO[e]&&iluFuente(EMO[e]) ? ilu(EMO[e],tam) : e;
    Solo en contenedores que el código nunca lee (.visual, .egrid, .lesson-v, .story-scene):
    las opciones de los retos (.opts .opt) se comprueban por su posición (data-i), no por su texto;
    las cartas de memoria sí se comparan por texto y NO se tocan. */
-const EMO_SEL='.visual,.egrid,.lesson-v,.story-scene,.opts .opt';
+const EMO_SEL='.visual,.egrid,.lesson-v,.story-scene,.opts .opt,.tbub';
 let emoRe=null;
 const emoRegex=()=>emoRe||(emoRe=new RegExp('('+Object.keys(EMO).filter(e=>iluFuente(EMO[e])).sort((a,b)=>b.length-a.length).map(e=>e.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('|')+')\\uFE0F?','gu'));
 window.emoDOM=root=>{ if(!root) return; const re=emoRegex(); const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT); const list=[];

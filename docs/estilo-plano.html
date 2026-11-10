@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Semillita · Estilo plano</title>
+<!-- Abrir con `npm run dev` → /docs/estilo-plano.html -->
+<link rel="stylesheet" href="/css/styles.css">
+<style>
+  .wrap{max-width:1000px;margin:0 auto;padding:var(--s-4) var(--s-4) 80px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:var(--s-3)}
+  .it{border-radius:var(--r-lg);padding:var(--s-3) var(--s-2);text-align:center}
+  .it .sizes{display:flex;align-items:flex-end;justify-content:center;gap:var(--s-2);min-height:76px}
+  .it code{display:block;margin-top:var(--s-2);font-size:var(--fs-2xs);color:#5A566B;font-weight:700}
+  .pal{display:flex;flex-wrap:wrap;gap:var(--s-2);margin:var(--s-3) 0}
+  .pal span{width:74px;border-radius:var(--r-sm);padding:40px 4px 4px;font-size:var(--fs-2xs);font-weight:800;text-align:center;background:var(--card)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="logo">Semi<span>llita</span> · estilo plano</div>
+  <p class="muted" style="font-weight:700">Piezas de <code>public/js/12-estilo-plano.js</code> a 64 y 32 px. Reglas en <code>docs/GUIA-ILUSTRACIONES.md</code>.</p>
+  <h2 class="h-sec">Paleta</h2><div class="pal" id="pal"></div>
+  <div id="out"></div>
+</div>
+<script>function shade(h,a){ const n=parseInt(h.slice(1),16); const f=c=>Math.max(0,Math.min(255,Math.round(a<0?c*(1+a):c+(255-c)*a))); return '#'+[n>>16,n>>8&255,n&255].map(f).map(x=>x.toString(16).padStart(2,'0')).join(''); }</script>
+<script src="/kenney/kenney.js"></script>
+<script src="/js/08-ilustraciones.js"></script>
+<script>window.SCENES={};</script>
+<script src="/js/12-estilo-plano.js"></script>
+<script>
+const bgs=['bg-mint','bg-sky','bg-peach','bg-lav','bg-butter','bg-rose','bg-sage'];
+const ks=Object.keys(PLANO), G=[['Jardín',ks.filter(k=>!k.startsWith('ti_')&&!k.startsWith('ic_'))],['Juguetes y aventuras',ks.filter(k=>k.startsWith('ti_'))],['Inicio',ks.filter(k=>k.startsWith('ic_'))]];
+document.getElementById('pal').innerHTML=Object.entries(PAL).map(([n,c])=>`<span style="box-shadow:inset 0 36px 0 ${c},0 0 0 1.6px ${shade(c,-.32)}">${n}<br>${c}</span>`).join('');
+document.getElementById('out').innerHTML=G.map(([t,l])=>`<h2 class="h-sec">${t} <small class="muted">(${l.length})</small></h2><div class="grid">${l.map((k,i)=>`<div class="it ${bgs[i%bgs.length]}"><div class="sizes">${ilu(k,64)}${ilu(k,32)}</div><code>${k}</code></div>`).join('')}</div>`).join('');
+</script>
+</body>
+</html>

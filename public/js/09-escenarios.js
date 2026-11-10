@@ -41,6 +41,7 @@ const SC={
     +capa(.5,`<div class="table"></div>`)
 };
 
+window.SCENES=SC;
 window.scene=(nombre,css='')=> SC[nombre] ? `<div class="scene scene-${nombre}" aria-hidden="true" style="${css}">${SC[nombre]()}</div>` : '';
 
 /* ---------- el animalito del niño dentro de la escena (fase 6) ----------

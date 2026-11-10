@@ -429,3 +429,16 @@ input[type=range].sz{width:110px;accent-color:var(--lavD);flex:none}
 .vt{min-width:var(--tap-min);min-height:var(--tap-min)}
 #cl2 button{position:relative}#cl2 button:after{content:"";position:absolute;inset:-6px}
 @media (max-width:400px){.toyhead{gap:6px}.toyhead h2{font-size:var(--fs-sm)}.toyhead .thi .ilu{width:30px!important;height:30px!important}.toyhead .chip:not(.vt){padding:0 var(--s-2)}.tbub{font-size:var(--fs-sm);max-width:80%}}
+
+/* =========================================================
+   ESTILO PLANO (12-estilo-plano.js · docs/GUIA-ILUSTRACIONES.md)
+   Formas planas, contorno suave de 1,6 px y bordes "hechos a mano" (#mano).
+   ========================================================= */
+.plano svg,.scene svg.sp{filter:url(#mano)}
+.kim{display:inline-block;vertical-align:-.15em;flex:none}.kim svg{width:100%;height:100%;display:block}
+.chip .ilu{margin:-4px 0}
+/* Mi jardín: tierra de cada surco, gotas de agua y aviso de sed */
+.mound{display:block;width:100%;height:24px;border-radius:50% 50% 12px 12px;background:#C99C78;border:1.6px solid #A07A5B}
+.gm{display:inline-block;width:7px;height:9px;margin:0 1.5px;border-radius:50% 50% 50% 50%/40% 40% 60% 60%;background:rgba(255,255,255,.75);border:1.2px solid #8DBDE6}
+.gm.on{background:#A9D3F0}
+.thirst .bang{font-size:var(--fs-md);color:#B4535E;font-weight:900;margin-left:-2px}
