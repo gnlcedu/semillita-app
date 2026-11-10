@@ -23,7 +23,10 @@ const PLAT = { p_suelo: ['MEMBER_130'], p_tierra: ['MEMBER_113'], p_plataforma: 
   p_llave: ['MEMBER_60'], p_gema: ['MEMBER_75'], p_gema_roja: ['MEMBER_74'], p_caja: ['MEMBER_46'], p_sorpresa: ['MEMBER_37', 'MEMBER_37_MEMBER_0'],
   p_hongo: ['MEMBER_77'], p_arbusto: ['MEMBER_112', 'MEMBER_112_MEMBER_0'], p_pasto: ['MEMBER_10'], p_roca: ['MEMBER_83'], p_cerca: ['MEMBER_23'],
   p_puerta: ['MEMBER_108', 'MEMBER_108_MEMBER_0'], p_bandera: ['MEMBER_92'], p_resorte: ['MEMBER_11', 'MEMBER_12', 'MEMBER_100'],
-  p_letrero: ['MEMBER_0', 'MEMBER_226'], p_nube: ['MEMBER_173'] };
+  p_letrero: ['MEMBER_0', 'MEMBER_226'], p_nube: ['MEMBER_173'], p_espinas: ['MEMBER_17'] };
+/* bichos del juego de plataformas → posición de sus <path> dentro de vector_enemies.svg (el archivo no trae nombres) */
+const BICHOS = { p_gusano: [31, 32, 33, 34], p_caracol: [182, 183, 184, 185, 186, 187, 188, 189], p_abeja: [224, 225, 226, 227, 228, 229, 230, 231] };
+const ORIGEN_BICHOS = path.join(RAIZ, 'vendor/kenney/plat/Vector/vector_enemies.svg');
 
 /* nombre de la pieza → número de capa (Layer0_N_FILL) en bgElements_elements.svg */
 const PIEZAS = { pino: 0, pino_oscuro: 2, pino_fino: 6, abeto: 11, abeto_ancho: 14, arbol: 23, arbol_copa: 26, arbol_alto: 17,
@@ -79,6 +82,10 @@ if (fs.existsSync(ORIGEN_PLAT)) {
     pieza(nombre, capas.join('').replace(/url\(#([^)]+)\)/g, (_, id) => grad[id] || '#888888'));
   }
 } else console.warn('⚠ Falta ' + ORIGEN_PLAT + ': no se generan las piezas de plataformas.');
+if (fs.existsSync(ORIGEN_BICHOS)) {
+  const formas = fs.readFileSync(ORIGEN_BICHOS, 'utf8').match(/<path[^>]*\/>/g);
+  for (const [nombre, idx] of Object.entries(BICHOS)) pieza(nombre, idx.map(i => formas[i]).join(''));
+} else console.warn('⚠ Falta ' + ORIGEN_BICHOS + ': no se generan los bichos.');
 
 const js = `/* Semillita · piezas de paisaje y de fondo marino para las escenas.
    GENERADO por "npm run entorno" (scripts/entorno.mjs). No lo edites a mano.

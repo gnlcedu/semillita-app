@@ -22,7 +22,7 @@ App educativa para niños de 5 a 12 años (República Dominicana), estilo Pok Po
   14. `16-mapa-mundo.js` — **generado** por `npm run mapa`: continentes del mundo (`window.MAPA_MUNDO`, contornos de MapSVG, CC0, proyección Equal Earth). No se edita a mano.
   15. `05-juguetes-nuevos.js` — colmado, granja, reloj, mapas (Mi país, Provincias, Mundo), cuerpo, laboratorio, tangram.
   16. `06-juguetes-completos.js` — Pintar, Mi jardín, Música (7 instrumentos), Acuario y Bloques completos.
-  17. `18-plataformas.js` — «El camino de la semilla»: juego de plataformas calmado (sin enemigos, vidas ni reloj). El animalito recoge semillas, agua y sol y hace florecer la maceta; en niveles 2 y 3 forma una palabra con letras en orden. Usa las piezas `p_*` de `17-entorno.js`.
+  17. `18-plataformas.js` — «El camino de la semilla»: juego de plataformas. El animalito recoge semillas, agua y sol y hace florecer la maceta; en niveles 2 y 3 forma una palabra con letras en orden. **Excepción pedida por el docente a «sin ganar ni perder»:** tiene obstáculos (espinas, gusano, caracol, abeja, arroyo), 3 corazones y, al perderlos, se reintenta el camino; sigue sin reloj. La dificultad sube por etapas (en memoria, por perfil) a partir del nivel por edad. El camino se arma al azar y se escala a la altura de la pantalla. Usa las piezas `p_*` de `17-entorno.js`.
   18. `07-aprender-adultos.js` — cuentos, lectura, cálculo mental, inglés, modo aula, reporte, límite de tiempo e **inicio de la app** (`render()` al final).
 - Varias funciones se **sobrescriben** en archivos posteriores (`vHome`, `mascot`, `win`, `finish`, `vAdults`, `go`, `tsay`, `giveSticker`, `addXP`). Antes de editar una función, busca si se redefine más adelante.
 - Vistas extra se registran en `window.VIEWS[nombre]`.

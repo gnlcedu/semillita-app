@@ -9,6 +9,7 @@
     "build": "vite build",
     "preview": "vite preview --host",
     "kenney": "node scripts/kenney.mjs",
+    "offline": "node scripts/offline.mjs",
     "entorno": "node scripts/entorno.mjs",
     "mapa": "node scripts/mapa-rd.mjs && node scripts/mapa-mundo.mjs"
   },
