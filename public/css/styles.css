@@ -379,3 +379,20 @@ input[type=range].sz{width:110px;accent-color:var(--lavD);flex:none}
 @keyframes swim{from{transform:translate(0,0) rotate(-4deg)}50%{transform:translate(40px,-14px) rotate(3deg)}to{transform:translate(90px,8px) rotate(-2deg)}}
 /* laboratorio: bata */
 .pet-lab .pet-prop{left:20%;top:48%;width:60%;height:44%}
+/* =========================================================
+   ANIMACIONES VIVAS · fase 7 (se apagan con prefers-reduced-motion)
+   ========================================================= */
+/* plantas que se mecen (Mi jardín) */
+.pt .ilu{transform-origin:50% 100%;animation:plantSway 3.6s ease-in-out infinite alternate}
+#plotsA>button:nth-child(2) .pt .ilu,#plotsB>button:nth-child(1) .pt .ilu{animation-delay:-1.2s}
+#plotsA>button:nth-child(3) .pt .ilu,#plotsB>button:nth-child(3) .pt .ilu{animation-delay:-2.3s}
+@keyframes plantSway{from{transform:rotate(-3deg)}to{transform:rotate(3deg)}}
+/* peces que ondulan al nadar (Acuario) */
+.fishw .ilu{transform-origin:65% 50%;animation:fishWig .55s ease-in-out infinite alternate}
+@keyframes fishWig{from{transform:rotate(-4deg) scaleX(1)}to{transform:rotate(3deg) scaleX(.95)}}
+/* animales de la granja que respiran */
+#fm button>span .ilu{transform-origin:50% 100%;animation:breathe 3s ease-in-out infinite}
+#fm button:nth-child(3n+2)>span .ilu{animation-delay:-1s}#fm button:nth-child(3n)>span .ilu{animation-delay:-2s}
+@keyframes breathe{0%,100%{transform:scale(1,1)}50%{transform:scale(1.03,.97)}}
+/* productos del colmado y fichas: pequeño salto al aparecer en la funda */
+#bg>span .ilu{animation:popin .3s both}

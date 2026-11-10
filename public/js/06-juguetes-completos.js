@@ -272,7 +272,7 @@ function toyAquarium2(root){
   const tk=root.querySelector('#tk'); const Wt=()=>tk.clientWidth, Ht=()=>tk.clientHeight; sceneParallax(root); scenePet(root,{at:'left:6%;top:24%',size:58,prop:ilu('careta','100%'),cls:'pet-diver'});
   const count=()=>{ const g={}; fish.forEach(f=>g[f.n]=(g[f.n]||0)+1); root.querySelector('#cnt').innerHTML=Object.entries(g).map(([n,c])=>`${c} ${emo(FISH.find(x=>x[1]===n)[0],'1.5em')}`).join('  ')||'Acuario vacío'; };
   function add(i){ if (fish.length>=18){ tsay('¡El acuario está lleno!'); return; } const [e,n,fact]=FISH[i];
-    const el=document.createElement('span'); el.className='abs'; el.innerHTML=emo(e); el.style.cssText=`left:0;top:0;font-size:${n==='ballena'?62:n==='medusa'?38:42}px;will-change:transform;cursor:pointer`;
+    const el=document.createElement('span'); el.className='abs fishw'; el.innerHTML=emo(e); el.style.cssText=`left:0;top:0;font-size:${n==='ballena'?62:n==='medusa'?38:42}px;will-change:transform;cursor:pointer`;
     tk.appendChild(el); const f={el,n,fact,x:rnd(20,Wt()-70),y:rnd(40,Ht()-120),tx:0,ty:0,sp:n==='tortuga marina'||n==='medusa'?.4:.6+Math.random()*.9,dir:1,crab:['cangrejo','langosta'].includes(n),jelly:n==='medusa',hop:0}; newT(f); fish.push(f);
     el.addEventListener('pointerdown',ev=>{ ev.stopPropagation(); f.hop=20; speak(`${n}. ${fact}`); sparks(el,4); });
     plopS(); count(); }
@@ -327,7 +327,7 @@ function toyBlocks2(root){
     const b={el,w:s[0],h:s[1],x:Math.max(8,Math.min(W()-s[0]-44, W()/2-s[0]/2+rnd(-60,60))),y:10,kind,rot:0};
     el.className='abs'; el.style.cssText=`left:${b.x}px;top:10px;width:${b.w}px;height:${b.h}px;${isF?'':`background-color:${col||pick(COLS.slice(0,8))};box-shadow:inset 0 -6px 0 rgba(0,0,0,.1),inset 0 5px 0 rgba(255,255,255,.45);${s[2]}`};transition:top .45s cubic-bezier(.5,0,.6,1.3),left .2s,width .2s,height .2s;z-index:2`;
     if (isF) el.innerHTML=petMini(prof(),66);
-    root.appendChild(el); blocks.push(b); let down=null;
+    root.appendChild(el); blocks.push(b); landSquash(el); let down=null;
     el.addEventListener('pointerdown',e=>{ down=[e.clientX,e.clientY]; },true);
     dragify(el, root, {drop:(e,px,py)=>{ const r=root.getBoundingClientRect(); const tapped = down && Math.hypot(down[0]-(r.left+px),down[1]-(r.top+py))<6;
       const t=root.querySelector('#tr').getBoundingClientRect(); if (r.left+px>t.left-10 && r.left+px<t.right+10 && r.top+py>t.top-10 && r.top+py<t.bottom+10){ el.remove(); blocks.splice(blocks.indexOf(b),1); noiseS(.2,.1,600); settle(); return; }

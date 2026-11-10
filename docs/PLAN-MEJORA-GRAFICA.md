@@ -21,7 +21,7 @@ Rama: `mejora-grafica` · Un commit al cerrar cada fase · Estado: marcar `[x]` 
 - [x] Fase 4 · Escenarios por capas con Kenney
 - [x] Fase 5 · Reconstrucción visual de los juegos (5A–5E)
 - [x] Fase 6 · El animalito dentro de cada escena
-- [ ] Fase 7 · Animaciones y transiciones
+- [x] Fase 7 · Animaciones y transiciones
 - [ ] Fase 8 · Recompensas vistosas
 - [ ] Fase 9 · Revisión final de calidad
 
@@ -207,11 +207,16 @@ Cada subfase rehace la **presentación** de sus juegos (escena, objetos, barra, 
 
 ## Fase 7 · Animaciones y transiciones
 **Archivos:** `styles.css`, `01-nucleo.js` (`go`/`render`), juguetes con objetos que caen.
-- [ ] Transición entre pantallas: deslizar + desvanecer (Web Animations API en `go()`).
-- [ ] Aplastar y rebotar al caer objetos; botones que se hunden.
-- [ ] Plantas que se mecen, peces que nadan ondulando (`transform` sobre las imágenes).
-- [ ] Solo `transform`/`opacity`, sin librerías; todo desactivado con `prefers-reduced-motion`.
-- [ ] Prueba con CPU ×6 más lenta en DevTools · build · commit `Fase 7: animaciones`.
+- [x] Transición entre pantallas: deslizar + desvanecer (Web Animations API en `go()`).
+- [x] Aplastar y rebotar al caer objetos; botones que se hunden.
+- [x] Plantas que se mecen, peces que nadan ondulando (`transform` sobre las imágenes).
+- [x] Solo `transform`/`opacity`, sin librerías; todo desactivado con `prefers-reduced-motion`.
+- [x] Prueba con CPU ×6 más lenta en DevTools · build · commit `Fase 7: animaciones`.
+- Notas de la fase 7:
+  - 10-animaciones.js: solo se anima la entrada de cada pantalla (go() sigue siendo inmediato), así no se rompe código que espera la vista nueva.
+  - squash()/landSquash(): aplastar y rebotar al aterrizar en Bloques y Laboratorio (WAAPI con composite:add para respetar giros).
+  - Plantas que se mecen, peces que ondulan, animales de la granja que respiran (CSS).
+  - Prueba con CPU ×6 más lenta (Chrome sin ventana): 60 cuadros/s en inicio, acuario, jardín y granja; peor cuadro 17 ms. Recorrido por los 26 juguetes y todas las vistas: 0 errores.
 
 ## Fase 8 · Recompensas vistosas
 **Archivos:** `03-niveles-ingenio.js` (`win`), `04-personajes.js` (XP, stickers), `styles.css`.

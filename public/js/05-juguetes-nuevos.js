@@ -200,7 +200,7 @@ function toyLab(root){
       <div class="abs" style="left:10px;right:10px;top:14px;display:flex;flex-wrap:wrap;gap:var(--s-2);justify-content:center">${OB.map((o,i)=>`<button data-o="${i}" style="font-size:var(--fs-4xl);line-height:1;background:var(--card);border:var(--bw) solid var(--line-2);border-radius:var(--r-sm);padding:var(--s-1) var(--s-2);box-shadow:var(--sh-btn)">${oe(o[0])}</button>`).join('')}</div>
       <div id="pq" class="abs" style="left:0;right:0;top:${wt-60}px;text-align:center"></div>`;
     const drop=(o,i)=>{ const el=document.createElement('div'); el.className='abs'; el.innerHTML=oe(o[0]); const x=rnd(14,76);
-      el.style.cssText=`left:${x}%;top:${wt-70}px;font-size:var(--fs-5xl);transition:top 1.4s cubic-bezier(.3,.7,.4,1)`; lb.appendChild(el);
+      el.style.cssText=`left:${x}%;top:${wt-70}px;font-size:var(--fs-5xl);transition:top 1.4s cubic-bezier(.3,.7,.4,1)`; lb.appendChild(el); landSquash(el);
       requestAnimationFrame(()=>requestAnimationFrame(()=>{ el.style.top=(o[2]?wt-28:H-70)+'px'; })); setTimeout(splashS,500);
       if (o[2]) setTimeout(()=>el.style.animation='bob 2s ease-in-out infinite',1500);
       setTimeout(()=>speak(`${o[1]}: ${o[2]?'¡flota!':'¡se hunde!'}`),900); };
