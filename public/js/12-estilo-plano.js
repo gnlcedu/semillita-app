@@ -148,6 +148,8 @@ ti_story:()=>svg(`${R(22,26,54,66,6,K.lav)}${R(22,26,11,66,4,shade(K.lav,-.12))}
 PL.ic_idea=()=>svg(`${rayos(50,40,30,38,7,shade(K.amarillo,-.1),4)}${P('M34 56 Q26 46 28 36 Q32 16 50 16 Q68 16 72 36 Q74 46 66 56 Q62 62 62 68 H38 Q38 62 34 56Z',K.amarillo)}${R(38,68,24,16,5,K.gris)}${L('M40 76 H60',K.grisO,1.6)}`);
 PL.abeja=()=>svg(`${E(42,36,12,9,K.blanco,-25)}${E(58,34,12,9,K.blanco,25)}${E(48,58,28,20,K.amarillo)}${F('M42 39 Q40 58 42 77 L48 78 Q46 58 48 38Z',K.tinta)}${F('M58 41 Q56 58 58 75 L64 73 Q62 58 64 43Z',K.tinta)}<ellipse cx="48" cy="58" rx="28" ry="20" fill="none" ${sk(K.amarillo)}/>${P('M75 60 L85 58 L75 54Z',K.tinta)}${D(30,54,2.6,K.tinta)}`);
 window.PLANO=PL;
+/* ayudantes de dibujo para otros archivos del estilo plano (13-plano-lugares.js …) */
+window.PLANO_KIT={K,f,o,sk,P,Pn,C,E,R,F,D,L,Lo,svg,sombra,bola,hoja,tallo,petalos,estrella,anillo,gotaG,rayos,NUBE};
 
 /* íconos monocromos (toman el color del texto), en lugar de los de Kenney */
 const MONO={
@@ -155,6 +157,7 @@ const MONO={
   silencio:'<path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path d="M16.5 9.5l5 5M21.5 9.5l-5 5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>'
 };
 
+window.PLANO_MONO=MONO;
 /* ---------- conexión con ilu(), emo(), kic() y toyIcon() ---------- */
 const tamCss=t=>typeof t==='number'?t+'px':t;
 const _ilu=window.ilu, _fuente=window.iluFuente, _kic=window.kic;

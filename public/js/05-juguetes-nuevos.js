@@ -13,18 +13,17 @@ function toyShop(root){
   const PROD=[['🍞','pan','panes',10],['🥚','huevo','huevos',8],['🍌','guineo','guineos',5],['🥛','leche','leches',45],['🧃','jugo','jugos',25],['🧀','queso','quesos',60],['🍫','chocolate','chocolates',30],['🥑','aguacate','aguacates',20],['🍬','dulce','dulces',2],['🍚','arroz','arroces',35],['🍋','limón','limones',3],['🥤','refresco','refrescos',40]];
   const MONEY=[1,5,10,25,50,100,200,500];
   const CUST=['🐶','🐱','🐰','🐥','🐮','🐷','🦁','🐵','🐯','🦒','🐘','🦜'];
-  /* clientes en 3D (Kenney Cube Pets), solo para mostrar */
-  const CLI={'🐶':'cliente_perro','🐱':'cliente_gato','🐰':'cliente_conejo','🐥':'cliente_pollito','🐮':'cliente_vaca','🐷':'cliente_cerdo','🦁':'cliente_leon','🐵':'cliente_mono','🐯':'cliente_tigre','🦒':'cliente_jirafa','🐘':'cliente_elefante','🦜':'cliente_loro'};
-  const custArt=e=> CLI[e]&&iluFuente(CLI[e]) ? ilu(CLI[e],'1.25em') : emo(e);
+  /* clientes: los animalitos de la app con ropa distinta (13-plano-lugares.js), solo para mostrar */
+  const custArt=e=>{ const [sp,outfit]=(window.CLIENTES||{})[e]||['leon',{}]; return `<span class="cli">${creature(sp,{outfit})}</span>`; };
   let order=null, bag=[], cash=[], paid=0;
   const money=(v,s=1)=> v<50 ? `<span style="display:inline-grid;place-items:center;width:${(30+v*.6)*s}px;height:${(30+v*.6)*s}px;border-radius:50%;background:${v===25||v===1?'#E9C46A':'#C9CCD3'};border:3px solid rgba(0,0,0,.12);font-size:${11*s}px;font-weight:800">${v}</span>`
     : `<span style="display:inline-grid;place-items:center;width:${64*s}px;height:${34*s}px;border-radius:6px;background:${{50:'#C9B8EE',100:'#F7C59F',200:'#F5B8D0',500:'#A9D3F0'}[v]};border:var(--bw) solid rgba(0,0,0,.12);font-size:${13*s}px;font-weight:800">RD$${v}</span>`;
-  addHTML(root, `<div class="abs" style="inset:0 0 var(--tbar-h) 0;background:linear-gradient(#FFF4E4 0 38%,#F3E3C9 38%)"></div>
+  addHTML(root, `<div class="abs" style="inset:0 0 var(--tbar-h) 0;background:linear-gradient(#FFF4E4 0 38%,#F1E0C6 38%)"></div>
     ${scene('colmado','inset:0 0 var(--tbar-h) 0')}
     <div class="abs" style="left:0;right:0;top:0;height:30px;background:repeating-linear-gradient(90deg,var(--c-rosa) 0 30px,var(--white) 30px 60px);border-radius:0 0 50% 50%/0 0 14px 14px;z-index:1"></div>
     <div id="cu" class="abs" style="left:14px;top:46px;display:flex;align-items:flex-end;gap:var(--s-2);max-width:68%;z-index:5"></div>
     <div id="sh" class="abs" style="left:10px;right:10px;top:150px;display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s-2)"></div>
-    <div class="abs" style="right:14px;bottom:162px;width:84px;z-index:0;pointer-events:none">${ilu('caja','100%')}</div>
+    <div class="abs caja-r" style="right:14px;bottom:162px;width:84px;height:84px;z-index:0;pointer-events:none"><span class="cajon">${ilu('cajon','100%')}</span>${ilu('caja','100%')}</div>
     <div id="bg" class="abs" style="left:10px;right:10px;bottom:84px;min-height:64px;background:var(--card);border:2px dashed var(--line);border-radius:var(--r-md);padding:var(--s-2);display:flex;flex-wrap:wrap;gap:var(--s-2);align-items:center"></div>
     <div class="tbar" id="tb2"></div>`);
   const cu=root.querySelector('#cu'), sh=root.querySelector('#sh'), bg=root.querySelector('#bg'), tb=root.querySelector('#tb2'); sceneParallax(root); scenePet(root,{at:'right:8px;top:40px',size:60,prop:ilu('delantal','100%'),cls:'pet-shop'});
@@ -36,17 +35,18 @@ function toyShop(root){
     paid = lv===3 ? [50,100,200,500].find(b=>b>total) : 0;
     order={items,total,who};
     const txt='Quiero '+items.map(([i,n])=>`${n} ${n===1?PROD[i][1]:PROD[i][2]}`).join(' y ');
-    cu.innerHTML=`<span style="font-size:var(--fs-8xl);display:inline-block;line-height:1;animation:popin .4s both">${custArt(who)}</span><div class="bubble" style="font-size:var(--fs-sm);padding:var(--s-2) var(--s-3)">${txt}${lv===3?`<br><span class="muted">Te pago con ${money(paid,.7)}</span>`:''}</div>`;
+    cu.innerHTML=`<span style="font-size:var(--fs-8xl);display:inline-block;line-height:1">${custArt(who)}</span><div class="bubble" style="font-size:var(--fs-sm);padding:var(--s-2) var(--s-3);animation-delay:.75s">${txt}${lv===3?`<br><span class="muted">Te pago con ${money(paid,.7)}</span>`:''}</div>`;
+    entrar(cu.firstElementChild);
     tsay(txt+(lv===3?`. Te pago con ${paid} pesos`:''));
     drawBag();
   }
-  function drawBag(){
+  function drawBag(nuevo){
     const hint = lv===1?'Toca los productos que pide':'1) Toca los productos que pide';
-    bg.innerHTML = bag.length ? bag.map(i=>`<span style="font-size:var(--fs-3xl);animation:popin .3s both">${emo(PROD[i][0])}</span>`).join('') : `<span class="muted" style="font-weight:700">${emo('🛍️','1.6em')} ${hint}</span>`;
+    bg.innerHTML = bag.length ? bag.map((i,j)=>`<span style="font-size:var(--fs-3xl);${nuevo&&j===bag.length-1?'animation:popin .3s .42s both':''}">${emo(PROD[i][0])}</span>`).join('') : `<span class="muted" style="font-weight:700">${emo('🛍️','1.6em')} ${hint}</span>`;
     if (lv>1 && bag.length){ const step = lv===2?'2) Cobra: toca el dinero que te da':`2) Da el cambio de RD$${paid}`;
       bg.insertAdjacentHTML('beforeend',`<div style="width:100%;border-top:2px dashed var(--line);margin-top:var(--s-2);padding-top:var(--s-2);font-weight:800">${step}: ${cash.map(v=>money(v,.6)).join(' ')} <span class="muted">= RD$${cash.reduce((a,b)=>a+b,0)}</span></div>`); }
-    tb.innerHTML=(lv>1?MONEY.filter(v=>lv===3||v<=100).map(v=>`<button data-m="${v}" style="padding:0 var(--s-2)">${money(v,.8)}</button>`).join('')+'<span class="sep"></span>':'')+`<button id="un">⌫</button><button id="ok" style="background:var(--c-menta)">✅ Entregar</button>`;
-    tb.querySelectorAll('[data-m]').forEach(b=>b.addEventListener('click',()=>{ if(!bag.length){ tsay('Primero pon los productos en la funda'); return; } cash.push(+b.dataset.m); coinS(); drawBag(); }));
+    tb.innerHTML=(lv>1?MONEY.filter(v=>lv===3||v<=100).map(v=>`<button data-m="${v}" style="padding:0 var(--s-2)">${money(v,.8)}</button>`).join('')+'<span class="sep"></span>':'')+`<button id="un" aria-label="Quitar">⌫</button><button id="ok" style="background:var(--c-menta)">${kic('check')} Entregar</button>`;
+    tb.querySelectorAll('[data-m]').forEach(b=>b.addEventListener('click',()=>{ if(!bag.length){ tsay('Primero pon los productos en la funda'); return; } cash.push(+b.dataset.m); volar(b,bg,money(+b.dataset.m,.8),{arco:-40}); coinS(); drawBag(); }));
     tb.querySelector('#un').addEventListener('click',()=>{ if(cash.length) cash.pop(); else bag.pop(); drawBag(); });
     tb.querySelector('#ok').addEventListener('click',check);
   }
@@ -57,9 +57,11 @@ function toyShop(root){
     const sum=cash.reduce((a,b)=>a+b,0);
     if (lv===2 && sum!==order.total){ tsay(`Cuenta otra vez. Son ${order.total} pesos`); note(220,.2,'sine',.1); return; }
     if (lv===3 && sum!==paid-order.total){ tsay(`El total es ${order.total}. Te pagó ${paid}. ¿Cuánto cambio le das?`); note(220,.2,'sine',.1); return; }
-    coinS(); confetti(); cu.querySelector('span').style.animation='hop .7s 2'; win(lv===1?'¡Gracias! ¡Vuelvo mañana!':lv===2?`¡Gracias! Pagué ${order.total} pesos`:`¡Gracias por el cambio de ${paid-order.total} pesos!`); setTimeout(newCustomer,2800);
+    coinS(); confetti(); cu.querySelector('span').style.animation='hop .7s 2'; abrirCaja(); setTimeout(()=>salir(cu.firstElementChild),1500); win(lv===1?'¡Gracias! ¡Vuelvo mañana!':lv===2?`¡Gracias! Pagué ${order.total} pesos`:`¡Gracias por el cambio de ${paid-order.total} pesos!`); setTimeout(newCustomer,2800);
   }
-  sh.querySelectorAll('[data-p]').forEach(b=>b.addEventListener('click',()=>{ if (cash.length){ tsay('Ya estás cobrando. Usa ⌫ para corregir'); return; } bag.push(+b.dataset.p); popS(); speak(PROD[+b.dataset.p][1]); drawBag(); }));
+  sh.querySelectorAll('[data-p]').forEach(b=>b.addEventListener('click',()=>{ if (cash.length){ tsay('Ya estás cobrando. Usa ⌫ para corregir'); return; } bag.push(+b.dataset.p); volar(b.querySelector('span'),bg,emo(PROD[+b.dataset.p][0],'1em')); popS(); speak(PROD[+b.dataset.p][1]); drawBag(true); }));
+  /* la caja registradora abre el cajón al cobrar */
+  function abrirCaja(){ const c=root.querySelector('.cajon'); temblar(root.querySelector('.caja-r'),{px:2}); if(!c||!c.animate||(typeof RM!=='undefined'&&RM)) return; c.animate([{transform:'translateY(0)'},{transform:'translateY(12%)',offset:.2},{transform:'translateY(12%)',offset:.8},{transform:'translateY(0)'}],{duration:1100,easing:'ease-out'}); }
   setTimeout(newCustomer,300);
 }
 
@@ -190,23 +192,23 @@ function toyBody(root){
 function toyLab(root){
   const lv=LV(); let mode='flota', cleanup=[];
   addHTML(root, `${scene('laboratorio','inset:0 0 var(--tbar-h) 0')}<div id="lb" class="abs" style="inset:0 0 var(--tbar-h) 0;overflow:hidden"></div>
-    <div class="tbar"><button data-m="flota" class="on">🛁 ¿Flota o se hunde?</button><button data-m="iman">🧲 Imanes</button><button data-m="volcan">🌋 Volcán</button></div>`);
+    <div class="tbar"><button data-m="flota" class="on">${ilu('tina','1.3em')} ¿Flota o se hunde?</button><button data-m="iman">${ilu('iman','1.2em')} Imanes</button><button data-m="volcan">${ilu('volcan','1.3em')} Volcán</button></div>`);
   const lb=root.querySelector('#lb'); sceneParallax(root); scenePet(root,{at:'right:4px;bottom:74px',size:54,prop:ilu('bata','100%'),cls:'pet-lab'});
   function flota(){
     const OB=[['🪵','madera',1],['🪨','piedra',0],['🍎','manzana',1],['🔑','llave',0],['🦆','pato de goma',1],['⚓','ancla',0],['🧽','esponja',1],['🔩','tornillo',0],['🏐','pelota',1],['🥄','cuchara',0]];
-    const oe=e=>e==='🦆'?e:emo(e); /* el pato de goma sigue como emoji: el de Kenney es un pato de granja */
+    const oe=e=>e==='🦆'?ilu('patito','1em'):emo(e); /* pato de goma propio (el 🦆 general es el pato de granja) */
     const W=lb.clientWidth, H=lb.clientHeight, wt=H*.42;
-    lb.innerHTML=`<div class="abs" style="left:6%;right:6%;top:${wt}px;bottom:16px;background:linear-gradient(#A9D3F0cc,#6FA3CBcc);border:4px solid #CFE3F1;border-top:none;border-radius:0 0 26px 26px"></div>
+    lb.innerHTML=`<div class="abs agua" style="left:6%;right:6%;top:${wt}px;bottom:16px"></div>
       <div class="abs" style="left:10px;right:10px;top:14px;display:flex;flex-wrap:wrap;gap:var(--s-2);justify-content:center">${OB.map((o,i)=>`<button data-o="${i}" style="font-size:var(--fs-4xl);line-height:1;background:var(--card);border:var(--bw) solid var(--line-2);border-radius:var(--r-sm);padding:var(--s-1) var(--s-2);box-shadow:var(--sh-btn)">${oe(o[0])}</button>`).join('')}</div>
       <div id="pq" class="abs" style="left:0;right:0;top:${wt-60}px;text-align:center"></div>`;
     const drop=(o,i)=>{ const el=document.createElement('div'); el.className='abs'; el.innerHTML=oe(o[0]); const x=rnd(14,76);
       el.style.cssText=`left:${x}%;top:${wt-70}px;font-size:var(--fs-5xl);transition:top 1.4s cubic-bezier(.3,.7,.4,1)`; lb.appendChild(el); landSquash(el);
-      requestAnimationFrame(()=>requestAnimationFrame(()=>{ el.style.top=(o[2]?wt-28:H-70)+'px'; })); setTimeout(splashS,500);
+      requestAnimationFrame(()=>requestAnimationFrame(()=>{ el.style.top=(o[2]?wt-28:H-70)+'px'; })); const cxo=()=>el.offsetLeft+el.offsetWidth/2; setTimeout(()=>{ splashS(); ondas(lb,cxo(),wt,{ancho:84}); gotitas(lb,cxo(),wt-4,{n:5}); },480); if(!o[2]) setTimeout(()=>burbujitas(lb,cxo(),H-70,{n:4,sube:H-70-wt}),800);
       if (o[2]) setTimeout(()=>el.style.animation='bob 2s ease-in-out infinite',1500);
       setTimeout(()=>speak(`${o[1]}: ${o[2]?'¡flota!':'¡se hunde!'}`),900); };
     lb.querySelectorAll('[data-o]').forEach(b=>b.addEventListener('click',()=>{ const o=OB[+b.dataset.o]; b.disabled=true; b.style.opacity=.35;
       if (lv===1){ drop(o); return; }
-      const pq=lb.querySelector('#pq'); pq.innerHTML=`<div class="bubble" style="display:inline-block;font-size:var(--fs-sm)">¿${oe(o[0])} flota o se hunde?<br><button class="chip" data-a="1">🛟 Flota</button> <button class="chip" data-a="0">⬇️ Se hunde</button></div>`;
+      const pq=lb.querySelector('#pq'); pq.innerHTML=`<div class="bubble" style="display:inline-block;font-size:var(--fs-sm)">¿${oe(o[0])} flota o se hunde?<br><button class="chip" data-a="1">${ilu('flotador','1.2em')} Flota</button> <button class="chip" data-a="0">${ilu('ancla','1.2em')} Se hunde</button></div>`;
       speak(`¿La ${o[1]} flota o se hunde?`.replace('La pato','El pato').replace('La tornillo','El tornillo'));
       pq.querySelectorAll('[data-a]').forEach(a=>a.addEventListener('click',()=>{ pq.innerHTML=''; drop(o); const ok=+a.dataset.a===o[2];
         setTimeout(()=>{ if(ok) win('¡Lo predijiste bien!'); else tsay(lv===3?(o[2]?'Flota porque es menos densa que el agua':'Se hunde porque es más densa que el agua'):'¡Sorpresa! Mira qué pasó'); },1700); })); }));
@@ -215,32 +217,35 @@ function toyLab(root){
     const OB=[['📎','clip',1],['🔩','tornillo',1],['🧷','imperdible',1],['✂️','tijeras',1],['🪛','destornillador',1],['🪵','madera',0],['🧸','peluche',0],['✏️','lápiz',0],['🧦','media',0],['🍎','manzana',0],['🎈','globo',0]];
     const W=lb.clientWidth, H=lb.clientHeight; const items=OB.map((o,i)=>{ const el=document.createElement('div'); el.className='abs'; el.innerHTML=emo(o[0]); const x=rnd(10,W-60), y=rnd(H*.35,H-60);
       el.style.cssText=`left:${x}px;top:${y}px;font-size:var(--fs-4xl);transition:left .25s,top .25s`; lb.appendChild(el); return {o,el,stuck:false,x,y}; });
-    lb.insertAdjacentHTML('afterbegin',`<p class="muted" style="text-align:center;font-weight:800;margin:var(--s-4) 40px 0">Arrastra el imán 🧲 cerca de las cosas</p>`);
-    const mg=document.createElement('div'); mg.className='abs'; mg.textContent='🧲'; mg.style.cssText=`left:${W/2-30}px;top:60px;font-size:var(--fs-7xl);z-index:5`; lb.appendChild(mg);
+    lb.insertAdjacentHTML('afterbegin',`<p class="muted" style="text-align:center;font-weight:800;margin:var(--s-4) 40px 0">Arrastra el imán ${ilu('iman','1.3em')} cerca de las cosas</p>`);
+    const mg=document.createElement('div'); mg.className='abs'; mg.innerHTML=ilu('iman','1em'); mg.style.cssText=`left:${W/2-30}px;top:60px;font-size:var(--fs-7xl);z-index:5`; lb.appendChild(mg);
     let found=0; const total=OB.filter(o=>o[2]).length;
     const tick=()=>{ const mx=parseFloat(mg.style.left)+30, my=parseFloat(mg.style.top)+40;
       items.forEach((it,k)=>{ if (it.stuck){ it.el.style.left=(mx-20+((k%3)-1)*22)+'px'; it.el.style.top=(my+10+Math.floor(k/3)%2*14)+'px'; return; }
-        if (it.o[2] && Math.hypot(it.x+18-mx,it.y+18-my)<80){ it.stuck=true; note(1046,.12,'triangle',.08); speak(`¡El imán atrae ${it.o[1]==='tijeras'?'las':'el'} ${it.o[1]}!`); found++;
+        if (it.o[2] && Math.hypot(it.x+18-mx,it.y+18-my)<80){ it.stuck=true; note(1046,.12,'triangle',.08); temblar(mg,{px:3,ms:300}); if(it.el.animate&&!RM) it.el.animate([{transform:'scale(1.35)'},{transform:'scale(1)'}],{duration:320,easing:'ease-out'}); speak(`¡El imán atrae ${it.o[1]==='tijeras'?'las':'el'} ${it.o[1]}!`); found++;
           if (found===total){ setTimeout(()=>win(lv>1?'¡Encontraste todo! El imán atrae los objetos de hierro y acero':'¡Lo encontraste todo!'),600); } } }); };
     dragify(mg, lb, {drop:tick}); const iv=setInterval(()=>{ if(mg.classList.contains('drag')) tick(); },120); cleanup.push(()=>clearInterval(iv));
   }
   function volcan(){
     let bic=0, vin=0, col=false;
-    lb.innerHTML=`<svg class="abs" viewBox="0 0 300 260" style="left:50%;bottom:14px;transform:translateX(-50%);width:min(90%,340px)"><path d="M20 250 L120 70 L180 70 L280 250Z" fill="#C9A27E" stroke="#A9825E" stroke-width="4"/><ellipse cx="150" cy="70" rx="30" ry="9" fill="#7A5A3E"/></svg>
+    lb.innerHTML=`<svg class="abs" viewBox="0 0 300 260" style="left:50%;bottom:14px;transform:translateX(-50%);width:min(90%,340px)"><path d="M20 250 L120 70 L180 70 L280 250Z" fill="#D9B08A" stroke="#A9825F" stroke-width="1.6" vector-effect="non-scaling-stroke" stroke-linejoin="round"/><path d="M70 180 L96 170 M200 190 L222 178 M150 210 L170 204" stroke="#C29A7C" stroke-width="5" stroke-linecap="round"/><path class="lava" d="M128 74 Q126 108 112 136 Q120 142 128 128 Q138 104 142 76Z" stroke="rgba(0,0,0,.12)" stroke-width="1.6" vector-effect="non-scaling-stroke"/><path class="lava" d="M160 76 Q166 112 186 150 Q178 156 170 140 Q156 110 152 76Z" stroke="rgba(0,0,0,.12)" stroke-width="1.6" vector-effect="non-scaling-stroke"/><ellipse cx="150" cy="70" rx="30" ry="9" fill="#8E6B52"/><path d="M30 250 q8 -14 16 0 M250 250 q8 -14 16 0" fill="#A3D69B" stroke="#6E9A69" stroke-width="1.6" vector-effect="non-scaling-stroke"/></svg>
       <div id="fx" class="abs" style="inset:0;pointer-events:none"></div>
-      <div class="abs" style="left:0;right:0;top:16px;display:flex;justify-content:center;gap:var(--s-2);flex-wrap:wrap"><button class="chip" id="b1">🥄 Bicarbonato</button><button class="chip" id="b2">🧴 Vinagre</button><button class="chip" id="b3">🎨 Colorante</button><button class="chip" id="b4">🔄</button></div>
+      <div class="abs" style="left:0;right:0;top:16px;display:flex;justify-content:center;gap:var(--s-2);flex-wrap:wrap"><button class="chip" id="b1">${ilu('cuchara','1.3em')} Bicarbonato</button><button class="chip" id="b2">${ilu('botella','1.3em')} Vinagre</button><button class="chip" id="b3">${ilu('gotero','1.3em')} Colorante</button><button class="chip" id="b4" aria-label="Empezar de nuevo">${kic('reiniciar','1.1em')}</button></div>
       <div id="vs" class="abs" style="left:0;right:0;top:112px;text-align:center;font-weight:800"></div>`;
     const vs=lb.querySelector('#vs'), fx=lb.querySelector('#fx');
-    const st=()=>vs.innerHTML=`Bicarbonato: ${'🥄'.repeat(bic)||'—'} · Vinagre: ${'🧴'.repeat(vin)||'—'}`; st();
-    const erupt=()=>{ const n=Math.min(bic,vin)*30+20; const r=lb.getBoundingClientRect(), v=lb.querySelector('svg').getBoundingClientRect(); const cx=v.left-r.left+v.width/2, cy=v.top-r.top+v.height*.27;
+    const st=()=>vs.innerHTML=`Bicarbonato: ${ilu('cuchara','1.3em').repeat(bic)||'—'} · Vinagre: ${ilu('botella','1.3em').repeat(vin)||'—'}`; st();
+    const crater=()=>{ const r=lb.getBoundingClientRect(), v=lb.querySelector('svg').getBoundingClientRect(); return [v.left-r.left+v.width/2, v.top-r.top+v.height*.27]; };
+    const burbujea=()=>{ const [cx,cy]=crater(); burbujitas(fx,cx,cy,{n:3,sube:34,c:col?'#F7B3A8':'#FFFFFF',borde:col?'#D9796A':'#C3C8D6'}); };
+    const lava=()=>{ if(RM) return; lb.querySelectorAll('.lava').forEach((l,i)=>{ l.setAttribute('fill',col?'#EE8A74':'#FFF7EE'); l.animate([{transform:'scaleY(0)'},{transform:'scaleY(1)',offset:.3},{transform:'scaleY(1)',opacity:1,offset:.75},{transform:'scaleY(1)',opacity:0}],{duration:2600,delay:200+i*120,easing:'ease-out'}); }); };
+    const erupt=()=>{ temblar(lb.querySelector('svg'),{px:5,ms:500}); lava(); const n=Math.min(bic,vin)*30+20; const r=lb.getBoundingClientRect(), v=lb.querySelector('svg').getBoundingClientRect(); const cx=v.left-r.left+v.width/2, cy=v.top-r.top+v.height*.27;
       for(let i=0;i<n;i++){ const b=document.createElement('span'); b.className='abs'; const s=rnd(10,26);
-        b.style.cssText=`left:${cx-s/2}px;top:${cy}px;width:${s}px;height:${s}px;border-radius:50%;background:${col?'#F4A6A6':'#FFF7EE'};border:var(--bw) solid ${col?'#E88A8A':'#E8DCCB'};transition:transform ${1+Math.random()}s cubic-bezier(.2,.8,.4,1),opacity 1.6s;opacity:1`;
+        b.style.cssText=`left:${cx-s/2}px;top:${cy}px;width:${s}px;height:${s}px;border-radius:50%;background:${col?'#F4A6A6':'#FFF7EE'};border:1.6px solid ${col?'#D9796A':'#C3C8D6'};transition:transform ${1+Math.random()}s cubic-bezier(.2,.8,.4,1),opacity 1.6s;opacity:1`;
         fx.appendChild(b); requestAnimationFrame(()=>requestAnimationFrame(()=>{ b.style.transform=`translate(${rnd(-110,110)}px,${rnd(-160,90)}px)`; b.style.opacity=0; })); setTimeout(()=>b.remove(),2200); }
       noiseS(1.2,.15,400); confetti();
       win(lv===1?'¡Erupción!':'¡Erupción! El vinagre y el bicarbonato reaccionan y forman un gas, el dióxido de carbono, que hace la espuma');
       bic=0; vin=0; setTimeout(st,1800); };
-    lb.querySelector('#b1').addEventListener('click',()=>{ if(bic<3){ bic++; plopS(); st(); if(vin) erupt(); } });
-    lb.querySelector('#b2').addEventListener('click',()=>{ if(vin<3){ vin++; splashS(); st(); if(bic) erupt(); } });
+    lb.querySelector('#b1').addEventListener('click',()=>{ if(bic<3){ bic++; plopS(); st(); burbujea(); if(vin) erupt(); } });
+    lb.querySelector('#b2').addEventListener('click',()=>{ if(vin<3){ vin++; splashS(); st(); burbujea(); if(bic) erupt(); } });
     lb.querySelector('#b3').addEventListener('click',()=>{ col=!col; tsay(col?'Colorante rojo, como lava':'Sin colorante'); });
     lb.querySelector('#b4').addEventListener('click',()=>{ bic=0; vin=0; st(); });
     tsay(lv===3?'Pon bicarbonato y vinagre. ¿Qué pasa si pones más cantidad?':'Pon bicarbonato y vinagre en el volcán');

@@ -348,11 +348,11 @@ input[type=range].sz{width:110px;accent-color:var(--lavD);flex:none}
 .bubble-b:before{content:"";position:absolute;inset:6%;border-radius:50%;background:conic-gradient(from 200deg,rgba(201,184,238,.35),rgba(169,211,240,.25),rgba(185,227,198,.3),rgba(246,227,154,.25),rgba(245,184,208,.35),rgba(201,184,238,.35));mix-blend-mode:multiply;pointer-events:none}
 #fm button>span{filter:drop-shadow(0 5px 0 rgba(74,70,88,.12))}
 /* fase 5C: frascos de pintura, tazón de vidrio, botón grabar, formas de bloques */
-.jar{position:relative;display:block;width:64px;height:76px;margin-top:12px;border-radius:12px 12px 20px 20px;background:linear-gradient(90deg,rgba(255,255,255,.4) 0 16%,transparent 16%),var(--c);border:3px solid rgba(74,70,88,.14);box-shadow:var(--sh-btn)}
-.jar:before{content:"";position:absolute;left:-6px;right:-6px;top:-14px;height:14px;border-radius:8px;background:#FBF8F4;border:3px solid rgba(74,70,88,.16)}
-.jar:after{content:"";position:absolute;left:14px;right:14px;top:22px;height:26px;border-radius:8px;background:rgba(255,255,255,.75)}
-.bowl{position:absolute;inset:0;border:6px solid #CFE3F1;border-top:none;border-radius:0 0 110px 110px;background:linear-gradient(90deg,rgba(255,255,255,.55) 0 10%,transparent 10% 90%,rgba(255,255,255,.3) 90%);box-shadow:0 8px 0 rgba(111,163,203,.18)}
-.bowl:before{content:"";position:absolute;left:-10px;right:-10px;top:-6px;height:12px;border-radius:50%;border:5px solid #CFE3F1;background:rgba(234,244,251,.4)}
+.jar{position:relative;display:block;width:64px;height:76px;margin-top:12px;border-radius:12px 12px 20px 20px;background:var(--c);border:1.6px solid color-mix(in srgb,var(--c) 68%,#4A4658);box-shadow:var(--sh-btn);transform-origin:50% 90%}
+.jar:before{content:"";position:absolute;left:-6px;right:-6px;top:-14px;height:13px;border-radius:7px;background:#FFF6E6;border:1.6px solid #C9B9A0}
+.jar:after{content:"";position:absolute;left:12px;right:12px;top:24px;height:22px;border-radius:6px;background:#FFF6E6;border:1.6px solid color-mix(in srgb,var(--c) 68%,#4A4658)}
+.bowl{position:absolute;inset:0;border:1.6px solid #7FA9CC;border-top:none;border-radius:0 0 110px 110px;background:rgba(234,245,252,.45)}
+.bowl:before{content:"";position:absolute;left:-8px;right:-8px;top:-6px;height:12px;border-radius:50%;border:1.6px solid #7FA9CC;background:#EAF5FC}
 .recdot{display:inline-block;width:20px;height:20px;border-radius:50%;background:#E8505B;box-shadow:0 0 0 3px rgba(232,80,91,.25)}
 .bshape{display:block;box-shadow:inset 0 -3px 0 rgba(0,0,0,.1)}
 /* fase 5D: canastas tejidas (Ordenar) y caritas en las figuras (Encaje) */
@@ -395,7 +395,6 @@ input[type=range].sz{width:110px;accent-color:var(--lavD);flex:none}
 #fm button:nth-child(3n+2)>span .ilu{animation-delay:-1s}#fm button:nth-child(3n)>span .ilu{animation-delay:-2s}
 @keyframes breathe{0%,100%{transform:scale(1,1)}50%{transform:scale(1.03,.97)}}
 /* productos del colmado y fichas: pequeño salto al aparecer en la funda */
-#bg>span .ilu{animation:popin .3s both}
 /* =========================================================
    RECOMPENSAS · fase 8
    ========================================================= */
@@ -457,3 +456,29 @@ input[type=range].sz{width:110px;accent-color:var(--lavD);flex:none}
 @keyframes pour{0%{opacity:0;transform:translate(-8px,-12px) rotate(0)}18%{opacity:1;transform:rotate(0)}38%,78%{opacity:1;transform:rotate(35deg)}100%{opacity:0;transform:rotate(0)}}
 .wdrop{position:absolute;bottom:104px;width:6px;height:9px;border-radius:50% 50% 50% 50%/40% 40% 60% 60%;background:#A9D3F0;border:1.2px solid #7FA9CC;opacity:0;pointer-events:none;z-index:3;animation:pourDrop .55s ease-in both}
 @keyframes pourDrop{0%{opacity:0;transform:translateY(0)}12%{opacity:1}100%{opacity:0;transform:translateY(74px)}}
+
+/* =========================================================
+   GRUPO A EN ESTILO PLANO (13-plano-lugares.js): colmado, pizzería, laboratorio, mezcla
+   ========================================================= */
+.cli{display:inline-block;width:1.3em;height:1.3em;line-height:0}.cli svg{width:100%;height:100%;overflow:visible}
+.caja-r .ilu,.cajon{position:absolute;inset:0}
+.volando{position:fixed;z-index:60;pointer-events:none;line-height:0;font-size:34px}
+.onda{position:absolute;border:2px solid #fff;border-radius:50%;pointer-events:none;z-index:4}
+.gotita{position:absolute;width:7px;height:9px;border-radius:50% 50% 50% 50%/40% 40% 60% 60%;border:1.2px solid rgba(74,70,88,.25);pointer-events:none;z-index:4}
+.burbujita{position:absolute;border-radius:50%;border:1.4px solid;pointer-events:none;z-index:4}
+.horno-ov{position:absolute;transform:translate(-50%,-50%);z-index:6;pointer-events:none;line-height:0}
+.horno-ov .fuego{transform-box:fill-box;transform-origin:50% 100%;animation:fuego .32s ease-in-out infinite alternate}
+@keyframes fuego{from{transform:scaleY(.88)}to{transform:scaleY(1.08)}}
+.vapor{position:absolute;width:14px;height:42px;pointer-events:none;z-index:4;margin-left:-7px}.vapor svg{width:100%;height:100%;display:block}
+.miga{position:absolute;width:6px;height:6px;border-radius:2px;background:#E4B871;pointer-events:none;z-index:4}
+.remolino{position:absolute;left:50%;top:62%;width:90px;height:90px;pointer-events:none;z-index:2;line-height:0}.remolino svg{width:100%;height:100%}
+.spark .ilu{width:1em;height:1em}.spark-dot{display:block;width:10px;height:10px;border-radius:50%}
+@keyframes caer{from{opacity:0;transform:translateY(-70px) rotate(var(--r)) scale(1.15)}65%{opacity:1;transform:translateY(4px) rotate(var(--r)) scale(1.06,.9)}to{transform:rotate(var(--r))}}
+/* laboratorio: agua plana del tanque y lava del volcán */
+.agua{background:rgba(169,211,240,.8);border:1.6px solid #7FA9CC;border-top:none;border-radius:0 0 26px 26px}
+.agua:before{content:"";position:absolute;left:0;right:0;top:0;height:8px;background:#C9E4F6;border-bottom:1.6px solid #9CC4E4}
+.lava{transform-box:fill-box;transform-origin:50% 0;transform:scaleY(0)}
+/* mezcla colores: pared y mesa planas, gota de pintura */
+.mix-fondo{background:linear-gradient(#FFF6EA 0 64%,#E6C39C 64% 100%)}
+.mix-fondo:before{content:"";position:absolute;left:0;right:0;top:64%;height:12px;background:#D9B08A;border-top:1.6px solid #B48C66;border-bottom:1.6px solid #B48C66}
+.gota-pint{width:24px;height:30px;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;background:var(--c);border:1.6px solid color-mix(in srgb,var(--c) 68%,#4A4658)}

@@ -13,11 +13,12 @@ App educativa para niños de 5 a 12 años (República Dominicana), estilo Pok Po
   6. `08-ilustraciones.js` — `ILU` (SVG propios), `ilu()`, `emo()`, `kic()`, `toyIcon()`, `emoDOM()`.
   7. `09-escenarios.js` — `scene()`, `sceneParallax()`, `scenePet()`, `setPetProp()`; envuelve `tsay` para la expresión de sorpresa.
   8. `12-estilo-plano.js` — **estilo plano** (`PLANO`, paleta `PAL`); envuelve `ilu`, `kic` e `iluFuente` para usar primero las piezas planas, y reemplaza la escena del jardín.
-  9. `10-animaciones.js` — entrada de pantallas (envuelve `go`), `squash()`, `landSquash()`.
-  10. `11-recompensas.js` — `flyStars()`, `showLevelUp()`; envuelve `win`, `giveSticker` y `addXP` (misma lógica y datos).
-  11. `05-juguetes-nuevos.js` — colmado, granja, reloj, mapas, cuerpo, laboratorio, tangram.
-  12. `06-juguetes-completos.js` — Pintar, Mi jardín, Música (7 instrumentos), Acuario y Bloques completos.
-  13. `07-aprender-adultos.js` — cuentos, lectura, cálculo mental, inglés, modo aula, reporte, límite de tiempo e **inicio de la app** (`render()` al final).
+  9. `13-plano-lugares.js` — piezas planas de colmado, pizzería, laboratorio y mezcla; animaciones `volar`, `entrar`/`salir`, `temblar`, `ondas`, `gotitas`, `burbujitas`, `hornear`, `vapor`, `migas`, `remolino`; `sparks` plano; escena del colmado.
+  10. `10-animaciones.js` — entrada de pantallas (envuelve `go`), `squash()`, `landSquash()`.
+  11. `11-recompensas.js` — `flyStars()`, `showLevelUp()`; envuelve `win`, `giveSticker` y `addXP` (misma lógica y datos).
+  12. `05-juguetes-nuevos.js` — colmado, granja, reloj, mapas, cuerpo, laboratorio, tangram.
+  13. `06-juguetes-completos.js` — Pintar, Mi jardín, Música (7 instrumentos), Acuario y Bloques completos.
+  14. `07-aprender-adultos.js` — cuentos, lectura, cálculo mental, inglés, modo aula, reporte, límite de tiempo e **inicio de la app** (`render()` al final).
 - Varias funciones se **sobrescriben** en archivos posteriores (`vHome`, `mascot`, `win`, `finish`, `vAdults`, `go`, `tsay`, `giveSticker`, `addXP`). Antes de editar una función, busca si se redefine más adelante.
 - Vistas extra se registran en `window.VIEWS[nombre]`.
 - `src/main.js` es un módulo ES: solo carga la letra Nunito y registra la PWA.
@@ -54,7 +55,8 @@ TOYS.push({id:'nuevo', name:'Nombre', icon:'🎈', c:'mint', open:toyNuevo, hi:'
 - **Estilo único: plano** (`docs/GUIA-ILUSTRACIONES.md`, catálogo en `/docs/estilo-plano.html`).
   - Formas planas, contorno suave de 1,6 px en un tono más oscuro del relleno, paleta pastel `PAL`, sin brillos ni 3D, sin caras en objetos.
   - Toda pieza nueva se dibuja en `12-estilo-plano.js`. No se agregan más imágenes de Kenney ni emojis visibles.
-  - Ya están en estilo plano: inicio, Mi jardín y el animalito. Los demás juguetes se pasan uno por uno.
+  - Ya están en estilo plano: inicio, Mi jardín, el animalito, Mi colmado, Pizzería, Laboratorio y Mezcla colores. Los demás juguetes se pasan por grupos (B naturaleza, C crear, D aprender e ingenio).
+  - Cada juguete pasado al estilo plano lleva animaciones que cuentan lo que pasa (ver `13-plano-lugares.js`), siempre con versión quieta para `RM`.
 - **Gráficos anteriores (en retirada): Kenney y SVG con brillo como respaldo.**
   - `ilu('nombre', tam)` muestra la pieza.
   - `emo('🍎')` muestra la ilustración de un emoji. Los datos y las comparaciones siguen usando el emoji.

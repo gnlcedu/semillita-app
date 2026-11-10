@@ -72,17 +72,17 @@ function toyPaint(root){
 
 /* ---------- 2. Mezcla colores ---------- */
 function toyMix(root){
-  const POTS={r:['rojo','#E8505B'],y:['amarillo','#F7C948'],b:['azul','#3D8BD9'],w:['blanco','#FFFFFF']};
+  const POTS={r:['rojo','#EE7A7A'],y:['amarillo','#F6D36F'],b:['azul','#7DAEE3'],w:['blanco','#FFFFFF']};
   const EN={rojo:'red',amarillo:'yellow',azul:'blue',anaranjado:'orange',verde:'green',morado:'purple','marrón':'brown',rosado:'pink',celeste:'light blue',lila:'lilac',blanco:'white','verde claro':'light green','salmón':'salmon','amarillo claro':'light yellow',beige:'beige'};
   let cnt={r:0,y:0,b:0,w:0}, lastName='';
   const lighten=(h,a)=>{ const n=parseInt(h.slice(1),16); const f=c=>Math.round(c+(255-c)*a); return `rgb(${f(n>>16)},${f(n>>8&255)},${f(n&255)})`; };
   function mix(){ const R=cnt.r>0, Y=cnt.y>0, B=cnt.b>0; let n='', c='#F4EFE8';
-    if (R&&Y&&B){n='marrón';c='#8B5E3C';} else if(R&&Y){n='anaranjado';c='#F28C38';} else if(Y&&B){n='verde';c='#4CAF6A';} else if(R&&B){n='morado';c='#8E5BB5';}
+    if (R&&Y&&B){n='marrón';c='#B98A6A';} else if(R&&Y){n='anaranjado';c='#F6A86A';} else if(Y&&B){n='verde';c='#8CCB8C';} else if(R&&B){n='morado';c='#B39AD9';}
     else if(R){n='rojo';c=POTS.r[1];} else if(Y){n='amarillo';c=POTS.y[1];} else if(B){n='azul';c=POTS.b[1];} else if(cnt.w){n='blanco';c='#FFFFFF';}
     if (cnt.w && n && n!=='blanco'){ c=lighten(c,Math.min(.65,cnt.w*.22)); n={rojo:'rosado',azul:'celeste',morado:'lila',verde:'verde claro',anaranjado:'salmón',amarillo:'amarillo claro','marrón':'beige'}[n]; }
     return [n,c]; }
-  addHTML(root, `<div style="position:absolute;inset:0 0 var(--tbar-h) 0;display:flex;flex-direction:column;align-items:center;justify-content:space-around;padding:50px var(--s-3) var(--s-3)">
-    <div style="position:relative;width:220px;height:150px"><div id="liq" style="position:absolute;left:14px;right:14px;bottom:14px;height:0;border-radius:0 0 100px 100px;background:#F4EFE8;transition:height .5s,background .7s"></div>
+  addHTML(root, `<div class="abs mix-fondo" aria-hidden="true" style="inset:0 0 var(--tbar-h) 0"></div><div style="position:absolute;inset:0 0 var(--tbar-h) 0;display:flex;flex-direction:column;align-items:center;justify-content:space-around;padding:50px var(--s-3) var(--s-3)">
+    <div style="position:relative;width:220px;height:150px"><div style="position:absolute;inset:0;border-radius:0 0 110px 110px;overflow:hidden"><div id="liq" style="position:absolute;left:0;right:0;bottom:0;height:0;background:#F4EFE8;transform-origin:50% 100%;transition:height .5s,background .7s"></div></div>
       <div class="bowl"></div></div>
     <div style="text-align:center;min-height:62px"><div id="nm" style="font-size:var(--fs-3xl);font-weight:800"></div><div id="en" class="muted" style="font-weight:700"></div></div>
     <div style="display:flex;gap:var(--s-4);flex-wrap:wrap;justify-content:center">${Object.entries(POTS).map(([k,[n,c]])=>`<button data-k="${k}" style="display:flex;flex-direction:column;align-items:center;gap:var(--s-2);font-weight:800"><span class="jar" style="--c:${c}"></span>${n}</button>`).join('')}</div></div>
@@ -91,7 +91,7 @@ function toyMix(root){
   const liq=root.querySelector('#liq');
   const GOALS = LV()===2 ? ['anaranjado','verde','morado','marrón'] : ['anaranjado','verde','morado','marrón','rosado','celeste','lila','verde claro','salmón'];
   let goal=null; const gEl=root.querySelector('#goal');
-  const newGoal=()=>{ if(LV()<2) return; goal=pick(GOALS.filter(g=>g!==goal)); gEl.style.display='block'; gEl.innerHTML=`🎯 Haz el color <b>${goal}</b>`; tsay(`Reto: haz el color ${goal}`); };
+  const newGoal=()=>{ if(LV()<2) return; goal=pick(GOALS.filter(g=>g!==goal)); gEl.style.display='block'; gEl.innerHTML=`${ilu('diana','1.2em')} Haz el color <b>${goal}</b>`; tsay(`Reto: haz el color ${goal}`); };
   setTimeout(newGoal,2600);
   const upd=()=>{ const [n,c]=mix(); const tot=cnt.r+cnt.y+cnt.b+cnt.w; liq.style.height=Math.min(110,tot*16)+'px'; liq.style.background=c;
     root.querySelector('#nm').textContent=n?n[0].toUpperCase()+n.slice(1):''; root.querySelector('#en').textContent=n?'En inglés: '+EN[n]:'';
@@ -101,9 +101,11 @@ function toyMix(root){
   root.querySelectorAll('[data-k]').forEach(b=>b.addEventListener('click',()=>{
     const k=b.dataset.k; if (cnt.r+cnt.y+cnt.b+cnt.w>=7){ tsay('¡El tazón está lleno! Toca Vaciar.'); return; }
     const a=b.getBoundingClientRect(), t=liq.parentElement.getBoundingClientRect(), r=root.getBoundingClientRect();
-    const d=document.createElement('div'); d.className='abs'; d.style.cssText=`left:${a.left-r.left+a.width/2-12}px;top:${a.top-r.top}px;width:24px;height:30px;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;background:${POTS[k][1]};border:var(--bw) solid rgba(0,0,0,.1);transition:transform .55s cubic-bezier(.5,0,.7,1);z-index:4`;
+    const jar=b.querySelector('.jar'); if(jar&&jar.animate&&!RM) jar.animate([{transform:'rotate(0)'},{transform:'rotate(-24deg) translateY(-6px)',offset:.35},{transform:'rotate(-24deg) translateY(-6px)',offset:.6},{transform:'rotate(0)'}],{duration:620,easing:'ease-in-out'});
+    const d=document.createElement('div'); d.className='abs gota-pint'; d.style.cssText=`left:${a.left-r.left+a.width/2-12}px;top:${a.top-r.top}px;--c:${POTS[k][1]};transition:transform .55s cubic-bezier(.5,0,.7,1);z-index:4`;
     root.appendChild(d); requestAnimationFrame(()=>requestAnimationFrame(()=>{ d.style.transform=`translate(${t.left-a.left+t.width/2-a.width/2}px,${t.top-a.top+60}px)`; }));
-    setTimeout(()=>{ d.remove(); plopS(); cnt[k]++; upd(); },560);
+    setTimeout(()=>{ d.remove(); plopS(); cnt[k]++; upd(); const bw=liq.parentElement, lh=liq.offsetHeight; remolino(bw); gotitas(bw,bw.clientWidth/2,bw.clientHeight-lh,{c:POTS[k][1],n:4,alto:30});
+      if(liq.animate&&!RM) liq.animate([{transform:'scaleY(1)'},{transform:'scaleY(.9)'},{transform:'scaleY(1.05)'},{transform:'scaleY(1)'}],{duration:500,easing:'ease-out'}); },560);
   }));
   root.querySelector('#em').addEventListener('click',()=>{ cnt={r:0,y:0,b:0,w:0}; lastName=''; upd(); tsay('Tazón limpio. ¡Mezcla otra vez!'); });
 }
@@ -301,41 +303,41 @@ function toyDress(root){
 function toyPizza(root){
   const ING=[['🧀','queso','quesos'],['🍄','champiñón','champiñones'],['🫑','ají','ajíes'],['🍍','piña','piñas'],['🌽','maíz','maíces'],['🫒','aceituna','aceitunas'],['🍅','tomate','tomates']];
   let cnt={}, baked=false, eaten=0, sauce=false;
-  /* ingredientes en 3D (Kenney Food Kit), solo para mostrar */
-  const PZ={'🧀':'queso_lonja','🍄':'hongo','🫑':'aji','🍍':'pina','🌽':'maiz','🍅':'tomate_rodaja'};
+  /* ingredientes en estilo plano (13-plano-lugares.js), solo para mostrar */
+  const PZ={'🧀':'queso_lonja','🍄':'hongo','🫑':'aji_aro','🍍':'pina_trozo','🌽':'granos','🫒':'aceituna','🍅':'tomate_rodaja'};
   const pzi=(e,t='1.1em')=>PZ[e]&&iluFuente(PZ[e])?ilu(PZ[e],t):e;
   addHTML(root, `<div class="abs" style="inset:0 0 var(--tbar-h) 0;background:repeating-linear-gradient(45deg,var(--paper-2) 0 22px,#FBEFE3 22px 44px)"></div>
-  <div class="abs" style="left:50%;top:46%;width:306px;height:306px;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle at 40% 35%,#E5C49B,#D9B48A 70%);box-shadow:0 8px 0 #C99B6E,0 14px 24px rgba(74,70,88,.12)"></div>
-  <div id="pz" class="abs" style="left:50%;top:46%;width:270px;height:270px;transform:translate(-50%,-50%);border-radius:50%;background:#F1D39A;box-shadow:inset 0 0 0 16px #E4B871,0 10px 0 rgba(0,0,0,.06);transition:filter 1s">
-    <div id="sc" class="abs" style="inset:18px;border-radius:50%;background:#E8705B;opacity:0;transition:opacity .5s"></div>
+  <div class="abs" style="left:50%;top:46%;width:306px;height:306px;transform:translate(-50%,-50%);border-radius:50%;background:#E6C39C;border:1.6px solid #B48C66;box-shadow:0 7px 0 #D2AA80"></div>
+  <div id="pz" class="abs" style="left:50%;top:46%;width:270px;height:270px;transform:translate(-50%,-50%);border-radius:50%;background:#F4D9A4;border:1.6px solid #C9A06A;box-shadow:inset 0 0 0 15px #E9C084;transition:filter 1s">
+    <div id="sc" class="abs" style="inset:18px;border-radius:50%;background:#EE8A74;opacity:0;transform:scale(.25) rotate(-40deg);transition:opacity .4s,transform .7s var(--ease-pop)"></div>
     <svg id="sl" class="abs" viewBox="0 0 270 270" style="inset:0;width:100%;height:100%;z-index:3;pointer-events:none"></svg></div>
   <div id="ct" class="abs" style="left:0;right:0;top:14px;text-align:center;font-weight:800;font-size:var(--fs-md);opacity:0"></div>
-  <div class="tbar"><button id="sa" aria-label="Salsa">${ilu('salsa','1.1em')}</button>${ING.map((x,i)=>`<button data-i="${i}" aria-label="${x[1]}">${pzi(x[0])}</button>`).join('')}<span class="sep"></span><button id="hn">🔥 Hornear</button><button id="eat">😋</button><button id="nw">🔄</button></div>`);
+  <div class="tbar"><button id="sa" aria-label="Salsa">${ilu('salsa','1.1em')}</button>${ING.map((x,i)=>`<button data-i="${i}" aria-label="${x[1]}">${pzi(x[0])}</button>`).join('')}<span class="sep"></span><button id="hn">${ilu('llama','1.2em')} Hornear</button><button id="eat" aria-label="Comer">${ilu('porcion','1.1em')}</button><button id="nw" aria-label="Pizza nueva">${kic('reiniciar','1.1em')}</button></div>`);
   const pz=root.querySelector('#pz'), sl=root.querySelector('#sl');
   let order=null, eatGoal=0;
   addHTML(root, `<div id="od" class="abs" style="left:12px;top:12px;background:var(--card);border:var(--bw) solid var(--line);border-radius:var(--r-md);padding:var(--s-2) var(--s-3);font-weight:800;z-index:5;display:none"></div>`);
   const od=root.querySelector('#od');
   const newOrder=()=>{ if (LV()<2) return; const ks=sample(ING.map((_,i)=>i), LV()===2?2:3); order=Object.fromEntries(ks.map(i=>[i, LV()===2?rnd(1,3):rnd(2,5)]));
-    od.style.display='block'; od.innerHTML='🧾 Pedido:<br>'+Object.entries(order).map(([i,n])=>`${n} ${pzi(ING[i][0],'1.5em')}`).join('&nbsp; ');
+    od.style.display='block'; od.innerHTML=emo('🧾')+' Pedido:<br>'+Object.entries(order).map(([i,n])=>`${n} ${pzi(ING[i][0],'1.5em')}`).join('&nbsp; ');
     tsay('Pedido: '+Object.entries(order).map(([i,n])=>`${n} ${n===1?ING[i][1]:ING[i][2]}`).join(', ')); };
   setTimeout(newOrder,2700);
-  root.querySelector('#sa').addEventListener('click',()=>{ if(baked) return; sauce=true; root.querySelector('#sc').style.opacity='1'; plopS(); tsay('Salsa de tomate'); });
+  root.querySelector('#sa').addEventListener('click',()=>{ if(baked) return; sauce=true; Object.assign(root.querySelector('#sc').style,{opacity:'1',transform:'none'}); plopS(); tsay('Salsa de tomate'); });
   root.querySelectorAll('[data-i]').forEach(b=>b.addEventListener('click',()=>{ if (baked){ tsay('Ya está horneada. ¡Hagamos otra! 🔄'); return; }
     const i=+b.dataset.i, [e,s,p]=ING[i]; const a=Math.random()*Math.PI*2, r=Math.sqrt(Math.random())*96;
-    const el=document.createElement('span'); el.className='abs top'; el.innerHTML=pzi(e,'1.3em'); el.style.cssText=`left:${135+Math.cos(a)*r-19}px;top:${135+Math.sin(a)*r-19}px;font-size:var(--fs-3xl);line-height:1;animation:popin .35s both;z-index:2;transform:rotate(${rnd(-30,30)}deg)`;
+    const el=document.createElement('span'); el.className='abs top'; el.innerHTML=pzi(e,'1.3em'); el.style.cssText=`left:${135+Math.cos(a)*r-19}px;top:${135+Math.sin(a)*r-19}px;font-size:var(--fs-3xl);line-height:1;--r:${rnd(-30,30)}deg;animation:caer .5s cubic-bezier(.3,1.3,.5,1) both;z-index:2;transform:rotate(var(--r))`;
     pz.appendChild(el); cnt[i]=(cnt[i]||0)+1; popS(); tsay(`${cnt[i]} ${cnt[i]===1?s:p}`); }));
-  root.querySelector('#hn').addEventListener('click',()=>{ if (baked) return; baked=true; tsay('Al horno... ¡3, 2, 1!'); pz.style.filter='brightness(.75) saturate(.6)';
-    setTimeout(()=>{ pz.style.filter='sepia(.25) saturate(1.3)'; let h=''; for(let k=0;k<8;k++){ const a0=k/8*Math.PI*2-Math.PI/2, a1=(k+1)/8*Math.PI*2-Math.PI/2;
-      h+=`<path data-k="${k}" d="M135 135L${135+135*Math.cos(a0)} ${135+135*Math.sin(a0)}A135 135 0 0 1 ${135+135*Math.cos(a1)} ${135+135*Math.sin(a1)}Z" fill="transparent" stroke="#C99A55" stroke-width="2"/>`; }
+  root.querySelector('#hn').addEventListener('click',()=>{ if (baked) return; baked=true; tsay('Al horno... ¡3, 2, 1!'); pz.style.filter='brightness(.75) saturate(.6)'; hornear(root,pz,1600);
+    setTimeout(()=>{ pz.style.filter='saturate(1.12) brightness(.97)'; let h=''; for(let k=0;k<8;k++){ const a0=k/8*Math.PI*2-Math.PI/2, a1=(k+1)/8*Math.PI*2-Math.PI/2;
+      h+=`<path data-k="${k}" d="M135 135L${135+135*Math.cos(a0)} ${135+135*Math.sin(a0)}A135 135 0 0 1 ${135+135*Math.cos(a1)} ${135+135*Math.sin(a1)}Z" fill="transparent" stroke="#C99A55" stroke-width="2" style="transition:fill .3s"/>`; }
       sl.innerHTML=h; eaten=0; react('happy');
       if (order){ const ok=Object.keys(ING).every(i=>(order[i]||0)===(cnt[i]||0)); if (ok){ win('¡Pedido perfecto!'); } else tsay('Hmm, el pedido no estaba igual. ¡Pero se ve rica!'); order=null; }
-      if (LV()===3){ const opts=[[4,'la mitad'],[2,'un cuarto'],[6,'tres cuartos'],[3,'tres octavos'],[5,'cinco octavos']]; const [k,t]=pick(opts); eatGoal=k; setTimeout(()=>{ od.style.display='block'; od.innerHTML=`🎯 Cómete ${t} de la pizza`; tsay(`Ahora cómete ${t} de la pizza`); },2200); }
+      if (LV()===3){ const opts=[[4,'la mitad'],[2,'un cuarto'],[6,'tres cuartos'],[3,'tres octavos'],[5,'cinco octavos']]; const [k,t]=pick(opts); eatGoal=k; setTimeout(()=>{ od.style.display='block'; od.innerHTML=`${ilu('diana','1.2em')} Cómete ${t} de la pizza`; tsay(`Ahora cómete ${t} de la pizza`); },2200); }
       else setTimeout(()=>tsay('¡Pizza lista! Está cortada en 8 porciones. Toca 😋 para comer'),1800); }, 1600); });
   root.querySelector('#eat').addEventListener('click',()=>{ if (!baked||!sl.innerHTML){ tsay('Primero hornea la pizza 🔥'); return; } if (eaten>=8){ tsay('¡Se acabó la pizza!'); return; }
-    const p=sl.querySelector(`[data-k="${eaten}"]`); p.setAttribute('fill','#FBF3EA'); p.setAttribute('stroke','transparent'); eaten++; react('happy'); note(300,.12,'square',.05);
+    const p=sl.querySelector(`[data-k="${eaten}"]`); p.setAttribute('fill','#FBF3EA'); p.setAttribute('stroke','transparent'); migas(pz,eaten); eaten++; react('happy'); note(300,.12,'square',.05);
     tsay(eaten<8?`¡Ñam! Comiste ${eaten} de 8. Quedan ${8-eaten}`:'¡Ñam! Nos comimos las 8 porciones');
     if (eatGoal && eaten===eatGoal){ eatGoal=0; setTimeout(()=>win('¡Exacto! Esa era la parte correcta'),900); } });
-  root.querySelector('#nw').addEventListener('click',()=>{ pz.querySelectorAll('.top').forEach(x=>x.remove()); sl.innerHTML=''; baked=false; sauce=false; cnt={}; eaten=0; pz.style.filter=''; root.querySelector('#sc').style.opacity='0'; eatGoal=0; od.style.display='none'; tsay('Masa nueva. ¡Pon salsa 🥫!'); setTimeout(newOrder,1800); });
+  root.querySelector('#nw').addEventListener('click',()=>{ pz.querySelectorAll('.top').forEach(x=>x.remove()); sl.innerHTML=''; baked=false; sauce=false; cnt={}; eaten=0; pz.style.filter=''; Object.assign(root.querySelector('#sc').style,{opacity:'0',transform:'scale(.25) rotate(-40deg)'}); eatGoal=0; od.style.display='none'; tsay('Masa nueva. ¡Pon salsa 🥫!'); setTimeout(newOrder,1800); });
 }
 
 /* ---------- 10. Clasificar ---------- */

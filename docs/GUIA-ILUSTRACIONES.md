@@ -50,8 +50,9 @@ girasol: () => svg(`${tallo('M50 96 V54')}${petalos(50,36,12,18,6.5,11,K.amarill
 - Íconos de juguetes: `ti_<id>`. Se conectan solos con `toyIcon()`.
 
 ## Estado
-- **Ya en estilo plano:**
-  - La pantalla de inicio.
-  - Mi jardín: escena, plantas, herramientas, bichitos y cocina.
-  - El animalito: ojos sin brillo, panza y mejillas planas.
-- **Pendiente:** los demás juguetes, que aún mezclan Kenney y los SVG antiguos. Se pasan juego por juego.
+- **Ya en estilo plano:** inicio, Mi jardín, el animalito, Mi colmado (clientes = animalitos de la app), Pizzería, Laboratorio y Mezcla colores.
+- **Pendiente** (aún con Kenney o SVG antiguos):
+  - Grupo B: Acuario, Granja, El tiempo y Burbujas.
+  - Grupo C: Pintar, Música y Bloques (Encaje ya usa figuras planas).
+  - Grupo D: Ordenar, Torre de Hanói y Sudoku, además de las demás pantallas de aprender.
+  - Recompensas: las medallas de subir de nivel.
