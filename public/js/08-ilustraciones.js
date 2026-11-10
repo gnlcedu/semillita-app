@@ -166,7 +166,7 @@ const EMO={'🌰':'semilla','🟤':'semilla','🌱':'brote','🌿':'planta','�
  /* piezas que solo existen en Kenney */
  '🍎':'manzana','🍐':'pera','🍇':'uvas','🍒':'cerezas','🍊':'naranja','🍍':'pina','🍕':'pizza',
  '🐰':'conejo','🐻':'oso','🐵':'mono','🦉':'buho','🐸':'rana','🐼':'panda','🦜':'loro','🐘':'elefante','🦒':'jirafa','🐧':'pinguino','🐮':'vaca','🐖':'cerdo','🐓':'gallina','🐕':'perro',
- '🫧':'burbuja','🪨':'roca'};
+ '🫧':'burbuja','🪨':'piedra','🪵':'madera','🥄':'cuchara','⚽':'pelota','🏀':'balon','🏐':'pelota','🐥':'pollito','🐍':'serpiente','🐊':'cocodrilo','🥦':'brocoli','🍪':'galleta','🍯':'miel','☕':'cafe','🍄':'hongo','🫑':'aji'};
 
 /* ---------- Kenney (CC0) primero, SVG propio como respaldo ----------
    window.KENNEY lo genera scripts/kenney.mjs en public/kenney/kenney.js: {nombre:[ancho, alto, esIcono]} */

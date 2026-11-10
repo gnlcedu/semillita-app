@@ -301,24 +301,28 @@ function toyDress(root){
 function toyPizza(root){
   const ING=[['🧀','queso','quesos'],['🍄','champiñón','champiñones'],['🫑','ají','ajíes'],['🍍','piña','piñas'],['🌽','maíz','maíces'],['🫒','aceituna','aceitunas'],['🍅','tomate','tomates']];
   let cnt={}, baked=false, eaten=0, sauce=false;
+  /* ingredientes en 3D (Kenney Food Kit), solo para mostrar */
+  const PZ={'🧀':'queso_lonja','🍄':'hongo','🫑':'aji','🍍':'pina','🌽':'maiz','🍅':'tomate_rodaja'};
+  const pzi=(e,t='1.1em')=>PZ[e]&&iluFuente(PZ[e])?ilu(PZ[e],t):e;
   addHTML(root, `<div class="abs" style="inset:0 0 var(--tbar-h) 0;background:repeating-linear-gradient(45deg,var(--paper-2) 0 22px,#FBEFE3 22px 44px)"></div>
+  <div class="abs" style="left:50%;top:46%;width:306px;height:306px;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle at 40% 35%,#E5C49B,#D9B48A 70%);box-shadow:0 8px 0 #C99B6E,0 14px 24px rgba(74,70,88,.12)"></div>
   <div id="pz" class="abs" style="left:50%;top:46%;width:270px;height:270px;transform:translate(-50%,-50%);border-radius:50%;background:#F1D39A;box-shadow:inset 0 0 0 16px #E4B871,0 10px 0 rgba(0,0,0,.06);transition:filter 1s">
     <div id="sc" class="abs" style="inset:18px;border-radius:50%;background:#E8705B;opacity:0;transition:opacity .5s"></div>
     <svg id="sl" class="abs" viewBox="0 0 270 270" style="inset:0;width:100%;height:100%;z-index:3;pointer-events:none"></svg></div>
   <div id="ct" class="abs" style="left:0;right:0;top:14px;text-align:center;font-weight:800;font-size:var(--fs-md);opacity:0"></div>
-  <div class="tbar"><button id="sa">🥫</button>${ING.map((x,i)=>`<button data-i="${i}">${x[0]}</button>`).join('')}<span class="sep"></span><button id="hn">🔥 Hornear</button><button id="eat">😋</button><button id="nw">🔄</button></div>`);
+  <div class="tbar"><button id="sa" aria-label="Salsa">${ilu('salsa','1.1em')}</button>${ING.map((x,i)=>`<button data-i="${i}" aria-label="${x[1]}">${pzi(x[0])}</button>`).join('')}<span class="sep"></span><button id="hn">🔥 Hornear</button><button id="eat">😋</button><button id="nw">🔄</button></div>`);
   const pz=root.querySelector('#pz'), sl=root.querySelector('#sl');
   let order=null, eatGoal=0;
   addHTML(root, `<div id="od" class="abs" style="left:12px;top:12px;background:var(--card);border:var(--bw) solid var(--line);border-radius:var(--r-md);padding:var(--s-2) var(--s-3);font-weight:800;z-index:5;display:none"></div>`);
   const od=root.querySelector('#od');
   const newOrder=()=>{ if (LV()<2) return; const ks=sample(ING.map((_,i)=>i), LV()===2?2:3); order=Object.fromEntries(ks.map(i=>[i, LV()===2?rnd(1,3):rnd(2,5)]));
-    od.style.display='block'; od.innerHTML='🧾 Pedido:<br>'+Object.entries(order).map(([i,n])=>`${n} ${ING[i][0]}`).join('&nbsp; ');
+    od.style.display='block'; od.innerHTML='🧾 Pedido:<br>'+Object.entries(order).map(([i,n])=>`${n} ${pzi(ING[i][0],'1.5em')}`).join('&nbsp; ');
     tsay('Pedido: '+Object.entries(order).map(([i,n])=>`${n} ${n===1?ING[i][1]:ING[i][2]}`).join(', ')); };
   setTimeout(newOrder,2700);
   root.querySelector('#sa').addEventListener('click',()=>{ if(baked) return; sauce=true; root.querySelector('#sc').style.opacity='1'; plopS(); tsay('Salsa de tomate'); });
   root.querySelectorAll('[data-i]').forEach(b=>b.addEventListener('click',()=>{ if (baked){ tsay('Ya está horneada. ¡Hagamos otra! 🔄'); return; }
     const i=+b.dataset.i, [e,s,p]=ING[i]; const a=Math.random()*Math.PI*2, r=Math.sqrt(Math.random())*96;
-    const el=document.createElement('span'); el.className='abs top'; el.textContent=e; el.style.cssText=`left:${135+Math.cos(a)*r-15}px;top:${135+Math.sin(a)*r-15}px;font-size:var(--fs-3xl);animation:popin .35s both;z-index:2;transform:rotate(${rnd(-30,30)}deg)`;
+    const el=document.createElement('span'); el.className='abs top'; el.innerHTML=pzi(e,'1.3em'); el.style.cssText=`left:${135+Math.cos(a)*r-19}px;top:${135+Math.sin(a)*r-19}px;font-size:var(--fs-3xl);line-height:1;animation:popin .35s both;z-index:2;transform:rotate(${rnd(-30,30)}deg)`;
     pz.appendChild(el); cnt[i]=(cnt[i]||0)+1; popS(); tsay(`${cnt[i]} ${cnt[i]===1?s:p}`); }));
   root.querySelector('#hn').addEventListener('click',()=>{ if (baked) return; baked=true; tsay('Al horno... ¡3, 2, 1!'); pz.style.filter='brightness(.75) saturate(.6)';
     setTimeout(()=>{ pz.style.filter='sepia(.25) saturate(1.3)'; let h=''; for(let k=0;k<8;k++){ const a0=k/8*Math.PI*2-Math.PI/2, a1=(k+1)/8*Math.PI*2-Math.PI/2;

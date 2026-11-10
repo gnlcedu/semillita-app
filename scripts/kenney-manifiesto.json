@@ -349,5 +349,22 @@
    "icono": true,
    "tam": 128
   }
- ]
+ ],
+ "hongo": ["food-kit", "Models/GLB format/mushroom.glb"],
+ "aji": ["food-kit", "Models/GLB format/paprika-slice.glb"],
+ "tomate_rodaja": ["food-kit", "Models/GLB format/tomato-slice.glb"],
+ "queso_lonja": ["food-kit", "Models/GLB format/cheese-cut.glb"],
+ "salsa": ["food-kit", "Models/GLB format/bottle-ketchup.glb"],
+ "brocoli": ["food-kit", "Models/GLB format/broccoli.glb"],
+ "galleta": ["food-kit", "Models/GLB format/cookie.glb"],
+ "miel": ["food-kit", "Models/GLB format/honey.glb"],
+ "cafe": ["food-kit", "Models/GLB format/cup-coffee.glb"],
+ "cuchara": ["food-kit", "Models/GLB format/utensil-spoon.glb"],
+ "madera": ["nature-kit", "Models/GLTF format/log.glb"],
+ "piedra": ["nature-kit", "Models/GLTF format/rock_smallA.glb"],
+ "pollito": ["animal-pack-redux", "PNG/Round (outline)/chick.png"],
+ "serpiente": ["animal-pack-redux", "PNG/Round (outline)/snake.png"],
+ "cocodrilo": ["animal-pack-redux", "PNG/Round (outline)/crocodile.png"],
+ "pelota": ["sports-pack-350", "PNG/Equipment/ball_soccer1.png"],
+ "balon": ["sports-pack-350", "PNG/Equipment/ball_basket1.png"]
 }

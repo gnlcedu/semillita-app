@@ -62,7 +62,7 @@ Para estos casos se siguen usando las ilustraciones SVG propias del mismo estilo
 ## Archivos en uso
 
 <!-- Sección generada por scripts/kenney.mjs (npm run kenney) desde scripts/kenney-manifiesto.json -->
-160 piezas · 665 KB en `public/kenney/`.
+177 piezas · 749 KB en `public/kenney/`.
 
 | Pieza en Semillita | Paquete de Kenney | Archivo original | Cómo se usa |
 | --- | --- | --- | --- |
@@ -226,3 +226,20 @@ Para estos casos se siguen usando las ilustraciones SVG propias del mismo estilo
 | `kic_mancha1` | Splat Pack | `PNG/Default (256px)/splat00.png` | PNG |
 | `kic_mancha2` | Splat Pack | `PNG/Default (256px)/splat03.png` | PNG |
 | `kic_mancha3` | Splat Pack | `PNG/Default (256px)/splat07.png` | PNG |
+| `hongo` | Food Kit | `Models/GLB format/mushroom.glb` | modelo 3D renderizado |
+| `aji` | Food Kit | `Models/GLB format/paprika-slice.glb` | modelo 3D renderizado |
+| `tomate_rodaja` | Food Kit | `Models/GLB format/tomato-slice.glb` | modelo 3D renderizado |
+| `queso_lonja` | Food Kit | `Models/GLB format/cheese-cut.glb` | modelo 3D renderizado |
+| `salsa` | Food Kit | `Models/GLB format/bottle-ketchup.glb` | modelo 3D renderizado |
+| `brocoli` | Food Kit | `Models/GLB format/broccoli.glb` | modelo 3D renderizado |
+| `galleta` | Food Kit | `Models/GLB format/cookie.glb` | modelo 3D renderizado |
+| `miel` | Food Kit | `Models/GLB format/honey.glb` | modelo 3D renderizado |
+| `cafe` | Food Kit | `Models/GLB format/cup-coffee.glb` | modelo 3D renderizado |
+| `cuchara` | Food Kit | `Models/GLB format/utensil-spoon.glb` | modelo 3D renderizado |
+| `madera` | Nature Kit 2.1 | `Models/GLTF format/log.glb` | modelo 3D renderizado |
+| `piedra` | Nature Kit 2.1 | `Models/GLTF format/rock_smallA.glb` | modelo 3D renderizado |
+| `pollito` | Animal Pack Redux | `PNG/Round (outline)/chick.png` | PNG |
+| `serpiente` | Animal Pack Redux | `PNG/Round (outline)/snake.png` | PNG |
+| `cocodrilo` | Animal Pack Redux | `PNG/Round (outline)/crocodile.png` | PNG |
+| `pelota` | Sports Pack | `PNG/Equipment/ball_soccer1.png` | PNG |
+| `balon` | Sports Pack | `PNG/Equipment/ball_basket1.png` | PNG |

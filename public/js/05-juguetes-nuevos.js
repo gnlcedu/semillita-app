@@ -12,9 +12,10 @@ function toyShop(root){
   const lv=LV();
   const PROD=[['🍞','pan','panes',10],['🥚','huevo','huevos',8],['🍌','guineo','guineos',5],['🥛','leche','leches',45],['🧃','jugo','jugos',25],['🧀','queso','quesos',60],['🍫','chocolate','chocolates',30],['🥑','aguacate','aguacates',20],['🍬','dulce','dulces',2],['🍚','arroz','arroces',35],['🍋','limón','limones',3],['🥤','refresco','refrescos',40]];
   const MONEY=[1,5,10,25,50,100,200,500];
-  const CUST=['🐶','🐱','🦉','🦁','🐼','🐨','🦊','🐷','🐸','🐄'];
-  /* cliente dibujado: ilustración de la granja o animalito de creature() */
-  const custArt=e=> ILU_EMO[e] ? emo(e) : SPECIES[e] ? `<span class="ilu" style="width:1.15em;height:1.15em">${creature(SPECIES[e],{})}</span>` : e;
+  const CUST=['🐶','🐱','🐰','🐥','🐮','🐷','🦁','🐵','🐯','🦒','🐘','🦜'];
+  /* clientes en 3D (Kenney Cube Pets), solo para mostrar */
+  const CLI={'🐶':'cliente_perro','🐱':'cliente_gato','🐰':'cliente_conejo','🐥':'cliente_pollito','🐮':'cliente_vaca','🐷':'cliente_cerdo','🦁':'cliente_leon','🐵':'cliente_mono','🐯':'cliente_tigre','🦒':'cliente_jirafa','🐘':'cliente_elefante','🦜':'cliente_loro'};
+  const custArt=e=> CLI[e]&&iluFuente(CLI[e]) ? ilu(CLI[e],'1.25em') : emo(e);
   let order=null, bag=[], cash=[], paid=0;
   const money=(v,s=1)=> v<50 ? `<span style="display:inline-grid;place-items:center;width:${(30+v*.6)*s}px;height:${(30+v*.6)*s}px;border-radius:50%;background:${v===25||v===1?'#E9C46A':'#C9CCD3'};border:3px solid rgba(0,0,0,.12);font-size:${11*s}px;font-weight:800">${v}</span>`
     : `<span style="display:inline-grid;place-items:center;width:${64*s}px;height:${34*s}px;border-radius:6px;background:${{50:'#C9B8EE',100:'#F7C59F',200:'#F5B8D0',500:'#A9D3F0'}[v]};border:var(--bw) solid rgba(0,0,0,.12);font-size:${13*s}px;font-weight:800">RD$${v}</span>`;
@@ -23,6 +24,7 @@ function toyShop(root){
     <div class="abs" style="left:0;right:0;top:0;height:30px;background:repeating-linear-gradient(90deg,var(--c-rosa) 0 30px,var(--white) 30px 60px);border-radius:0 0 50% 50%/0 0 14px 14px;z-index:1"></div>
     <div id="cu" class="abs" style="left:14px;top:46px;display:flex;align-items:flex-end;gap:var(--s-2);max-width:92%"></div>
     <div id="sh" class="abs" style="left:10px;right:10px;top:150px;display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s-2)"></div>
+    <div class="abs" style="right:14px;bottom:162px;width:84px;z-index:0;pointer-events:none">${ilu('caja','100%')}</div>
     <div id="bg" class="abs" style="left:10px;right:10px;bottom:84px;min-height:64px;background:var(--card);border:2px dashed var(--line);border-radius:var(--r-md);padding:var(--s-2);display:flex;flex-wrap:wrap;gap:var(--s-2);align-items:center"></div>
     <div class="tbar" id="tb2"></div>`);
   const cu=root.querySelector('#cu'), sh=root.querySelector('#sh'), bg=root.querySelector('#bg'), tb=root.querySelector('#tb2'); sceneParallax(root);
@@ -34,7 +36,7 @@ function toyShop(root){
     paid = lv===3 ? [50,100,200,500].find(b=>b>total) : 0;
     order={items,total,who};
     const txt='Quiero '+items.map(([i,n])=>`${n} ${n===1?PROD[i][1]:PROD[i][2]}`).join(' y ');
-    cu.innerHTML=`<span style="font-size:var(--fs-7xl);display:inline-block;animation:popin .4s both">${custArt(who)}</span><div class="bubble" style="font-size:var(--fs-sm);padding:var(--s-2) var(--s-3)">${txt}${lv===3?`<br><span class="muted">Te pago con ${money(paid,.7)}</span>`:''}</div>`;
+    cu.innerHTML=`<span style="font-size:var(--fs-8xl);display:inline-block;line-height:1;animation:popin .4s both">${custArt(who)}</span><div class="bubble" style="font-size:var(--fs-sm);padding:var(--s-2) var(--s-3)">${txt}${lv===3?`<br><span class="muted">Te pago con ${money(paid,.7)}</span>`:''}</div>`;
     tsay(txt+(lv===3?`. Te pago con ${paid} pesos`:''));
     drawBag();
   }
@@ -192,25 +194,26 @@ function toyLab(root){
   const lb=root.querySelector('#lb'); sceneParallax(root);
   function flota(){
     const OB=[['🪵','madera',1],['🪨','piedra',0],['🍎','manzana',1],['🔑','llave',0],['🦆','pato de goma',1],['⚓','ancla',0],['🧽','esponja',1],['🔩','tornillo',0],['🏐','pelota',1],['🥄','cuchara',0]];
+    const oe=e=>e==='🦆'?e:emo(e); /* el pato de goma sigue como emoji: el de Kenney es un pato de granja */
     const W=lb.clientWidth, H=lb.clientHeight, wt=H*.42;
     lb.innerHTML=`<div class="abs" style="left:6%;right:6%;top:${wt}px;bottom:16px;background:linear-gradient(#A9D3F0cc,#6FA3CBcc);border:4px solid #CFE3F1;border-top:none;border-radius:0 0 26px 26px"></div>
-      <div class="abs" style="left:10px;right:10px;top:14px;display:flex;flex-wrap:wrap;gap:var(--s-2);justify-content:center">${OB.map((o,i)=>`<button data-o="${i}" style="font-size:var(--fs-4xl);background:var(--card);border:var(--bw) solid var(--line);border-radius:var(--r-sm);padding:2px var(--s-2)">${o[0]}</button>`).join('')}</div>
+      <div class="abs" style="left:10px;right:10px;top:14px;display:flex;flex-wrap:wrap;gap:var(--s-2);justify-content:center">${OB.map((o,i)=>`<button data-o="${i}" style="font-size:var(--fs-4xl);line-height:1;background:var(--card);border:var(--bw) solid var(--line-2);border-radius:var(--r-sm);padding:var(--s-1) var(--s-2);box-shadow:var(--sh-btn)">${oe(o[0])}</button>`).join('')}</div>
       <div id="pq" class="abs" style="left:0;right:0;top:${wt-60}px;text-align:center"></div>`;
-    const drop=(o,i)=>{ const el=document.createElement('div'); el.className='abs'; el.textContent=o[0]; const x=rnd(14,76);
+    const drop=(o,i)=>{ const el=document.createElement('div'); el.className='abs'; el.innerHTML=oe(o[0]); const x=rnd(14,76);
       el.style.cssText=`left:${x}%;top:${wt-70}px;font-size:var(--fs-5xl);transition:top 1.4s cubic-bezier(.3,.7,.4,1)`; lb.appendChild(el);
       requestAnimationFrame(()=>requestAnimationFrame(()=>{ el.style.top=(o[2]?wt-28:H-70)+'px'; })); setTimeout(splashS,500);
       if (o[2]) setTimeout(()=>el.style.animation='bob 2s ease-in-out infinite',1500);
       setTimeout(()=>speak(`${o[1]}: ${o[2]?'¡flota!':'¡se hunde!'}`),900); };
     lb.querySelectorAll('[data-o]').forEach(b=>b.addEventListener('click',()=>{ const o=OB[+b.dataset.o]; b.disabled=true; b.style.opacity=.35;
       if (lv===1){ drop(o); return; }
-      const pq=lb.querySelector('#pq'); pq.innerHTML=`<div class="bubble" style="display:inline-block;font-size:var(--fs-sm)">¿${o[0]} flota o se hunde?<br><button class="chip" data-a="1">🛟 Flota</button> <button class="chip" data-a="0">⬇️ Se hunde</button></div>`;
+      const pq=lb.querySelector('#pq'); pq.innerHTML=`<div class="bubble" style="display:inline-block;font-size:var(--fs-sm)">¿${oe(o[0])} flota o se hunde?<br><button class="chip" data-a="1">🛟 Flota</button> <button class="chip" data-a="0">⬇️ Se hunde</button></div>`;
       speak(`¿La ${o[1]} flota o se hunde?`.replace('La pato','El pato').replace('La tornillo','El tornillo'));
       pq.querySelectorAll('[data-a]').forEach(a=>a.addEventListener('click',()=>{ pq.innerHTML=''; drop(o); const ok=+a.dataset.a===o[2];
         setTimeout(()=>{ if(ok) win('¡Lo predijiste bien!'); else tsay(lv===3?(o[2]?'Flota porque es menos densa que el agua':'Se hunde porque es más densa que el agua'):'¡Sorpresa! Mira qué pasó'); },1700); })); }));
   }
   function iman(){
     const OB=[['📎','clip',1],['🔩','tornillo',1],['🧷','imperdible',1],['✂️','tijeras',1],['🪛','destornillador',1],['🪵','madera',0],['🧸','peluche',0],['✏️','lápiz',0],['🧦','media',0],['🍎','manzana',0],['🎈','globo',0]];
-    const W=lb.clientWidth, H=lb.clientHeight; const items=OB.map((o,i)=>{ const el=document.createElement('div'); el.className='abs'; el.textContent=o[0]; const x=rnd(10,W-60), y=rnd(H*.35,H-60);
+    const W=lb.clientWidth, H=lb.clientHeight; const items=OB.map((o,i)=>{ const el=document.createElement('div'); el.className='abs'; el.innerHTML=emo(o[0]); const x=rnd(10,W-60), y=rnd(H*.35,H-60);
       el.style.cssText=`left:${x}px;top:${y}px;font-size:var(--fs-4xl);transition:left .25s,top .25s`; lb.appendChild(el); return {o,el,stuck:false,x,y}; });
     lb.insertAdjacentHTML('afterbegin',`<p class="muted" style="text-align:center;font-weight:800;margin:var(--s-4) 40px 0">Arrastra el imán 🧲 cerca de las cosas</p>`);
     const mg=document.createElement('div'); mg.className='abs'; mg.textContent='🧲'; mg.style.cssText=`left:${W/2-30}px;top:60px;font-size:var(--fs-7xl);z-index:5`; lb.appendChild(mg);
