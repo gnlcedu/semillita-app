@@ -366,5 +366,10 @@
  "serpiente": ["animal-pack-redux", "PNG/Round (outline)/snake.png"],
  "cocodrilo": ["animal-pack-redux", "PNG/Round (outline)/crocodile.png"],
  "pelota": ["sports-pack-350", "PNG/Equipment/ball_soccer1.png"],
- "balon": ["sports-pack-350", "PNG/Equipment/ball_basket1.png"]
+ "balon": ["sports-pack-350", "PNG/Equipment/ball_basket1.png"],
+ "cara_a": ["shape-characters", "PNG/Default/face_a.png",
+  {
+   "tam": 128
+  }
+ ]
 }

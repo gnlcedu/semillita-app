@@ -392,7 +392,7 @@ function toyShapes(root){
       const h=document.createElement('div'); h.className='abs'; h.style.cssText=`left:${x}px;top:${y}px;width:${S}px;height:${S}px`; h.innerHTML=shapeSVG(s[0],'#E4D5C0','#C9B79D','6 5'); ar.appendChild(h); return {t:s[0],x,y}; });
     const top0=54+S*2+66, rowH=Math.max(S+12,(H-top0-10)/2); const slots=shuffle(times(NN,k=>[12+((W-24)/C)*(k%C+.5)-S/2+rnd(-6,6), top0+Math.floor(k/C)*rowH+rnd(0,Math.max(0,rowH-S-8))]));
     set.forEach((s,i)=>{ const el=document.createElement('div'); el.className='abs'; const [x,y]=slots[i];
-      el.style.cssText=`left:${x}px;top:${y}px;width:${S}px;height:${S}px;z-index:3;transition:left .35s,top .35s;animation:popin .4s ${i*.06}s both`; el.innerHTML=shapeSVG(s[0],s[1],s[2]); ar.appendChild(el);
+      el.style.cssText=`left:${x}px;top:${y}px;width:${S}px;height:${S}px;z-index:3;transition:left .35s,top .35s;animation:popin .4s ${i*.06}s both`; el.innerHTML=shapeSVG(s[0],s[1],s[2])+(iluFuente('cara_a')?`<img class="shface" src="/kenney/cara_a.webp" alt="" draggable="false">`:''); ar.appendChild(el);
       dragify(el, ar, {start:()=>speak(s[0]), drop:(el)=>{ const h=holes.find(h=>h.t===s[0]); const cx=parseFloat(el.style.left), cy=parseFloat(el.style.top);
         if (Math.hypot(cx-h.x,cy-h.y)<S*.6){ el.style.left=h.x+'px'; el.style.top=h.y+'px'; el.dataset.lock=1; el.style.zIndex=2; note(784,.25,'sine',.13); sparkAt(ar,h.x+S/2,h.y+S/2); left--;
           if (left===0){ confetti(); win('¡Encajaste todas las figuras!'); setTimeout(round,2800); } }
@@ -460,7 +460,7 @@ function toyTrace(root){
   }
   function check(){ if (done||!pts.length) return; const d=uc.getImageData(0,0,u.width,u.height).data; const hit=pts.filter(k=>d[k+3]>0).length;
     if (hit/pts.length>=(lvT===3?.66:.72)){ done=true; const c=L[i];
-      if (lvT===3){ const w=WRD[i]; const pr=root.querySelector('#pr'); pr.innerHTML=w[1]; pr.style.fontSize='54px'; pr.style.opacity=1; confetti(); win(`¡Escribiste ${w[0].toLowerCase()}!`); return; }
+      if (lvT===3){ const w=WRD[i]; const pr=root.querySelector('#pr'); pr.innerHTML=emo(w[1]); pr.style.fontSize='54px'; pr.style.opacity=1; confetti(); win(`¡Escribiste ${w[0].toLowerCase()}!`); return; }
       const isN=!isNaN(c); const pr=root.querySelector('#pr'); pr.innerHTML=isN?`${'⭐'.repeat(Math.min(+c||10,10)).replace(/(.{10})/g,'$1<br>')}`:`${LETRAS[c][1]}<div style="font-size:var(--fs-sm)">${LETRAS[c][0]}</div>`;
       pr.style.fontSize=isN?'22px':'54px'; pr.style.opacity=1; confetti(); win(isN?`¡Muy bien! El número ${c}`:`¡Muy bien! ${c}, de ${LETRAS[c][0]}`); } }
   let dr=false, last;

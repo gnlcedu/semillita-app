@@ -84,16 +84,16 @@ function toySort2(root){
     const nb=Sx.b.length; const items=sample(Sx.it, nb>=4?10:nb===2?8:9); left=items.length;
     const W=ar.clientWidth, H=ar.clientHeight, bw=Math.min(130,(W-30)/nb-10);
     const baskets=Sx.b.map((b,i)=>{ const el=document.createElement('div'); el.className='abs';
-      el.style.cssText=`left:${(W/nb)*(i+.5)-bw/2}px;top:${H-140}px;width:${bw}px;height:120px;border-radius:20px 20px 34px 34px;background:#EAD8BF;border:4px solid #D7BE9C;display:flex;flex-direction:column;align-items:center;padding-top:var(--s-2);transition:transform .2s;overflow:hidden`;
-      el.innerHTML=`<span style="font-size:var(--fs-3xl)">${b[0]}</span><b style="font-size:var(--fs-xs)">${b[1]}</b><div class="in" style="display:flex;flex-wrap:wrap;justify-content:center;font-size:var(--fs-xs);max-width:100%"></div>`; ar.appendChild(el); return el; });
+      el.className='abs basket'; el.style.cssText=`left:${(W/nb)*(i+.5)-bw/2}px;top:${H-140}px;width:${bw}px;height:120px;display:flex;flex-direction:column;align-items:center;padding-top:var(--s-2);transition:transform .2s;overflow:hidden`;
+      el.innerHTML=`<span style="font-size:var(--fs-3xl);line-height:1">${emo(b[0])}</span><b style="font-size:var(--fs-xs)">${b[1]}</b><div class="in" style="display:flex;flex-wrap:wrap;justify-content:center;font-size:var(--fs-xs);max-width:100%"></div>`; ar.appendChild(el); return el; });
     const cols=3, rowsN=Math.ceil(items.length/cols), cw=(W-20)/cols, rh=Math.max(54,(H-150-60)/rowsN); const slots=shuffle(times(items.length,q=>q));
     items.forEach(([e,k],j)=>{ const el=document.createElement('div'); el.className='abs'; const isTxt=/^[\wáéíóúñ]+$/i.test(e); const q=slots[j];
-      el.textContent=e; const x=Math.round(10+(q%cols)*cw+rnd(4,Math.max(5,cw-(isTxt?100:60)))), y=Math.round(56+Math.floor(q/cols)*rh+rnd(0,Math.max(1,rh-56)));
+      el.innerHTML=isTxt?e:emo(e); const x=Math.round(10+(q%cols)*cw+rnd(4,Math.max(5,cw-(isTxt?100:60)))), y=Math.round(56+Math.floor(q/cols)*rh+rnd(0,Math.max(1,rh-56)));
       el.style.cssText=`left:${x}px;top:${y}px;font-size:${isTxt?22:46}px;font-weight:800;line-height:1;z-index:3;transition:left .35s,top .35s;animation:popin .4s ${j*.05}s both;${isTxt?'background:var(--card);border:var(--bw) solid var(--line);border-radius:var(--r-sm);padding:var(--s-2) var(--s-3)':''}`;
       el.dataset.x=x; el.dataset.y=y; ar.appendChild(el);
       dragify(el, ar, {start:()=>{ popS(); if(isTxt) speak(e, cur==='eng'?'en-US':'es-ES'); }, drop:(el,px,py)=>{
         const a=ar.getBoundingClientRect(); const hit=baskets.findIndex(b=>{ const r=b.getBoundingClientRect(); return px>r.left-a.left-10 && px<r.right-a.left+10 && py>r.top-a.top-30 && py<r.bottom-a.top; });
-        if (hit===k){ baskets[k].querySelector('.in').insertAdjacentHTML('beforeend',`<span style="animation:popin .3s both;margin:1px">${isTxt?'•':e}</span>`); el.remove(); left--; note(660,.2,'sine',.12);
+        if (hit===k){ baskets[k].querySelector('.in').insertAdjacentHTML('beforeend',`<span style="animation:popin .3s both;margin:1px">${isTxt?'•':emo(e,'1.7em')}</span>`); el.remove(); left--; note(660,.2,'sine',.12);
           baskets[k].style.transform='scale(1.08)'; setTimeout(()=>baskets[k].style.transform='',200);
           if (left===0){ confetti(); win('¡Todo en su lugar!'); setTimeout(round,2600); } }
         else { el.style.left=el.dataset.x+'px'; el.style.top=el.dataset.y+'px'; if (hit>=0){ el.classList.add('wob'); setTimeout(()=>el.classList.remove('wob'),500); tsay('Hmm... ¿y en otra canasta?'); } } }}); });

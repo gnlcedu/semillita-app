@@ -62,7 +62,7 @@ Para estos casos se siguen usando las ilustraciones SVG propias del mismo estilo
 ## Archivos en uso
 
 <!-- Sección generada por scripts/kenney.mjs (npm run kenney) desde scripts/kenney-manifiesto.json -->
-177 piezas · 749 KB en `public/kenney/`.
+178 piezas · 749 KB en `public/kenney/`.
 
 | Pieza en Semillita | Paquete de Kenney | Archivo original | Cómo se usa |
 | --- | --- | --- | --- |
@@ -243,3 +243,4 @@ Para estos casos se siguen usando las ilustraciones SVG propias del mismo estilo
 | `cocodrilo` | Animal Pack Redux | `PNG/Round (outline)/crocodile.png` | PNG |
 | `pelota` | Sports Pack | `PNG/Equipment/ball_soccer1.png` | PNG |
 | `balon` | Sports Pack | `PNG/Equipment/ball_basket1.png` | PNG |
+| `cara_a` | Shape Characters | `PNG/Default/face_a.png` | PNG |
