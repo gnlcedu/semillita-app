@@ -338,3 +338,6 @@ input[type=range].sz{width:110px;accent-color:var(--lavD);flex:none}
 .scene .sl{transition:transform .25s ease-out,filter 1s}
 /* arcoíris (El tiempo) */
 .rainbow{position:absolute;left:-15%;top:6%;width:130%;aspect-ratio:2/1;border-radius:50% 50% 0 0/100% 100% 0 0;background:radial-gradient(circle at 50% 100%,transparent 54%,#C9B8EE 54% 58%,#A9D3F0 58% 62%,#B9E3C6 62% 66%,#F6E39A 66% 70%,#F7C59F 70% 74%,#F4A6A6 74% 78%,transparent 78%);opacity:0;transition:opacity 1.2s;pointer-events:none}
+/* fase 5B: burbujas tornasoladas, sombra de los animales de la granja */
+.bubble-b:before{content:"";position:absolute;inset:6%;border-radius:50%;background:conic-gradient(from 200deg,rgba(201,184,238,.35),rgba(169,211,240,.25),rgba(185,227,198,.3),rgba(246,227,154,.25),rgba(245,184,208,.35),rgba(201,184,238,.35));mix-blend-mode:multiply;pointer-events:none}
+#fm button>span{filter:drop-shadow(0 5px 0 rgba(74,70,88,.12))}

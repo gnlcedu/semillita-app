@@ -268,7 +268,7 @@ function toyAquarium2(root){
       ${scene('acuario','inset:0')}
       ${[8,30,66,88].map(x=>`<span class="abs" style="left:${x}%;bottom:26px;font-size:var(--fs-6xl);transform-origin:50% 100%;animation:palm 4s ease-in-out ${-x/20}s infinite;pointer-events:none">${ilu('alga','1.1em')}</span>`).join('')}
       <div id="cnt" class="abs" style="left:12px;top:12px;background:rgba(255,255,255,.85);border-radius:var(--r-sm);padding:var(--s-1) var(--s-3);font-weight:800;font-size:var(--fs-xs)"></div></div>
-    <div class="tbar"><button id="ad">➕${emo('🐠')}</button><button id="dc">${emo('🏰')}</button><button id="lt">💡</button><button id="cl">🔄</button></div>`);
+    <div class="tbar"><button id="ad">➕${emo('🐠')}</button><button id="dc">${emo('🏰')}</button><button id="lt">💡</button><button id="cl" aria-label="Vaciar">${kic('borrar','1em')}</button></div>`);
   const tk=root.querySelector('#tk'); const Wt=()=>tk.clientWidth, Ht=()=>tk.clientHeight; sceneParallax(root);
   const count=()=>{ const g={}; fish.forEach(f=>g[f.n]=(g[f.n]||0)+1); root.querySelector('#cnt').innerHTML=Object.entries(g).map(([n,c])=>`${c} ${emo(FISH.find(x=>x[1]===n)[0],'1.5em')}`).join('  ')||'Acuario vacío'; };
   function add(i){ if (fish.length>=18){ tsay('¡El acuario está lleno!'); return; } const [e,n,fact]=FISH[i];

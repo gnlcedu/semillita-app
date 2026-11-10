@@ -418,7 +418,7 @@ function toyWeather(root){
     <div class="abs" style="left:56%;bottom:24%;font-size:84px;line-height:0">${ilu('casa','1em')}</div>
     <div class="abs" style="left:36%;bottom:12%;text-align:center"><span id="ac" style="position:absolute;left:52px;top:-18px;font-size:var(--fs-4xl)"></span><span style="display:inline-block;animation:bob 2.6s ease-in-out infinite">${petMini(prof(),80)}</span></div>
     <div id="fl" class="abs" style="inset:0;background:var(--card);opacity:0;pointer-events:none"></div></div>
-  <div class="tbar"><button data-w="dia">☀️</button><button data-w="noche">🌙</button><button data-w="nubes">☁️</button><button data-w="lluvia">🌧️</button><button data-w="tormenta">⛈️</button><button data-w="arcoiris">🌈</button><button data-w="viento">💨</button></div>`);
+  <div class="tbar">${[['dia','sol','Día'],['noche','luna','Noche'],['nubes','w_nubes','Nublado'],['lluvia','w_lluvia','Lluvia'],['tormenta','w_tormenta','Tormenta'],['arcoiris','w_arcoiris','Arcoíris'],['viento','w_viento','Viento']].map(([w,n,t])=>`<button data-w="${w}" aria-label="${t}">${ilu(n,'1.15em')}</button>`).join('')}</div>`);
   const $r=id=>root.querySelector('#'+id); sceneParallax(root);
   const rain=(on,heavy)=>{ clearInterval(rainT); $r('rn').innerHTML=''; if(!on) return; rainT=setInterval(()=>{ for(let k=0;k<(heavy?4:2);k++){ const d=document.createElement('span'); d.className='abs';
     d.style.cssText=`left:${rnd(0,100)}%;top:-20px;width:3px;height:18px;border-radius:3px;background:#7FAFD3;animation:drop ${(Math.random()*.4+.7).toFixed(2)}s linear forwards`; $r('rn').appendChild(d); setTimeout(()=>d.remove(),1200);} },70); };

@@ -24,7 +24,7 @@ function toyBubbles2(root){
   const MIXES=[['verde','amarillo y azul'],['anaranjado','rojo y amarillo'],['morado','rojo y azul'],['rosado','rojo y blanco']];
   let mode='n', it, target=null, hits=0; const lv=LV(); const maxN = lv===1?10:lv===2?20:50;
   addHTML(root, `<div id="bz" class="abs" style="inset:0 0 var(--tbar-h) 0;background:linear-gradient(#EAF4FB,var(--bg));overflow:hidden"></div>
-  <div class="tbar"><button data-m="n" class="on">123</button><button data-m="l">ABC</button><button data-m="c">🎨</button><button data-m="a">🐾</button></div>`);
+  <div class="tbar"><button data-m="n" class="on">123</button><button data-m="l">ABC</button><button data-m="c" aria-label="Colores">${ilu('ic_mix','1.15em')}</button><button data-m="a" aria-label="Animales">${ilu('perro','1.15em')}</button></div>`);
   const bz=root.querySelector('#bz'); const tg=banner(root); tg.style.display='none';
   function content(forceKey){
     if (mode==='n'){ const n=forceKey?+forceKey:rnd(1,maxN); return {key:String(n), txt:n, say:String(n)}; }
@@ -46,13 +46,14 @@ function toyBubbles2(root){
   function spawn(){ if (bz.children.length>9) return;
     const c = (target && Math.random()<.35) ? content(target.key) : content();
     const b=document.createElement('button'); const sz=rnd(78,104); const bg=c.bg||'rgba(255,255,255,.55)';
-    b.className='abs'; b.innerHTML=`<span style="display:grid;place-items:center;width:100%;height:100%;animation:sway ${rnd(3,5)}s ease-in-out infinite">${c.txt??''}</span>`;
-    b.style.cssText=`left:${rnd(2,80)}%;bottom:-120px;width:${sz}px;height:${sz}px;border-radius:50%;font-size:${mode==='a'?40:32}px;font-weight:800;color:var(--ink);background:radial-gradient(circle at 30% 30%,rgba(255,255,255,.95) 0 12%,transparent 13%),${bg};border:3px solid rgba(255,255,255,.9);box-shadow:inset -6px -8px 14px rgba(140,170,210,.35);animation:rise2 ${lv===3?rnd(6,9):rnd(8,12)}s linear forwards`;
+    b.className='abs bubble-b'; b.innerHTML=`<span style="display:grid;place-items:center;width:100%;height:100%;animation:sway ${rnd(3,5)}s ease-in-out infinite">${mode==='a'?emo(c.txt,'1.25em'):(c.txt??'')}</span>`;
+    b.style.cssText=`left:${rnd(2,80)}%;bottom:${RM?rnd(6,68)+'%':'-120px'};width:${sz}px;height:${sz}px;border-radius:50%;font-size:${mode==='a'?40:32}px;font-weight:800;color:var(--ink);background:radial-gradient(circle at 30% 30%,rgba(255,255,255,.95) 0 12%,transparent 13%),${bg};border:3px solid rgba(255,255,255,.9);box-shadow:inset -6px -8px 14px rgba(140,170,210,.35);animation:rise2 ${lv===3?rnd(6,9):rnd(8,12)}s linear forwards`;
     b.addEventListener('pointerdown',e=>{ e.preventDefault();
       if (target && c.key!==target.key){ note(220,.2,'sine',.1); b.classList.add('wob'); setTimeout(()=>b.classList.remove('wob'),500); return; }
       popS(); speak(c.say, c.lang||'es-ES'); b.style.transition='transform .2s,opacity .2s'; b.style.animationPlayState='paused'; b.style.transform+=' scale(1.5)'; b.style.opacity='0'; setTimeout(()=>b.remove(),220);
       if (target){ hits++; tg.querySelector('.muted').textContent=`${hits}/5`; if (hits>=5){ win('¡Lo encontraste 5 veces!'); setTimeout(newTarget,2200); } } });
     b.addEventListener('animationend',ev=>{ if(ev.animationName==='rise2') b.remove(); });
+    if (RM) setTimeout(()=>b.remove(),7000); /* sin movimiento: aparecen quietas y se van solas */
     bz.appendChild(b); }
   it=setInterval(spawn, lv===3?800:1000); spawn();
   root.querySelectorAll('[data-m]').forEach(b=>b.addEventListener('click',()=>{ mode=b.dataset.m; root.querySelectorAll('[data-m]').forEach(x=>x.classList.toggle('on',x===b)); bz.innerHTML='';

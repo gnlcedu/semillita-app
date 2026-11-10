@@ -132,6 +132,11 @@ const rayos=(cx,cy,r1,r2,n,c)=>Array.from({length:n},(_,i)=>{const a=i*2*Math.PI
 const nubeSvg=(x,y,s=1)=>`<g transform="translate(${x} ${y}) scale(${s})">${P('M-26 10 Q-34 10 -34 2 Q-34 -8 -22 -8 Q-20 -22 -6 -22 Q8 -24 12 -12 Q26 -14 28 0 Q36 2 34 10 Q32 14 26 14 H-22 Q-26 14 -26 10Z',K.blanco)}${luz(-10,-12,6,3)}</g>`;
 Object.assign(ILU,{
 sol:()=>svg(`${rayos(50,50,34,46,12,'#F7C948')}${C(50,50,28,K.amarillo)}${luz(40,38,8,5)}${cara(50,54,1.1,9)}`),
+w_nubes:()=>svg(`${nubeSvg(38,40,.9)}${nubeSvg(56,62,1.2)}`),
+w_lluvia:()=>svg(`${nubeSvg(50,40,1.3)}${[30,48,66].map((x,i)=>drop(x,72+(i%2)*8,.38,K.cie)).join('')}`),
+w_tormenta:()=>svg(`${nubeSvg(50,38,1.3)}${P('M54 50 L38 72 H50 L44 94 L66 66 H54 L60 50Z',K.amarillo)}`),
+w_arcoiris:()=>svg(`${[['#F4A6A6',40],['#F7C59F',33],['#F6E39A',26],['#B9E3C6',19],['#A9D3F0',12]].map(([c,r])=>L(`M${50-r} 70 A${r} ${r} 0 0 1 ${50+r} 70`,c,7)).join('')}${nubeSvg(16,72,.55)}${nubeSvg(84,72,.55)}`),
+w_viento:()=>svg(`${L('M12 36 H58 Q72 36 72 24 Q72 14 62 14 Q54 14 54 22',K.cie,7)}${L('M12 54 H76 Q90 54 90 66 Q90 76 80 76 Q72 76 72 68',K.cie,7)}${L('M20 72 H46',K.cie,7)}${hoja(48,86,-20,20,K.hoja)}`),
 ic_weather:()=>svg(`<g transform="translate(-10 -8) scale(.8)">${rayos(50,50,34,46,10,'#F7C948')}${C(50,50,26,K.amarillo)}${luz(40,40,7,4)}</g>${nubeSvg(60,66,1.25)}`),
 ic_paint:()=>svg(`${P('M50 12 Q88 12 90 46 Q92 68 72 66 Q60 66 62 78 Q64 92 44 88 Q10 82 10 50 Q10 12 50 12Z','#F2D3A6')}${C(34,38,7,K.rojo)}${C(52,28,7,K.amarillo)}${C(70,36,7,K.cie)}${C(30,60,7,K.hoja)}${C(54,56,6,'#F2D3A6')}${luz(26,28,7,4)}`),
 ic_mix:()=>svg(`${drop(36,46,1.15,K.rosa)}${drop(64,46,1.15,K.cie)}${drop(50,68,1.15,K.amarillo)}${D(50,54,6,K.lav,.9)}`),
