@@ -141,10 +141,14 @@ function toyGarden2(root){
     ['plátano','🍌',['🌱','🌿','🪴','🌴','🍌'],'El plátano se usa para hacer mangú.']
   ];
   const RECIPES=[['🥗','ensalada',{'tomate':1,'zanahoria':1,'maíz':1}],['🧃','jugo de frutas',{'fresa':1,'mango':1}],['🍉','merienda de sandía',{'sandía':1}],['🍲','sancocho',{'plátano':1,'maíz':1,'zanahoria':1}],['💐','ramo de flores',{'girasol':1,'rosa':1,'tulipán':1}]];
-  let tool='seed', seed=0, day=true, inv={}, order=null, tick, bugs=lv>=2;
+  let tool='seed', seed=0, day=true, inv={}, order=null, tick, bugs=lv>=2, made={};
+  /* lo que se cocina queda a la vista en la mesa (solo mientras se juega) */
+  const showMade=k=>{ const box=root.querySelector('#mesa .mesa-items'); box.innerHTML=Object.entries(made).map(([e,n])=>`<span class="crea" data-e="${e}">${emo(e,'100%')}${n>1?`<b>×${n}</b>`:''}</span>`).join('');
+    const el=k&&box.querySelector(`[data-e="${k}"]`); if(el){ el.classList.add('new'); sparks(el,6); } };
   const plots=[];
   addHTML(root, `<div id="sky" class="abs" style="inset:0 0 var(--tbar-h) 0;background:linear-gradient(#DDEFFA 0 46%,#E4C4A2 46% 100%);transition:background 1s"></div>
     ${scene('jardin','inset:0 0 var(--tbar-h) 0')}
+    <div id="mesa" class="mesa" aria-label="Mis creaciones"><div class="mesa-items"></div><div class="mesa-top"></div><div class="mesa-legs"><i></i><i></i></div></div>
     <div id="sun" class="abs" style="top:16px;left:18px;font-size:var(--fs-7xl);transition:opacity 1s;animation:bob 4s ease-in-out infinite">${ilu('sol','1em')}</div>
     <div id="moon" class="abs" style="top:16px;left:18px;font-size:var(--fs-6xl);opacity:0;transition:opacity 1s">${ilu('luna','1em')}</div>
     <div id="rain" class="abs" style="inset:0 0 var(--tbar-h) 0;pointer-events:none"></div>
@@ -175,7 +179,8 @@ function toyGarden2(root){
     if (pl.t===null){ tsay('Primero siembra una semilla 🌰'); return; }
     const max=P(pl)[2].length;
     if (tool==='water'){ if (pl.st>=max){ tsay('¡Ya está grande! Cosecha con ✂️'); return; }
-      for (let k=0;k<6;k++){ const d=document.createElement('span'); d.innerHTML=emo('💧'); d.style.cssText=`position:absolute;left:${8+k*14}%;top:-60px;font-size:var(--fs-sm);animation:drop .9s ease-in ${k*.07}s forwards`; pl.el.appendChild(d); setTimeout(()=>d.remove(),900); }
+      const can=document.createElement('span'); can.className='wcan'; can.innerHTML=ilu('regadera','100%'); pl.el.appendChild(can); setTimeout(()=>can.remove(),1150);
+      for (let k=0;k<6;k++){ const d=document.createElement('span'); d.className='wdrop'; d.style.cssText=`left:calc(50% + ${(k%3)*6-8}px);animation-delay:${(.34+k*.08).toFixed(2)}s`; pl.el.appendChild(d); setTimeout(()=>d.remove(),1150); }
       splashS(); pl.water=3; if (pl.st===0) pl.st=0; setTimeout(()=>{ if (lv===1) grow(pl); else show(pl,false); },700); return; }
     if (tool==='bug'){ if (!pl.bug){ tsay('No hay bichitos aquí'); return; } pl.bug=false; show(pl,false); const l=document.createElement('span'); l.innerHTML=emo('🐞'); l.className='abs'; l.style.cssText='top:20px;right:0;font-size:var(--fs-2xl);transition:transform 1.2s,opacity 1.2s'; pl.el.appendChild(l);
       requestAnimationFrame(()=>requestAnimationFrame(()=>{ l.style.transform='translate(60px,-120px)'; l.style.opacity=0; })); setTimeout(()=>l.remove(),1300); popS(); tsay('¡Gracias! La mariquita se llevó al gusanito'); return; }
@@ -198,7 +203,7 @@ function toyGarden2(root){
       <h3 style="margin-top:var(--s-4)">${emo('🍲')} Cocina con tu cosecha</h3><div style="display:flex;flex-direction:column;gap:var(--s-2);margin-top:var(--s-2)">${RECIPES.map((r,i)=>{ const can=Object.entries(r[2]).every(([n,c])=>(inv[n]||0)>=c); return `<button class="opt" data-r="${i}" style="text-align:left;font-size:var(--fs-sm);${can?'':'opacity:.5'}">${emo(r[0])} <b>${r[1]}</b> · ${Object.entries(r[2]).map(([n,c])=>emo(PL.find(p=>p[0]===n)[1])).join(' + ')}</button>`; }).join('')}</div></div>`;
     o.addEventListener('click',e=>{ if(e.target===o) o.remove(); }); root.appendChild(o);
     o.querySelectorAll('[data-r]').forEach(b=>b.addEventListener('click',()=>{ const r=RECIPES[+b.dataset.r]; const can=Object.entries(r[2]).every(([n,c])=>(inv[n]||0)>=c);
-      if (!can){ tsay(`Para ${r[1]} necesitas: ${Object.keys(r[2]).join(', ')}`); return; } Object.entries(r[2]).forEach(([n,c])=>inv[n]-=c); root.querySelector('#hv').textContent=Object.values(inv).reduce((a,b)=>a+b,0); o.remove(); confetti(); win(`¡Preparaste ${r[1]} ${r[0]}! ¡Qué rico!`); })); });
+      if (!can){ tsay(`Para ${r[1]} necesitas: ${Object.keys(r[2]).join(', ')}`); return; } Object.entries(r[2]).forEach(([n,c])=>inv[n]-=c); root.querySelector('#hv').textContent=Object.values(inv).reduce((a,b)=>a+b,0); o.remove(); made[r[0]]=(made[r[0]]||0)+1; showMade(r[0]); react('happy'); confetti(); win(`¡Preparaste ${r[1]} ${r[0]}! ¡Qué rico!`); })); });
   root.querySelectorAll('[data-t]').forEach(b=>b.addEventListener('click',()=>{ tool=b.dataset.t; root.querySelectorAll('[data-t]').forEach(x=>x.classList.toggle('on',x===b));
     if (tool==='seed'){ const o=document.createElement('div'); o.className='ov'; o.innerHTML=`<div class="sheet"><h3>${emo('🌰')} Elige una semilla</h3><div class="thumbs" style="grid-template-columns:repeat(4,1fr);margin-top:var(--s-3)">${PL.map((p,i)=>`<button data-s="${i}" style="font-size:var(--fs-2xs);aspect-ratio:auto;padding:var(--s-2) 2px"><span style="font-size:var(--fs-4xl)">${emo(p[1])}</span>${p[0]}</button>`).join('')}</div></div>`;
       o.addEventListener('click',e=>{ if(e.target===o) o.remove(); }); root.appendChild(o); o.querySelectorAll('[data-s]').forEach(x=>x.addEventListener('click',()=>{ seed=+x.dataset.s; root.querySelector('#sd').innerHTML=emo(PL[seed][1]); o.remove(); tsay(`Semilla de ${PL[seed][0]}: toca la tierra`); })); return; }

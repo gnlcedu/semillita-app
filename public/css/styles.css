@@ -442,3 +442,18 @@ input[type=range].sz{width:110px;accent-color:var(--lavD);flex:none}
 .gm{display:inline-block;width:7px;height:9px;margin:0 1.5px;border-radius:50% 50% 50% 50%/40% 40% 60% 60%;background:rgba(255,255,255,.75);border:1.2px solid #8DBDE6}
 .gm.on{background:#A9D3F0}
 .thirst .bang{font-size:var(--fs-md);color:#B4535E;font-weight:900;margin-left:-2px}
+/* Mi jardín: mesa de creaciones (delante de la cerca, detrás de los surcos) */
+.mesa{position:absolute;left:3%;width:46%;max-width:300px;bottom:calc((100% - var(--tbar-h)) * .54 + var(--tbar-h) - 6px);display:flex;flex-direction:column;pointer-events:none}
+.mesa-items{display:flex;justify-content:center;align-items:flex-end;gap:2px;padding:0 6px;margin-bottom:-5px;min-height:6px}
+.crea{position:relative;width:clamp(40px,11vw,60px);aspect-ratio:1;display:block}
+.crea.new{animation:popin .5s var(--ease-pop) both}
+.crea b{position:absolute;right:-4px;top:-4px;background:var(--card);border:1.6px solid var(--line-2);border-radius:var(--r-pill);font-size:var(--fs-2xs);line-height:1;padding:2px 4px;font-weight:900}
+.mesa-top{height:10px;background:#E6C39C;border:1.6px solid #B48C66;border-radius:5px;position:relative}
+.mesa-legs{display:flex;justify-content:space-between;padding:0 12%}
+.mesa-legs i{width:8px;height:28px;background:#D9B08A;border:1.6px solid #A9825F;border-top:none;border-radius:0 0 3px 3px}
+.night .mesa{filter:brightness(.6) saturate(.8)}
+/* Mi jardín: regadera que se inclina al regar */
+.wcan{position:absolute;left:calc(50% - 62px);bottom:88px;width:60px;height:60px;pointer-events:none;z-index:3;transform-origin:30% 70%;transform:rotate(35deg);animation:pour 1.15s ease-in-out both}
+@keyframes pour{0%{opacity:0;transform:translate(-8px,-12px) rotate(0)}18%{opacity:1;transform:rotate(0)}38%,78%{opacity:1;transform:rotate(35deg)}100%{opacity:0;transform:rotate(0)}}
+.wdrop{position:absolute;bottom:104px;width:6px;height:9px;border-radius:50% 50% 50% 50%/40% 40% 60% 60%;background:#A9D3F0;border:1.2px solid #7FA9CC;opacity:0;pointer-events:none;z-index:3;animation:pourDrop .55s ease-in both}
+@keyframes pourDrop{0%{opacity:0;transform:translateY(0)}12%{opacity:1}100%{opacity:0;transform:translateY(74px)}}
