@@ -526,7 +526,7 @@ function vToy(){
   if (toyCleanup){ toyCleanup(); toyCleanup=null; }
   const T=TOYS.find(t=>t.id===view.toy), p=prof();
   streak=0;
-  app.innerHTML=`<div class="toyhead"><button class="icon-btn" id="back" aria-label="Volver">←</button><h2>${T.icon} ${T.name}</h2><button class="chip vt"></button><button class="chip" id="lv"></button>${mascot(p.avatar,44)}</div><div class="toy" id="toy"><div class="tbub" id="tb"></div></div>`;
+  app.innerHTML=`<div class="toyhead"><button class="icon-btn" id="back" aria-label="Volver">←</button><span class="thi">${toyIcon(T,'38px')}</span><h2>${T.name}</h2><button class="chip vt"></button><button class="chip" id="lv"></button>${mascot(p.avatar,44)}</div><div class="toy" id="toy"><div class="tbub" id="tb"></div></div>`;
   bind('#back',()=>go({name:'home'}));
   updLvChip();
   bind('#lv',()=>{ setLV(LV()%3+1); go({name:'toy',toy:T.id}); setTimeout(()=>tsay(`Nivel ${LV()}: ${['fácil','medio','difícil'][LV()-1]}`),350); });

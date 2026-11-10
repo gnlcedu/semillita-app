@@ -62,7 +62,7 @@ Para estos casos se siguen usando las ilustraciones SVG propias del mismo estilo
 ## Archivos en uso
 
 <!-- Sección generada por scripts/kenney.mjs (npm run kenney) desde scripts/kenney-manifiesto.json -->
-108 piezas · 542 KB en `public/kenney/`.
+162 piezas · 677 KB en `public/kenney/`.
 
 | Pieza en Semillita | Paquete de Kenney | Archivo original | Cómo se usa |
 | --- | --- | --- | --- |
@@ -174,3 +174,57 @@ Para estos casos se siguen usando las ilustraciones SVG propias del mismo estilo
 | `kic_arriba` | Game Icons | `PNG/Black/2x/up.png` | PNG |
 | `kic_abajo` | Game Icons | `PNG/Black/2x/down.png` | PNG |
 | `kic_lupa` | Game Icons | `PNG/Black/2x/zoom.png` | PNG |
+| `sol` | Background Elements Redux | `PNG/Default/sun.png` | PNG |
+| `luna` | Background Elements Redux | `PNG/Default/moon.png` | PNG |
+| `nube1` | Background Elements Redux | `PNG/Default/cloud1.png` | PNG |
+| `nube2` | Background Elements Redux | `PNG/Default/cloud3.png` | PNG |
+| `nube3` | Background Elements Redux | `PNG/Default/cloud5.png` | PNG |
+| `casa` | Background Elements Redux | `PNG/Default/house1.png` | PNG |
+| `casa_peq` | Background Elements Redux | `PNG/Default/houseSmall1.png` | PNG |
+| `arbol_fondo` | Background Elements Redux | `PNG/Default/tree.png` | PNG |
+| `arbol_peq` | Background Elements Redux | `PNG/Default/treeSmall_green1.png` | PNG |
+| `pino` | Background Elements Redux | `PNG/Default/treePine.png` | PNG |
+| `palmera_fondo` | Background Elements Redux | `PNG/Default/treePalm.png` | PNG |
+| `arbusto_fondo` | Background Elements Redux | `PNG/Default/bush1.png` | PNG |
+| `arbusto_fondo2` | Background Elements Redux | `PNG/Default/bushAlt1.png` | PNG |
+| `cerca` | Background Elements Redux | `PNG/Default/fence.png` | PNG |
+| `clima` | Background Elements Redux | `PNG/Default/sun.png` | PNG |
+| `arena` | Fish Pack 2.0 | `Vector/terrain_sand_top_a.svg` | vector |
+| `arena_fondo` | Fish Pack 2.0 | `Vector/terrain_sand_a.svg` | vector |
+| `alga_fondo1` | Fish Pack 2.0 | `Vector/background_seaweed_a.svg` | vector |
+| `alga_fondo2` | Fish Pack 2.0 | `Vector/background_seaweed_c.svg` | vector |
+| `alga_fondo3` | Fish Pack 2.0 | `Vector/background_seaweed_e.svg` | vector |
+| `roca_fondo` | Fish Pack 2.0 | `Vector/background_rock_a.svg` | vector |
+| `alga_hierba` | Fish Pack 2.0 | `Vector/seaweed_grass_a_outline.svg` | vector |
+| `alga2` | Fish Pack 2.0 | `Vector/seaweed_green_c_outline.svg` | vector |
+| `estante_cajas` | Mini Shop 2.1 | `Models/GLB format/shelf-boxes.glb` | modelo 3D renderizado |
+| `estante_fundas` | Mini Shop 2.1 | `Models/GLB format/shelf-bags.glb` | modelo 3D renderizado |
+| `latas` | Mini Shop 2.1 | `Models/GLB format/display-cans.glb` | modelo 3D renderizado |
+| `nevera` | Mini Shop 2.1 | `Models/GLB format/freezer.glb` | modelo 3D renderizado |
+| `puesto_flores` | Mini Shop 2.1 | `Models/GLB format/display-flowers.glb` | modelo 3D renderizado |
+| `estrella_oro` | Physics Assets | `PNG/Other/starGold.png` | PNG |
+| `estrella_plata` | Physics Assets | `PNG/Other/starSilver.png` | PNG |
+| `estrella_bronce` | Physics Assets | `PNG/Other/starBronze.png` | PNG |
+| `moneda_oro` | Physics Assets | `PNG/Other/coinGold.png` | PNG |
+| `gema_azul` | Platformer Pack Redux | `PNG/Items/gemBlue.png` | PNG |
+| `gema_roja` | Platformer Pack Redux | `PNG/Items/gemRed.png` | PNG |
+| `bandera` | Platformer Pack Redux | `PNG/Items/flagRed1.png` | PNG |
+| `estrella` | Platformer Pack Redux | `PNG/Items/star.png` | PNG |
+| `medalla_1` | Medals | `PNG/flatshadow_medal1.png` | PNG |
+| `medalla_2` | Medals | `PNG/flatshadow_medal2.png` | PNG |
+| `medalla_3` | Medals | `PNG/flatshadow_medal3.png` | PNG |
+| `ladrillo` | Toy Brick Pack | `PNG/Default/Red/brick_medium_4.png` | PNG |
+| `ladrillo_azul` | Toy Brick Pack | `PNG/Default/Blue/brick_medium_2.png` | PNG |
+| `ladrillo_amarillo` | Toy Brick Pack | `PNG/Default/Yellow/brick_medium_2.png` | PNG |
+| `ladrillo_verde` | Toy Brick Pack | `PNG/Default/Green/brick_high_2.png` | PNG |
+| `letra_a` | Letter Tiles | `PNG/Wood/letter_A.png` | PNG |
+| `bola_azul` | Puzzle Pack 2 | `PNG/Balls/Blue/ballBlue_01.png` | PNG |
+| `bola_amarilla` | Puzzle Pack 2 | `PNG/Balls/Yellow/ballYellow_01.png` | PNG |
+| `robot` | Robot Pack | `PNG/Side view/robot_blueBody.png` | PNG |
+| `figura` | Shape Characters | `PNG/Default/purple_body_squircle.png` | PNG |
+| `figura_circulo` | Shape Characters | `PNG/Default/red_body_circle.png` | PNG |
+| `figura_cuadrado` | Shape Characters | `PNG/Default/blue_body_square.png` | PNG |
+| `figura_rombo` | Shape Characters | `PNG/Default/green_body_rhombus.png` | PNG |
+| `kic_mancha1` | Splat Pack | `PNG/Default (256px)/splat00.png` | PNG |
+| `kic_mancha2` | Splat Pack | `PNG/Default (256px)/splat03.png` | PNG |
+| `kic_mancha3` | Splat Pack | `PNG/Default (256px)/splat07.png` | PNG |

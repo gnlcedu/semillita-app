@@ -125,6 +125,33 @@ xilofono:()=>svg(`${R(10,70,80,8,3,K.madera)}${['#F4A6A6','#F7C59F','#F6E39A','#
 tambora:()=>svg(`${R(44,22,16,62,8,K.gris)}${[32,42,52,62,72].map(y=>[49,55].map(x=>D(x,y,1.4,shade(K.gris,-.4))).join('')).join('')}${L('M66 30 L54 86',o(K.gris),SW+2)}${L('M66 30 L54 86',K.gris,2)}${P('M10 40 Q22 34 34 40 V78 Q22 84 10 78Z',K.madera)}${E(10,59,6,19,K.blanco)}${E(34,59,6,19,K.blanco)}${L('M12 44 L32 52 L12 62 L32 70 L14 76',K.rojo,2.6)}${luz(20,48,2,6,0)}`)
 };
 
+/* ================= ÍCONOS DEL INICIO (los que Kenney no tiene) ================= */
+const heart='M50 86 Q14 62 14 38 Q14 18 32 18 Q44 18 50 30 Q56 18 68 18 Q86 18 86 38 Q86 62 50 86Z';
+const drop=(x,y,s,c)=>`<g transform="translate(${x} ${y}) scale(${s})">${P('M0 -22 Q16 -2 16 8 Q16 22 0 22 Q-16 22 -16 8 Q-16 -2 0 -22Z',c)}${luz(-6,6,3,6,15)}</g>`;
+Object.assign(ILU,{
+ic_paint:()=>svg(`${P('M50 12 Q88 12 90 46 Q92 68 72 66 Q60 66 62 78 Q64 92 44 88 Q10 82 10 50 Q10 12 50 12Z','#F2D3A6')}${C(34,38,7,K.rojo)}${C(52,28,7,K.amarillo)}${C(70,36,7,K.cie)}${C(30,60,7,K.hoja)}${C(54,56,6,'#F2D3A6')}${luz(26,28,7,4)}`),
+ic_mix:()=>svg(`${drop(36,46,1.15,K.rosa)}${drop(64,46,1.15,K.cie)}${drop(50,68,1.15,K.amarillo)}${D(50,54,6,K.lav,.9)}`),
+ic_bubble:()=>svg(`${[[38,56,26],[72,34,16],[72,74,12]].map(([x,y,r])=>`<circle cx="${x}" cy="${y}" r="${r}" fill="#DCEFFB" fill-opacity=".75" stroke="${o(K.cie)}" stroke-width="${SW}"/>${luz(x-r*.35,y-r*.35,r*.28,r*.16)}${L(`M${x+r*.2} ${y+r*.55} q${r*.3} -${r*.2} ${r*.4} -${r*.5}`,'#fff',2.5)}`).join('')}`),
+ic_beads:()=>svg(`${R(12,14,76,72,8,K.madera)}${R(19,21,62,58,4,K.crema)}${[32,50,68].map((y,i)=>L(`M19 ${y} H81`,o(K.madera),2.5)+[0,1,2,3].map(j=>C(28+j*11+(i===1?14:0),y,5.5,[K.rosa,K.amarillo,K.cie][i])).join('')).join('')}`),
+ic_clock:()=>svg(`${C(24,22,9,K.rosa)}${C(76,22,9,K.rosa)}${L('M30 84 L24 92 M70 84 L76 92',o(K.lav),4)}${C(50,54,34,K.lav)}${C(50,54,26,K.blanco)}${[0,90,180,270].map(a=>`<circle cx="${50+20*Math.sin(a*Math.PI/180)}" cy="${54-20*Math.cos(a*Math.PI/180)}" r="2.2" fill="${K.ink}"/>`).join('')}${L('M50 54 V38 M50 54 L62 60',K.ink,3.5)}${D(50,54,3.5,K.rojo)}${luz(36,38,6,3)}`),
+ic_maps:()=>svg(`${P('M10 26 L34 16 L64 28 L90 18 V76 L64 86 L34 74 L10 84Z',K.men)}${L('M34 16 V74 M64 28 V86',o(K.men),2.5)}${F('M18 50 Q30 40 42 50 Q52 58 58 48',shade(K.hoja,.2),.8)}${P('M66 24 Q80 24 80 38 Q80 48 66 62 Q52 48 52 38 Q52 24 66 24Z',K.rojo)}${D(66,38,5,'#fff')}`),
+ic_body:()=>svg(`${P(heart,'#F48FA0')}${luz(32,32,7,4)}${cara(50,50,1.1,10)}`),
+ic_lab:()=>svg(`${R(38,8,24,8,3,'#EAF4FB')}${P('M41 16 H59 V38 L80 78 Q84 88 74 88 H26 Q16 88 20 78 L41 38Z','#EAF4FB')}${F('M31 60 H69 L77 77 Q80 84 73 84 H27 Q20 84 23 77Z',K.men)}${L('M31 60 H69',o(K.men),2.5)}${D(44,72,3.5,'#fff',.8)}${D(56,66,2.5,'#fff',.8)}${C(64,30,4.5,K.men)}${C(72,18,3,K.men)}${luz(48,28,2,7,0)}`),
+ic_tangram:()=>svg(`${P('M14 14 H86 L50 50Z',K.rosa)}${P('M14 14 L50 50 L14 86Z',K.cie)}${P('M86 14 V50 L68 32Z',K.amarillo)}${P('M50 50 L68 32 L86 50 L68 68Z',K.men)}${P('M14 86 L50 50 L50 86Z',K.lav)}${P('M50 86 L50 50 L68 68 L68 86Z',K.dur)}${P('M68 86 V68 L86 50 V86Z',K.ros)}`),
+ic_maze:()=>svg(`${R(10,10,80,80,12,K.lav)}${L('M24 24 H62 M24 24 V76 M38 38 H76 V62 M38 38 V62 H58 M24 76 H76 V62',K.blanco,6)}${D(31,31,5,K.rojo)}${P('M68 64 l3 6 7 1 -5 5 1 7 -6 -3 -6 3 1 -7 -5 -5 7 -1Z',K.amarillo,'stroke-width="2"')}`),
+ic_hanoi:()=>svg(`${R(8,80,84,10,4,K.madera)}${[24,50,76].map(x=>R(x-3,26,6,56,3,K.madera)).join('')}${R(10,70,28,10,5,K.cie)}${R(14,60,20,10,5,K.amarillo)}${R(18,50,12,10,5,K.rosa)}${R(40,70,20,10,5,K.men)}`),
+ic_slide:()=>svg(`${R(10,10,80,80,12,K.madera)}${[0,1,2].map(r=>[0,1,2].map(c=> r===2&&c===2?'':R(16+c*24,16+r*24,20,20,5,[K.rosa,K.amarillo,K.cie,K.men,K.lav,K.dur,K.ros,K.rosa][r*3+c])).join('')).join('')}`),
+ic_balance:()=>svg(`${R(30,84,40,8,4,K.madera)}${R(47,30,6,56,3,K.madera)}${L('M16 34 L84 26',o(K.gris),5)}${L('M16 34 L84 26',K.gris,3)}${C(50,30,5,K.amarillo)}${L('M16 34 L8 58 M16 34 L24 58 M84 26 L76 50 M84 26 L92 50',o(K.gris),2)}${P('M4 58 H28 Q26 68 16 68 Q6 68 4 58Z',K.rosa)}${P('M72 50 H96 Q94 60 84 60 Q74 60 72 50Z',K.cie)}`),
+ic_av_learn:()=>svg(`${P('M30 30 Q30 12 50 12 Q70 12 70 30',`none`,`stroke="${o(K.rojo)}" stroke-width="6" fill="none"`)}${R(18,26,64,64,16,K.rojo)}${R(30,54,40,26,8,shade(K.rojo,.25))}${L('M30 62 H70',o(K.rojo),2.5)}${D(50,62,3,K.amarillo)}${luz(30,38,4,8,0)}${cara(50,40,.8,8)}`),
+ic_av_math:()=>svg(`${P('M58 6 L24 54 H46 L38 94 L76 40 H54Z',K.amarillo)}${luz(48,30,3,9,30)}`),
+ic_av_fluency:()=>svg(`${P('M50 30 Q32 20 12 24 V80 Q32 76 50 86Z',K.blanco)}${P('M50 30 Q68 20 88 24 V80 Q68 76 50 86Z',K.blanco)}${L('M20 38 Q32 36 42 40 M20 50 Q32 48 42 52 M58 40 Q68 36 80 38 M58 52 Q68 48 80 50',shade(K.cie,-.2),2.5)}${L('M50 30 V86',o(K.blanco),2.5)}${L('M70 8 Q78 14 74 22 M80 4 Q92 14 84 26',K.rosa,3.5)}`)
+});
+/* juguete → pieza para su ícono (Kenney si existe, si no SVG propio) */
+const TOY_ILU={paint:'ic_paint',mix:'ic_mix',music:'guitarra',blocks:'ladrillo',garden:'flor_roja',aqua:'pez_tropical',bubble:'ic_bubble',dress:'figura',pizza:'pizza',sort:'canasta',shapes:'figura',weather:'clima',trace:'letra_a',beads:'ic_beads',
+ shop:'caja',farm:'vaca',clock:'ic_clock',maps:'ic_maps',body:'ic_body',lab:'ic_lab',tangram:'ic_tangram',code:'robot',maze:'ic_maze',hanoi:'ic_hanoi',sudoku:'uvas',slide:'ic_slide',balance:'ic_balance',
+ /* aventuras */ learn:'ic_av_learn',math:'ic_av_math',fluency:'ic_av_fluency',eng:'loro',story:'buho'};
+window.TOY_ILU=TOY_ILU;
+
 /* emoji → ilustración (solo para mostrar; los datos siguen guardando el emoji) */
 const EMO={'🌰':'semilla','🟤':'semilla','🌱':'brote','🌿':'planta','🌼':'flor_amarilla','🥀':'flor_roja','🍀':'arbusto','🍃':'arbusto','🥬':'arbusto','🌾':'arbusto','🪴':'arbusto','🌳':'arbol','🌴':'palmera',
  '🌻':'girasol','🌷':'tulipan','🌹':'rosa','🌺':'cayena','🍅':'tomate','🌽':'maiz','🍓':'fresa','🥕':'zanahoria','🍉':'sandia','🫛':'habichuela','🥭':'mango','💧':'gota','🧺':'canasta',
@@ -149,6 +176,9 @@ window.ilu=(nombre,tam=48,c)=>{ const t=tamCss(tam), k=KN()[nombre];
   const f=ILU[nombre]; if(!f) return '';
   return `<span class="ilu" data-ilu="${nombre}" style="width:${t};height:${t}">${c?f(c):f()}</span>`; };
 window.emo=(e,tam='1.1em')=> EMO[e]&&iluFuente(EMO[e]) ? ilu(EMO[e],tam) : e;
+/* ícono ilustrado de un juguete o aventura (objeto de TOYS o id); si no hay pieza, su emoji */
+window.toyIcon=(t,tam='1.2em')=>{ const id=typeof t==='string'?t:t.id, n=TOY_ILU[id];
+  return n&&iluFuente(n) ? ilu(n,tam) : (typeof t==='string'?'':t.icon); };
 /* ícono monocromo de Kenney (Game Icons), toma el color del texto: kic('play') */
 window.kic=(nombre,tam='1em')=> KN()['kic_'+nombre] ? `<span class="kic" aria-hidden="true" style="width:${tamCss(tam)};height:${tamCss(tam)};--k:url(/kenney/kic_${nombre}.webp)"></span>` : '';
 })();

@@ -17,7 +17,7 @@ Rama: `mejora-grafica` · Un commit al cerrar cada fase · Estado: marcar `[x]` 
 - [x] Fase 1 · Sistema visual unificado
 - [x] Fase 2 · Biblioteca de ilustraciones SVG (queda como respaldo de Kenney)
 - [x] Fase K · Importar Kenney (recursos, licencias y `ilu()` con imágenes)
-- [ ] Fase 3 · Íconos del inicio con Kenney
+- [x] Fase 3 · Íconos del inicio con Kenney
 - [ ] Fase 4 · Escenarios por capas con Kenney
 - [ ] Fase 5 · Reconstrucción visual de los juegos (5A–5E)
 - [ ] Fase 6 · El animalito dentro de cada escena
@@ -150,11 +150,16 @@ La carpeta aún no es un repositorio.
 
 ## Fase 3 · Íconos del inicio con Kenney
 **Archivos:** `08-ilustraciones.js`, `04-personajes.js` (`vHome`), `02-juguetes.js` (`vToy`), `styles.css`.
-- [ ] Un ícono por juguete visible (26) y por aventura (5), tomado de la pieza más representativa de cada juego (tabla de arriba). Si no hay pieza de Kenney, se usa el SVG propio.
-- [ ] Función `toyIcon(t)` (en vez de un campo nuevo en `TOYS`): devuelve la imagen o el emoji de respaldo.
-- [ ] Usar el ícono en las tarjetas del inicio, en las aventuras y en el encabezado de cada juguete.
-- [ ] Rebote leve al tocar la tarjeta (sin animación con movimiento reducido).
-- [ ] Revisar · build · commit `Fase 3: íconos del inicio`.
+- [x] Un ícono por juguete visible (26) y por aventura (5), tomado de la pieza más representativa de cada juego (tabla de arriba). Si no hay pieza de Kenney, se usa el SVG propio.
+- [x] Función `toyIcon(t)` (en vez de un campo nuevo en `TOYS`): devuelve la imagen o el emoji de respaldo.
+- [x] Usar el ícono en las tarjetas del inicio, en las aventuras y en el encabezado de cada juguete.
+- [x] Rebote leve al tocar la tarjeta (sin animación con movimiento reducido).
+- [x] Revisar · build · commit `Fase 3: íconos del inicio`.
+- Notas de la fase 3:
+  - Kenney: Mi colmado (caja registradora 3D), Granja (vaca), Pizzería, Ordenar (canasta), Sudoku (uvas), Acuario, Mi jardín (flor), Bloques (ladrillo), Encaje (figura con carita), El tiempo (sol + nube), Traza letras (letra de madera), Programa a tu amigo (robot), Mundo de inglés (loro), Cuentos (búho).
+  - SVG propio (Kenney no tiene): Pintar, Mezcla colores, Música, Burbujas, Cuentas, El reloj, Mapas, Mi cuerpo, Laboratorio, Tangram, Laberinto, Hanói, Rompecabezas, Balanza, Retos por grado, Cálculo mental, Lectura.
+  - El script `kenney.mjs` admite `capas` para combinar piezas (figura + carita, sol + nube).
+  - Encabezado de juguete: ícono fuera del título; en celular el chip de nivel muestra solo las estrellas.
 
 ## Fase 4 · Escenarios por capas con Kenney
 **Archivos:** `public/js/09-escenarios.js` (nuevo), juguetes afectados, `styles.css`.

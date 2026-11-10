@@ -103,6 +103,20 @@ for (const [name, [pack, file, opt = {}]] of MANI) {
     src = sharp(entryOf(pack, file).getData());
   }
   const tam = opt.tam || (opt.icono ? 96 : 256);
+  /* capas: superpone otras piezas sobre la base. Cada capa: [paquete, archivo, x, y, escala]
+     (x, y = centro en fracciones del lienzo; escala = ancho relativo al de la base). margen agranda el lienzo. */
+  if (opt.capas) {
+    let base = await src.ensureAlpha().trim({ threshold: 1 }).png().toBuffer({ resolveWithObject: true });
+    const m = opt.margen || 0, W = Math.round(base.info.width * (1 + 2 * m)), H = Math.round(base.info.height * (1 + 2 * m));
+    const comps = [{ input: base.data, left: Math.round(base.info.width * m), top: Math.round(base.info.height * m) }];
+    for (const [cp, cf, x = .5, y = .5, s = .6] of opt.capas) {
+      const w = Math.round(base.info.width * s);
+      const ov = await sharp(entryOf(cp, cf).getData()).ensureAlpha().trim({ threshold: 1 }).resize(w).png().toBuffer({ resolveWithObject: true });
+      comps.push({ input: ov.data, left: Math.round(W * x - ov.info.width / 2), top: Math.round(H * y - ov.info.height / 2) });
+    }
+    src = sharp({ create: { width: W, height: H, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } } }).composite(comps).png();
+    src = sharp(await src.toBuffer());
+  }
   let img = src.ensureAlpha().trim({ threshold: 1 });
   if (opt.espejo) img = img.flop();
   const buf = await img.resize(tam, tam, { fit: 'inside', withoutEnlargement: true })

@@ -213,7 +213,7 @@ vAdults=function(){
     <p class="muted" style="font-size:var(--fs-xs);margin:var(--s-2) 0 0">Al llegar al límite, la app muestra la pantalla de descanso. Desde aquí puedes darle más tiempo hoy.</p>
     ${S.profiles.map(p=>`<button class="chip" data-unl="${p.id}" style="margin-top:var(--s-2)">➕ Más tiempo hoy para ${esc(p.name)}</button>`).join(' ')}
     <button class="btn full" id="cls" style="margin-top:var(--s-4)">🏫 Modo aula</button></div>`;
-  S.profiles.forEach(p=>{ const tt=Object.entries(p.toyTime||{}).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([k,v])=>{ const T=TOYS.find(t=>t.id===k); return T?`${T.icon} ${T.name} (${fmtM(v)})`:''; }).filter(Boolean);
+  S.profiles.forEach(p=>{ const tt=Object.entries(p.toyTime||{}).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([k,v])=>{ const T=TOYS.find(t=>t.id===k); return T?`${toyIcon(T,'1.3em')} ${T.name} (${fmtM(v)})`:''; }).filter(Boolean);
     const wins=Object.entries(S.toyWins||{}).filter(([k])=>k.startsWith(p.id+'|')).reduce((s,[,v])=>s+v,0); const fl=(p.fluency||[]).slice(-3); const lvl=xpLevel(p.xp||0);
     html+=`<div class="card" style="margin-bottom:var(--s-4)"><div class="row">${petMini(p,48)}<div><b style="font-size:var(--fs-md)">Reporte de ${esc(p.name)}</b><div class="muted">${p.age?p.age+' años · ':''}Nivel de juego ${lvlOf(p)}</div></div></div>
       <table style="margin-top:var(--s-3)"><tr><td>Tiempo hoy</td><td><b>${fmtM((p.time||{})[today()])}</b></td></tr><tr><td>Últimos 7 días</td><td><b>${fmtM(week(p))}</b></td></tr>

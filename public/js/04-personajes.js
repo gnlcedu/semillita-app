@@ -143,7 +143,7 @@ vHome=function(){
   const p=prof(); if(!p) return go({name:'profiles'});
   const o=petOf(p), lvl=o.level, xp=p.xp||0, nextT=XPT[lvl], pct=nextT?Math.round((xp-XPT[lvl-1])/(nextT-XPT[lvl-1])*100):100;
   const hi=`¡Hola, ${esc(p.name)}! Soy ${mname(p.avatar)}. ¿A qué jugamos hoy?`;
-  const tile=(t,i)=>`<button class="toytile bg-${t.c}" data-t="${t.id}" style="animation-delay:${i*.02}s"><span class="ic">${t.icon}</span><b>${t.name}</b></button>`;
+  const tile=(t,i)=>`<button class="toytile bg-${t.c}" data-t="${t.id}" style="animation-delay:${i*.02}s"><span class="ic">${toyIcon(t,'1.25em')}</span><b>${t.name}</b></button>`;
   const adv=[['learn','🎒','Retos por grado','20 juegos de 1ro a 6to','lav'],['math','⚡','Cálculo mental','1 minuto al día','peach'],['fluency','📖','Lectura en voz alta','Mide tu velocidad lectora','rose'],['eng','🇺🇸','Mundo de inglés','Palabras, canciones y diálogos','sky'],['story','📚','Cuentos','Tú decides qué pasa','mint']];
   app.innerHTML=`<div class="row" style="margin-bottom:var(--s-2)"><div class="logo" style="font-size:var(--fs-2xl)">Semi<span>llita</span></div><div class="sp"></div><button class="chip vt" style="margin-right:var(--s-2)"></button><button class="chip" id="switch">👤 Cambiar</button></div>
   <div class="hero" style="align-items:center">${mascot(p.avatar,100)}<div style="flex:1"><div class="bubble" style="font-size:var(--fs-md)">${hi}</div>
@@ -154,9 +154,12 @@ vHome=function(){
   <h2 class="h-sec" style="margin-bottom:var(--s-1)">Retos de ingenio 🧠</h2><p class="muted" style="margin:0 0 var(--s-3);font-weight:600">Para pensar, planear y resolver</p>
   <div class="toys">${TOYS.filter(t=>t.brain).map(tile).join('')}</div>
   <h2 class="h-sec">Aventuras para aprender</h2>
-  <div style="display:flex;flex-direction:column;gap:var(--s-3)">${adv.map(([v,ic,n,d,c])=>`<button class="area bg-${c}" data-v="${v}" style="width:100%;min-height:0;flex-direction:row;align-items:center;gap:var(--s-4)"><span class="ic">${ic}</span><span><b>${n}</b><br><small>${d}</small></span></button>`).join('')}</div>`;
-  bind('[data-t]', el=>go({name:'toy', toy:el.dataset.t}));
-  bind('[data-v]', el=>go({name:el.dataset.v}));
+  <div style="display:flex;flex-direction:column;gap:var(--s-3)">${adv.map(([v,ic,n,d,c])=>`<button class="area bg-${c}" data-v="${v}" style="width:100%;min-height:0;flex-direction:row;align-items:center;gap:var(--s-4)"><span class="ic">${toyIcon(v,'1.35em')||ic}</span><span><b>${n}</b><br><small>${d}</small></span></button>`).join('')}</div>`;
+  /* rebote corto del ícono antes de abrir (sin animación con movimiento reducido) */
+  const tapGo=(el,fn)=>{ const ic=el.querySelector('.ic'); if (RM||!ic||!ic.animate) return fn();
+    ic.animate([{transform:'scale(1)'},{transform:'scale(.82,1.12)'},{transform:'scale(1.12,.9)'},{transform:'scale(1)'}],{duration:260,easing:'ease-out'}); setTimeout(fn,170); };
+  bind('[data-t]', el=>tapGo(el,()=>go({name:'toy', toy:el.dataset.t})));
+  bind('[data-v]', el=>tapGo(el,()=>go({name:el.dataset.v})));
   bind('#friend', ()=>go({name:'friend'})); bind('#album', ()=>go({name:'friend',tab:'album'}));
   bind('#switch', ()=>{ greeted=false; go({name:'profiles'}); });
   bind('.hero .mascot', ()=>{ react('happy'); speak(pick([`¡Hola, ${p.name}!`,'¡Me haces cosquillas!','¡Vamos a jugar!'])); });

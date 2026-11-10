@@ -6,7 +6,7 @@
 function lvlOf(p){ if (p.age) return p.age<=6?1:p.age<=9?2:3; return p.grade<=1?1:p.grade<=4?2:3; }
 function LV(){ const p=prof(); return (S.toyLv&&S.toyLv[p.id]&&S.toyLv[p.id][view.toy]) || lvlOf(p); }
 function setLV(n){ const p=prof(); S.toyLv=S.toyLv||{}; (S.toyLv[p.id]=S.toyLv[p.id]||{})[view.toy]=n; save(); }
-function updLvChip(){ const c=document.getElementById('lv'); if(c){ const l=LV(); c.textContent=`${'★'.repeat(l)}${'☆'.repeat(3-l)} Nivel ${l}`; } }
+function updLvChip(){ const c=document.getElementById('lv'); if(c){ const l=LV(); c.innerHTML=`${'★'.repeat(l)}${'☆'.repeat(3-l)}<span class="lvt"> Nivel ${l}</span>`; c.setAttribute('aria-label',`Nivel ${l}`); } }
 let streak=0;
 function win(msg){
   streak++; react('happy'); note(880,.2,'sine',.12); setTimeout(()=>note(1175,.3,'sine',.12),150);
