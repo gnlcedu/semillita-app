@@ -151,9 +151,9 @@ vHome=function(){
   const tile=(t,i)=>`<button class="toytile bg-${t.c}" data-t="${t.id}" style="animation-delay:${i*.02}s"><span class="ic">${toyIcon(t,'1.25em')}</span><b>${t.name}</b></button>`;
   const adv=[['learn','🎒','Retos por grado','20 juegos de 1ro a 6to','lav'],['math','⚡','Cálculo mental','1 minuto al día','peach'],['fluency','📖','Lectura en voz alta','Mide tu velocidad lectora','rose'],['eng','🇺🇸','Mundo de inglés','Palabras, canciones y diálogos','sky'],['story','📚','Cuentos','Tú decides qué pasa','mint']];
   app.innerHTML=`<div class="row" style="margin-bottom:var(--s-2)"><div class="logo" style="font-size:var(--fs-2xl)">Semi<span>llita</span></div><div class="sp"></div><button class="chip vt" style="margin-right:var(--s-2)"></button><button class="chip" id="switch">${ilu('ic_perfil','1.25em')} Cambiar</button></div>
-  <div class="hero" style="align-items:center">${mascot(p.avatar,100)}<div style="flex:1"><div class="bubble" style="font-size:var(--fs-md)">${hi}</div>
+  <div class="hero land" style="align-items:center">${mascot(p.avatar,100)}<div style="flex:1"><div class="bubble" style="font-size:var(--fs-md)">${hi}</div>
     <div class="row" style="margin-top:var(--s-3);gap:var(--s-2);flex-wrap:wrap"><button class="chip" id="friend">${ilu('ic_gorro','1.3em')} Mi amigo</button><button class="chip" id="album">${ilu('ic_album','1.25em')} ${(p.stickers||[]).length}/${STK.length}</button></div>
-    <div style="margin-top:var(--s-2);font-size:var(--fs-xs);font-weight:800" class="muted">${ilu('brote','1.5em')} ${LEVELN[lvl-1]}</div><div class="bar" style="background:var(--line);height:8px;margin-top:var(--s-1)"><i class="fg-mint" style="width:${pct}%"></i></div></div></div>
+    <div class="nivel"><div style="font-size:var(--fs-xs);font-weight:800;color:#5A566B">${ilu('brote','1.5em')} ${LEVELN[lvl-1]}</div><div class="bar" style="background:var(--line);height:8px;margin-top:var(--s-1)"><i class="fg-mint" style="width:${pct}%"></i></div></div></div></div>
   <h2 class="h-sec first">Sala de juegos</h2>
   <div class="toys">${TOYS.filter(t=>!t.brain&&!t.hidden).map(tile).join('')}</div>
   <h2 class="h-sec" style="margin-bottom:var(--s-1)">Retos de ingenio ${ilu('ic_idea','1.1em')}</h2><p class="muted" style="margin:0 0 var(--s-3);font-weight:600">Para pensar, planear y resolver</p>

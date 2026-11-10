@@ -597,12 +597,19 @@ function flyTo(el, targetId='msc'){
 /* =========================================================
    VOZ Y SONIDO
    ========================================================= */
+/* Estilos de voz: cambian el tono (p) y la velocidad (r) de la voz del dispositivo. El estilo se guarda en
+   S.settings.voiceStyle y la voz elegida en S.settings.voiceName; si faltan, se usa «Clara» y la primera voz en español. */
+const VOCES=[{id:'clara',n:'Clara',d:'Tono normal',p:1,r:.95},{id:'dulce',n:'Dulce',d:'Aguda y suave',p:1.35,r:.9},{id:'calma',n:'Tranquila',d:'Grave y pausada',p:.8,r:.82},{id:'alegre',n:'Alegre',d:'Aguda y ágil',p:1.5,r:1.08}];
+const vozEstilo=()=>VOCES.find(v=>v.id===S.settings.voiceStyle)||VOCES[0];
+function vocesES(){ try{ return speechSynthesis.getVoices().filter(v=>v.lang.toLowerCase().startsWith('es')); }catch(e){ return []; } }
 function speak(text, lang='es-ES'){
   try{
     if (!S.settings.voice || !('speechSynthesis' in window)) return;
     speechSynthesis.cancel();
-    const u=new SpeechSynthesisUtterance(strip(text)); u.lang=lang; u.rate=lang.startsWith('en')?0.85:0.95;
-    const v=speechSynthesis.getVoices().find(v=>v.lang.toLowerCase().startsWith(lang.slice(0,2).toLowerCase()));
+    const en=lang.startsWith('en'), est=vozEstilo();
+    const u=new SpeechSynthesisUtterance(strip(text)); u.lang=lang; u.rate=en?est.r*.9:est.r; u.pitch=est.p;
+    const todas=speechSynthesis.getVoices();
+    const v=(!en&&S.settings.voiceName&&todas.find(v=>v.name===S.settings.voiceName))||todas.find(v=>v.lang.toLowerCase().startsWith(lang.slice(0,2).toLowerCase()));
     if (v) u.voice=v;
     const m=document.getElementById('msc');
     if (m){ u.onstart=()=>m.classList.add('talk'); u.onend=u.onerror=()=>m.classList.remove('talk'); }
@@ -814,14 +821,21 @@ function vResult(){
 }
 
 /* ---------- zona de adultos ---------- */
+/* Puerta de la zona de adultos. Con PIN (S.settings.pin, 4 dígitos que pone el adulto) pide el PIN;
+   sin PIN pide una multiplicación. «Olvidé el PIN» pide una operación más difícil, quita el PIN y deja entrar. */
 function gate(){
-  const a=rnd(6,9), b=rnd(6,9);
-  const m=document.createElement('div'); m.className='modal';
-  m.innerHTML=`<div class="card stack"><h3>Zona para docentes y familias</h3><p class="muted" style="margin:var(--s-2) 0 0">Para continuar, resuelve: <b>${a} × ${b}</b></p><input class="txt" id="gv" inputmode="numeric" autocomplete="off"><div class="row"><button class="btn soft" id="gc">Cancelar</button><div class="sp"></div><button class="btn" id="go">Entrar</button></div><p class="muted" id="ge" style="margin:0"></p></div>`;
-  document.body.appendChild(m); const inp=m.querySelector('#gv'); inp.focus();
-  const tryIt=()=>{ if(+inp.value===a*b){ m.remove(); go({name:'adults'}); } else { m.querySelector('#ge').textContent='Respuesta incorrecta.'; inp.value=''; } };
-  m.querySelector('#go').addEventListener('click',tryIt); inp.addEventListener('keydown',e=>{ if(e.key==='Enter') tryIt(); });
-  m.querySelector('#gc').addEventListener('click',()=>m.remove());
+  const pin=S.settings.pin, m=document.createElement('div'); m.className='modal'; document.body.appendChild(m);
+  const pedir=(texto, esPin, valido, alEntrar)=>{
+    m.innerHTML=`<div class="card stack"><h3>Zona para docentes y familias</h3><p class="muted" style="margin:var(--s-2) 0 0">${texto}</p><input class="txt" id="gv" inputmode="numeric" autocomplete="off" ${esPin?'type="password" maxlength="4" aria-label="PIN de adultos"':'aria-label="Respuesta"'}><div class="row"><button class="btn soft" id="gc">Cancelar</button><div class="sp"></div><button class="btn" id="go">Entrar</button></div><p class="muted" id="ge" style="margin:0" role="status"></p>${esPin?'<button class="chip" id="gf" style="align-self:flex-start">Olvidé el PIN</button>':''}</div>`;
+    const inp=m.querySelector('#gv'); inp.focus();
+    const tryIt=()=>{ if(valido(inp.value.trim())){ m.remove(); alEntrar&&alEntrar(); go({name:'adults'}); } else { m.querySelector('#ge').textContent=esPin?'PIN incorrecto. Intenta otra vez.':'Respuesta incorrecta.'; inp.value=''; inp.focus(); } };
+    m.querySelector('#go').addEventListener('click',tryIt); inp.addEventListener('keydown',e=>{ if(e.key==='Enter') tryIt(); });
+    m.querySelector('#gc').addEventListener('click',()=>m.remove());
+    const gf=m.querySelector('#gf'); if(gf) gf.addEventListener('click',()=>{ const x=rnd(13,19), y=rnd(6,9);
+      pedir(`Para quitar el PIN, resuelve: <b>${x} × ${y}</b>. Al entrar podrás poner uno nuevo.`, false, v=>+v===x*y, ()=>{ delete S.settings.pin; save(); toast('PIN quitado. Puedes poner uno nuevo.'); }); });
+  };
+  if (pin) pedir('Escribe el PIN de adultos.', true, v=>v===pin);
+  else { const x=rnd(6,9), y=rnd(6,9); pedir(`Para continuar, resuelve: <b>${x} × ${y}</b>`, false, v=>v!==''&&+v===x*y); }
 }
 function vAdults(){
   const fmt=t=>t?new Date(t).toLocaleDateString('es-DO',{day:'numeric',month:'short'}):'—';

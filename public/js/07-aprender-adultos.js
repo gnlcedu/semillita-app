@@ -208,7 +208,18 @@ vAdults=function(){
   _vAdults();
   const fmtM=s=>`${Math.round((s||0)/60)} min`;
   const week=p=>{ let s=0; for(let i=0;i<7;i++){ s+=(p.time||{})[new Date(Date.now()-i*864e5).toISOString().slice(0,10)]||0; } return s; };
-  let html=`<div class="card" style="margin-bottom:var(--s-4)"><h3 style="font-size:var(--fs-md);margin-bottom:var(--s-2)">⏱️ Tiempo de juego por día</h3>
+  const ves=vocesES(), est=vozEstilo();
+  let html=`<div class="card" style="margin-bottom:var(--s-4)"><h3 style="font-size:var(--fs-md);margin-bottom:var(--s-2)">🗣️ Estilo de voz</h3>
+    <div class="grades">${VOCES.map(v=>`<button class="chip ${est.id===v.id?'on':''}" data-voz="${v.id}" aria-pressed="${est.id===v.id}">${v.n}</button>`).join('')}</div>
+    <p class="muted" style="font-size:var(--fs-xs);margin:var(--s-2) 0 0">${est.n}: ${est.d.toLowerCase()}. Toca un estilo para escucharlo.${S.settings.voice?'':' La voz está apagada: actívala arriba para oír la prueba.'}</p>
+    ${ves.length>1?`<label style="display:flex;align-items:center;gap:var(--s-2);flex-wrap:wrap;margin-top:var(--s-3);font-weight:700;font-size:var(--fs-sm)">Voz del dispositivo <select class="chip" id="vozsel" style="max-width:100%"><option value="">Automática</option>${ves.map(v=>`<option value="${esc(v.name)}" ${S.settings.voiceName===v.name?'selected':''}>${esc(v.name.replace(/^(Microsoft|Google)\s+/,''))} (${esc(v.lang)})</option>`).join('')}</select></label>`:''}
+    <p class="muted" style="font-size:var(--fs-xs);margin:var(--s-2) 0 0">Las voces dependen de cada celular o computadora.</p></div>
+  <div class="card" style="margin-bottom:var(--s-4)"><h3 style="font-size:var(--fs-md);margin-bottom:var(--s-2)">🔒 PIN de adultos</h3>
+    <p class="muted" style="font-size:var(--fs-sm);margin:0 0 var(--s-3)">${S.settings.pin?'<b>PIN activado.</b> Se pide al entrar a esta zona.':'Sin PIN: para entrar a esta zona se pide una multiplicación. Con un PIN de 4 números solo entra quien lo sepa.'}</p>
+    <div id="pinform" class="stack" style="gap:var(--s-2);${S.settings.pin?'display:none':''}"><input class="txt" id="pin1" type="password" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="PIN nuevo (4 números)" aria-label="PIN nuevo de 4 números"><input class="txt" id="pin2" type="password" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="Repite el PIN" aria-label="Repite el PIN"><button class="btn full" id="pinok">Guardar PIN</button></div>
+    ${S.settings.pin?'<div class="grades" id="pinacc"><button class="chip" id="pinch">Cambiar PIN</button><button class="chip" id="pindel">Quitar PIN</button></div>':''}
+    <p class="muted" id="pinmsg" role="status" style="font-size:var(--fs-xs);margin:var(--s-2) 0 0">Si lo olvidas, en la entrada toca «Olvidé el PIN».</p></div>
+  <div class="card" style="margin-bottom:var(--s-4)"><h3 style="font-size:var(--fs-md);margin-bottom:var(--s-2)">⏱️ Tiempo de juego por día</h3>
     <div class="grades">${[0,15,30,45,60,90].map(m=>`<button class="chip ${(S.settings.limit||0)===m?'on':''}" data-lim="${m}">${m?m+' min':'Sin límite'}</button>`).join('')}</div>
     <p class="muted" style="font-size:var(--fs-xs);margin:var(--s-2) 0 0">Al llegar al límite, la app muestra la pantalla de descanso. Desde aquí puedes darle más tiempo hoy.</p>
     ${S.profiles.map(p=>`<button class="chip" data-unl="${p.id}" style="margin-top:var(--s-2)">➕ Más tiempo hoy para ${esc(p.name)}</button>`).join(' ')}
@@ -223,6 +234,15 @@ vAdults=function(){
       <tr><td>Lectura (palabras correctas/min)</td><td>${fl.length?fl.map(f=>`${f.d}: <b>${f.wcpm}</b>`).join('<br>'):'—'}</td></tr></table></div>`; });
   html+=`<p class="muted" style="font-size:var(--fs-xs);text-align:center;margin:var(--s-5) 0 0">Gráficos de <b>Kenney</b> (www.kenney.nl), licencia CC0 · Ilustraciones y animalitos hechos para Semillita.</p>`;
   app.insertAdjacentHTML('beforeend',html);
+  const pmsg=app.querySelector('#pinmsg'), p1=app.querySelector('#pin1'), p2=app.querySelector('#pin2');
+  bind('#pinok',()=>{ const v=p1.value.trim(); if(!/^\d{4}$/.test(v)){ pmsg.textContent='El PIN debe tener exactamente 4 números.'; p1.focus(); return; } if(v!==p2.value.trim()){ pmsg.textContent='Los dos PIN no son iguales. Escríbelos otra vez.'; p2.value=''; p2.focus(); return; } S.settings.pin=v; save(); render(); toast('PIN guardado'); });
+  bind('#pinch',()=>{ app.querySelector('#pinform').style.display=''; app.querySelector('#pinacc').style.display='none'; p1.focus(); });
+  bind('#pindel',()=>{ delete S.settings.pin; save(); render(); toast('PIN quitado'); });
+  const probar=()=>speak('¡Hola! Soy tu amigo. ¿A qué jugamos hoy?');
+  bind('[data-voz]',el=>{ S.settings.voiceStyle=el.dataset.voz; save(); render(); probar(); });
+  const vs=app.querySelector('#vozsel'); if(vs) vs.addEventListener('change',()=>{ if(vs.value) S.settings.voiceName=vs.value; else delete S.settings.voiceName; save(); probar(); });
+  /* las voces del sistema llegan tarde: al llegar, se vuelve a dibujar el panel una sola vez */
+  if(!ves.length && 'speechSynthesis' in window && !vAdults._esp){ vAdults._esp=1; try{ speechSynthesis.addEventListener('voiceschanged',()=>{ if(view.name==='adults') render(); },{once:true}); }catch(e){} }
   bind('[data-lim]',el=>{ S.settings.limit=+el.dataset.lim; save(); render(); });
   bind('[data-unl]',el=>{ S.settings.unlocked=today()+el.dataset.unl; save(); el.textContent='✅ Listo: tiempo libre hoy'; });
   bind('#cls',()=>go({name:'class'}));

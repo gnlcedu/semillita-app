@@ -493,3 +493,9 @@ input[type=range].sz{width:110px;accent-color:var(--lavD);flex:none}
 /* ---- arreglos: tamaño del animalito en botones y dibujos grandes sin filtro ---- */
 .crt{width:100%;height:100%;display:block;overflow:visible}
 .horno-ov svg,.lvup-medal svg{filter:none}
+
+/* ---------- paisaje (17-entorno.js): pie de todas las pantallas e inicio ---------- */
+#app{background:var(--paisaje,none) bottom center/auto 108px repeat-x}
+#app:has(.tbar),#app:has(.pbar){background-image:none}
+.hero.land{background:#E3F1FA var(--paisaje,none) bottom center/auto 64% repeat-x;border-radius:var(--r-lg);padding:var(--s-4) var(--s-4) var(--s-5);box-shadow:var(--sh-1);overflow:hidden}
+.hero.land .nivel{margin-top:var(--s-2);background:var(--card);border-radius:var(--r-sm);padding:var(--s-2) var(--s-3)}

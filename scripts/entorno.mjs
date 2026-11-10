@@ -4,6 +4,8 @@
         →  vendor/oga/be/Vector/bgElements_elements.svg  (descomprime ahí kenney_backgroundElements.zip)
      «Fish Pack» · https://opengameart.org/content/fish-pack-0
         →  vendor/kenney/fish/Vector/*.svg  (descomprime ahí la carpeta Vector de fish-pack-0.zip)
+     «Platformer Pack Redux» · https://opengameart.org/content/platformer-pack-redux-360-assets
+        →  vendor/kenney/plat/Vector/vector_tiles.svg  (descomprime ahí la carpeta Vector del paquete)
    Uso:    npm run entorno
    Qué hace: toma las formas elegidas, las lleva al origen con 100 de alto, redondea y pasa los colores a
    tonos pastel para que combinen con el estilo plano. El contorno lo pone ent() en 12-estilo-plano.js. */
@@ -14,7 +16,14 @@ import { fileURLToPath } from 'url';
 const RAIZ = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const ORIGEN = path.join(RAIZ, 'vendor/oga/be/Vector/bgElements_elements.svg');
 const DIR_MAR = path.join(RAIZ, 'vendor/kenney/fish/Vector');
+const ORIGEN_PLAT = path.join(RAIZ, 'vendor/kenney/plat/Vector/vector_tiles.svg');
 const SALIDA = path.join(RAIZ, 'public/js/17-entorno.js');
+/* piezas del juego de plataformas → capas (Layer0_0_<id>_FILL) de vector_tiles.svg */
+const PLAT = { p_suelo: ['MEMBER_130'], p_tierra: ['MEMBER_113'], p_plataforma: ['MEMBER_121'], p_moneda: ['MEMBER_82'], p_estrella: ['MEMBER_15'],
+  p_llave: ['MEMBER_60'], p_gema: ['MEMBER_75'], p_gema_roja: ['MEMBER_74'], p_caja: ['MEMBER_46'], p_sorpresa: ['MEMBER_37', 'MEMBER_37_MEMBER_0'],
+  p_hongo: ['MEMBER_77'], p_arbusto: ['MEMBER_112', 'MEMBER_112_MEMBER_0'], p_pasto: ['MEMBER_10'], p_roca: ['MEMBER_83'], p_cerca: ['MEMBER_23'],
+  p_puerta: ['MEMBER_108', 'MEMBER_108_MEMBER_0'], p_bandera: ['MEMBER_92'], p_resorte: ['MEMBER_11', 'MEMBER_12', 'MEMBER_100'],
+  p_letrero: ['MEMBER_0', 'MEMBER_226'], p_nube: ['MEMBER_173'] };
 
 /* nombre de la pieza → número de capa (Layer0_N_FILL) en bgElements_elements.svg */
 const PIEZAS = { pino: 0, pino_oscuro: 2, pino_fino: 6, abeto: 11, abeto_ancho: 14, arbol: 23, arbol_copa: 26, arbol_alto: 17,
@@ -60,11 +69,20 @@ for (const [nombre, capa] of Object.entries(PIEZAS)) {
   pieza(nombre, m[1]);
 }
 if (fs.existsSync(DIR_MAR)) for (const [nombre, archivo] of Object.entries(MAR)) pieza(nombre, fs.readFileSync(path.join(DIR_MAR, archivo + '.svg'), 'utf8'));
-else console.warn('⚠ Falta ' + DIR_MAR + ': se generan solo las piezas de tierra.');
+else console.warn('⚠ Falta ' + DIR_MAR + ': no se generan las piezas de mar.');
+if (fs.existsSync(ORIGEN_PLAT)) {
+  const tp = fs.readFileSync(ORIGEN_PLAT, 'utf8'), grad = {};
+  /* los degradados pasan a color plano (su primer color) */
+  for (const m of tp.matchAll(/<(?:linear|radial)Gradient id="([^"]+)"[\s\S]*?stop-color="([^"]+)"/g)) grad[m[1]] = m[2];
+  for (const [nombre, ids] of Object.entries(PLAT)) {
+    const capas = ids.map(id => { const m = tp.match(new RegExp(`<g id="Layer0_0_${id}_FILL">([\\s\\S]*?)</g>`)); if (!m) throw new Error('No existe la capa ' + id); return m[1]; });
+    pieza(nombre, capas.join('').replace(/url\(#([^)]+)\)/g, (_, id) => grad[id] || '#888888'));
+  }
+} else console.warn('⚠ Falta ' + ORIGEN_PLAT + ': no se generan las piezas de plataformas.');
 
 const js = `/* Semillita · piezas de paisaje y de fondo marino para las escenas.
    GENERADO por "npm run entorno" (scripts/entorno.mjs). No lo edites a mano.
-   Formas: «Background Elements» y «Fish Pack» de Kenney (CC0), recoloreadas a tonos pastel. Cada pieza mide 100 de alto.
+   Formas: «Background Elements», «Fish Pack» y «Platformer Pack Redux» de Kenney (CC0), recoloreadas a tonos pastel. Cada pieza mide 100 de alto.
    nombre: { w (ancho), h, p: [[color, contorno], …] }. Se dibujan con ent() (12-estilo-plano.js). */
 window.ENTORNO=${JSON.stringify(datos)};
 `;

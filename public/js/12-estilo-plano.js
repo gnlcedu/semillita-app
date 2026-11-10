@@ -193,4 +193,10 @@ const JARDIN=()=>capa(.15,`<div class="sp drift" style="left:6%;top:5%;width:26%
   +capa(.3,lam('0 0 400 110',`${ent('montes',200,88,62,'#CBDDEA')}${P('M-20 112 Q50 34 160 62 Q230 80 270 112Z','#CDE8BE')}${P('M140 112 Q250 40 420 70 V112Z','#BCDDA8')}${ent('arbol_copa',128,66,24)}${ent('pino',152,68,22)}${ent('arbol',32,92,58)}${ent('pino',70,96,44)}${ent('casa_lado',236,92,36)}${ent('abeto',284,84,34)}${palma(330,98,1.05)}${ent('abeto_ancho',376,98,50)}`,'left:0;width:100%;bottom:calc(54% - 8px);height:calc(24% + 8px)'))
   +capa(.5,lam('0 0 400 40',cerca(),'left:0;width:100%;bottom:calc(54% - 3px);height:7%')+lam('0 0 400 40',`${arbusto(70,40,.9)}${arbusto(300,40,.75,K.verde)}`,'left:0;width:100%;bottom:calc(54% - 3px);height:7%'));
 if (window.SCENES) window.SCENES.jardin=JARDIN;
+/* Tira de paisaje (montañas, lomas, árboles, casa y palma) que se repite de lado a lado sin costura.
+   Se guarda como imagen en la variable CSS --paisaje: la usan el pie de todas las pantallas (#app) y el inicio (.hero.land). */
+(function(){ if(!window.ENTORNO) return;
+  const tira=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 120" width="400" height="120">${ent('montes',200,84,52,'#CBDDEA')}${P('M-2 122 V80 Q50 58 110 72 Q170 86 220 70 Q250 62 280 70 V122Z','#CDE8BE')}${P('M150 122 V86 Q220 62 300 72 Q360 78 402 80 V122Z','#BCDDA8')}${ent('arbol_copa',118,74,24)}${ent('pino',140,76,22)}${ent('arbol',34,96,46)}${ent('pino_oscuro',64,100,36)}${ent('casa_lado',214,92,30)}${ent('abeto',254,90,30)}${palma(318,104,.8)}${ent('abeto_ancho',368,104,40)}${P('M-2 122 V102 Q60 94 130 100 Q200 106 270 99 Q340 93 402 102 V122Z','#AED69A')}</svg>`;
+  try{ document.documentElement.style.setProperty('--paisaje',`url("data:image/svg+xml,${encodeURIComponent(tira)}")`); }catch(e){}
+})();
 })();

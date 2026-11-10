@@ -12,7 +12,7 @@ App educativa para niños de 5 a 12 años (República Dominicana), estilo Pok Po
   5. `/kenney/kenney.js` — **generado** por `npm run kenney`: lista de imágenes de Kenney (`window.KENNEY`).
   6. `08-ilustraciones.js` — `ILU` (SVG propios), `ilu()`, `emo()`, `kic()`, `toyIcon()`, `emoDOM()`.
   7. `09-escenarios.js` — `scene()`, `sceneParallax()`, `scenePet()`, `setPetProp()`; envuelve `tsay` para la expresión de sorpresa.
-  - `17-entorno.js` (se carga justo antes de `12`) — **generado** por `npm run entorno`: piezas de paisaje 2D (`window.ENTORNO`: pinos, árboles, casas, cerca, montañas, algas, corales, rocas; formas de Kenney «Background Elements» y «Fish Pack», CC0, recoloreadas a pastel). Se dibujan con `ent(nombre, x, y, alto, color)` dentro de una lámina (definido en `12`, pone el contorno plano) o con `entS(nombre, css, clase, color)` como pieza suelta (en `14`).
+  - `17-entorno.js` (se carga justo antes de `12`) — **generado** por `npm run entorno`: piezas de paisaje 2D (`window.ENTORNO`: pinos, árboles, casas, cerca, montañas, algas, corales, rocas y piezas `p_*` de plataformas; formas de Kenney «Background Elements», «Fish Pack» y «Platformer Pack Redux», CC0, recoloreadas a pastel). Se dibujan con `ent(nombre, x, y, alto, color)` dentro de una lámina (definido en `12`, pone el contorno plano) o con `entS(nombre, css, clase, color)` como pieza suelta (en `14`).
   8. `12-estilo-plano.js` — **estilo plano** (`PLANO`, paleta `PAL`); envuelve `ilu`, `kic` e `iluFuente` para usar primero las piezas planas, y reemplaza la escena del jardín.
   9. `13-plano-lugares.js` — piezas planas de colmado, pizzería, laboratorio y mezcla; animaciones `volar`, `entrar`/`salir`, `temblar`, `ondas`, `gotitas`, `burbujitas`, `hornear`, `vapor`, `migas`, `remolino`; `sparks` plano; escena del colmado.
   10. `14-plano-mundo.js` — redibuja en plano las piezas SVG antiguas de 08 y agrega el resto (mar, granja, música, retos, stickers, personas, ropa…); íconos monocromos; escenas del acuario, granja, tiempo y bloques; `sonar()`, `relampago()`.
@@ -22,7 +22,8 @@ App educativa para niños de 5 a 12 años (República Dominicana), estilo Pok Po
   14. `16-mapa-mundo.js` — **generado** por `npm run mapa`: continentes del mundo (`window.MAPA_MUNDO`, contornos de MapSVG, CC0, proyección Equal Earth). No se edita a mano.
   15. `05-juguetes-nuevos.js` — colmado, granja, reloj, mapas (Mi país, Provincias, Mundo), cuerpo, laboratorio, tangram.
   16. `06-juguetes-completos.js` — Pintar, Mi jardín, Música (7 instrumentos), Acuario y Bloques completos.
-  17. `07-aprender-adultos.js` — cuentos, lectura, cálculo mental, inglés, modo aula, reporte, límite de tiempo e **inicio de la app** (`render()` al final).
+  17. `18-plataformas.js` — «El camino de la semilla»: juego de plataformas calmado (sin enemigos, vidas ni reloj). El animalito recoge semillas, agua y sol y hace florecer la maceta; en niveles 2 y 3 forma una palabra con letras en orden. Usa las piezas `p_*` de `17-entorno.js`.
+  18. `07-aprender-adultos.js` — cuentos, lectura, cálculo mental, inglés, modo aula, reporte, límite de tiempo e **inicio de la app** (`render()` al final).
 - Varias funciones se **sobrescriben** en archivos posteriores (`vHome`, `mascot`, `win`, `finish`, `vAdults`, `go`, `tsay`, `giveSticker`, `addXP`). Antes de editar una función, busca si se redefine más adelante.
 - Vistas extra se registran en `window.VIEWS[nombre]`.
 - `src/main.js` es un módulo ES: solo carga la letra Nunito y registra la PWA.

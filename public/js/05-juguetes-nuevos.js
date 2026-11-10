@@ -28,6 +28,14 @@ function toyShop(root){
     <div class="tbar" id="tb2"></div>`);
   const cu=root.querySelector('#cu'), sh=root.querySelector('#sh'), bg=root.querySelector('#bg'), tb=root.querySelector('#tb2'); sceneParallax(root); scenePet(root,{at:'right:8px;top:40px',size:60,prop:ilu('delantal','100%'),cls:'pet-shop'});
   sh.innerHTML=PROD.map((p,i)=>`<button data-p="${i}" style="background:var(--card);border:var(--bw) solid var(--line);border-radius:var(--r-md);padding:var(--s-2) 2px;display:flex;flex-direction:column;align-items:center"><span style="font-size:var(--fs-4xl)">${emo(p[0])}</span>${lv>1?`<small style="font-weight:800;background:var(--butter);border-radius:var(--r-xs);padding:0 var(--s-2)">RD$${p[3]}</small>`:`<small style="font-weight:700">${p[1]}</small>`}</button>`).join('');
+  /* Leyenda plegable: nombre (y precio en niveles 2 y 3) de cada producto; tocar una fila lo dice en voz alta */
+  addHTML(root, `<button id="lyb" class="chip abs" aria-expanded="false" aria-controls="ly" style="right:10px;top:102px;min-height:var(--tap);padding:0 var(--s-3);font-size:var(--fs-xs);z-index:6">📖 Nombres</button>
+    <div id="ly" class="abs" hidden style="left:10px;right:10px;top:150px;z-index:8;background:var(--card);border:var(--bw) solid var(--line);border-radius:var(--r-md);box-shadow:var(--sh-2);padding:var(--s-3)">
+      <div class="row" style="margin-bottom:var(--s-2)"><b style="font-size:var(--fs-md)">Productos del colmado</b><div class="sp"></div><button id="lyx" class="chip" style="min-height:var(--tap);padding:0 var(--s-3);font-size:var(--fs-xs)">Ocultar</button></div>
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:var(--s-1) var(--s-2)">${PROD.map((p,i)=>`<button data-ly="${i}" style="display:flex;align-items:center;gap:var(--s-2);min-height:var(--tap);background:none;border:0;padding:0 var(--s-1);text-align:left;font-weight:800;font-size:var(--fs-sm);color:var(--ink)"><span style="font-size:var(--fs-2xl);flex:none">${emo(p[0])}</span><span>${p[1]}${lv>1?`<small style="display:block;font-weight:700;color:#5A566B">RD$${p[3]}</small>`:''}</span></button>`).join('')}</div></div>`);
+  { const ly=root.querySelector('#ly'), lyb=root.querySelector('#lyb'); const ver=on=>{ ly.hidden=!on; lyb.setAttribute('aria-expanded',on); lyb.classList.toggle('on',on); };
+    lyb.addEventListener('click',()=>ver(ly.hidden)); root.querySelector('#lyx').addEventListener('click',()=>ver(false));
+    ly.querySelectorAll('[data-ly]').forEach(b=>b.addEventListener('click',()=>speak(PROD[+b.dataset.ly][1]))); }
   function newCustomer(){
     bag=[]; cash=[]; const who=pick(CUST); const k = lv===1?1:lv===2?rnd(1,2):rnd(2,3);
     const items=sample(PROD.map((_,i)=>i).filter(i=>lv===1||PROD[i][3]<=(lv===2?45:60)),k).map(i=>[i, lv===1?rnd(1,4):rnd(1,3)]);
