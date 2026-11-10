@@ -693,7 +693,7 @@ function vRoute(){
   bind('.node', el=>{ const i=+el.dataset.i; if(!isUnlocked(p.id,nodes,i)) return; startGame(nodes[i].gid, g, nodes[i].l, A.id); });
 }
 
-function decorVT(){ document.querySelectorAll('.vt').forEach(b=>{ const on=S.settings.voice!==false; b.textContent= on?'🔊':'🔇'; b.title=on?'Voz encendida':'Voz apagada'; b.setAttribute('aria-label',b.title);
+function decorVT(){ document.querySelectorAll('.vt').forEach(b=>{ const on=S.settings.voice!==false; b.innerHTML= typeof kic==='function'&&kic('sonido')?kic(on?'sonido':'silencio','1.1em'):(on?'🔊':'🔇'); b.title=on?'Voz encendida':'Voz apagada'; b.setAttribute('aria-label',b.title);
   if(!b._vt){ b._vt=1; b.addEventListener('click',e=>{ e.stopPropagation(); S.settings.voice=!(S.settings.voice!==false); save(); try{ speechSynthesis.cancel(); }catch(_){} decorVT(); toast(S.settings.voice?'🔊 Voz encendida':'🔇 Voz apagada. Los mensajes se verán en pantalla'); }); } }); }
 /* ---------- sesión de juego ---------- */
 let sess=null;

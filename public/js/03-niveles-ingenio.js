@@ -158,7 +158,7 @@ function toyHanoi(root){
       h+=`<div class="abs" style="left:${cx-6}px;top:${base-dh*7-10}px;width:12px;height:${dh*7+10}px;border-radius:6px;background:#C9B79D;pointer-events:none"></div>`;
       r.forEach((d,k)=>{ const w=30+d*(rw-46)/6; const lift = sel===ri && k===r.length-1 ? 40 : 0;
         h+=`<div class="abs" style="left:${cx-w/2}px;top:${base-dh*(k+1)-lift-(lift?dh*(6-k):0)}px;width:${w}px;height:${dh-3}px;border-radius:${dh/2}px;background:${COL[d-1]};border:var(--bw) solid rgba(0,0,0,.08);pointer-events:none;transition:top .25s"></div>`; });
-      if (ri===2) h+=`<div class="abs" style="left:${cx-14}px;top:${base+20}px;font-size:var(--fs-2xl)">🏁</div>`; });
+      if (ri===2) h+=`<div class="abs" style="left:${cx-14}px;top:${base+20}px;font-size:var(--fs-2xl)">${ilu('bandera','1.1em')}</div>`; });
     ar.innerHTML=h; mv.textContent=''; tg.innerHTML=`🎯 Pasa la torre a la 🏁<br><small class="muted">Movimientos: ${moves} · mínimo: ${2**n-1}</small>`;
     ar.querySelectorAll('[data-r]').forEach(b=>b.addEventListener('click',()=>tap(+b.dataset.r)));
   }
@@ -179,7 +179,7 @@ function toyHanoi(root){
 function toySudoku(root){
   const lv=LV(); const SYM=['🍎','🍌','🍇','🍓'], blanks=[5,8,11][lv-1]; let sol, grid, fixed, cur=0;
   addHTML(root, `<div id="ar" class="abs" style="inset:0 0 var(--tbar-h) 0;background:var(--paper);display:flex;flex-direction:column;align-items:center;justify-content:center;padding-top:40px"></div>
-  <div class="tbar">${SYM.map((s,i)=>`<button data-s="${i}" class="${i?'':'on'}" style="font-size:var(--fs-3xl)">${s}</button>`).join('')}<button data-s="-1">🧽</button><span class="sep"></span><button id="nw">🔄</button></div>`);
+  <div class="tbar">${SYM.map((s,i)=>`<button data-s="${i}" class="${i?'':'on'}" style="font-size:var(--fs-3xl)">${emo(s,'1em')}</button>`).join('')}<button data-s="-1" aria-label="Borrar">${kic('borrar')}</button><span class="sep"></span><button id="nw">🔄</button></div>`);
   const ar=root.querySelector('#ar');
   function gen(){
     const base=[[0,1,2,3],[2,3,0,1],[1,0,3,2],[3,2,1,0]];
@@ -192,7 +192,7 @@ function toySudoku(root){
     const br=r-r%2, bc=c-c%2; for(let i=br;i<br+2;i++) for(let j=bc;j<bc+2;j++) if((i!==r||j!==c)&&grid[i][j]===v) return true; return false; }
   function draw(){
     const S=Math.min(ar.clientWidth-40, ar.clientHeight-160, 360)/4;
-    ar.innerHTML=`<p class="muted" style="font-weight:800;margin:0 0 var(--s-3);text-align:center;max-width:320px">Cada fila, columna y cuadro de 4 debe tener los 4 dibujos, sin repetir</p><div style="display:grid;grid-template-columns:repeat(4,${S}px);gap:0;border:4px solid #C9B79D;border-radius:var(--r-md);overflow:hidden;background:var(--card)">${grid.map((row,r)=>row.map((v,c)=>`<button data-c="${r*4+c}" style="width:${S}px;height:${S}px;font-size:${S*.55}px;border-right:${c===1?4:1}px solid #C9B79D;border-bottom:${r===1?4:1}px solid #C9B79D;background:${fixed[r][c]?'#F6EFE4':conflict(r,c)?'#F8DADA':'#fff'}">${v<0?'':SYM[v]}</button>`).join('')).join('')}</div>`;
+    ar.innerHTML=`<p class="muted" style="font-weight:800;margin:0 0 var(--s-3);text-align:center;max-width:320px">Cada fila, columna y cuadro de 4 debe tener los 4 dibujos, sin repetir</p><div style="display:grid;grid-template-columns:repeat(4,${S}px);gap:0;border:4px solid #C9B79D;border-radius:var(--r-md);overflow:hidden;background:var(--card)">${grid.map((row,r)=>row.map((v,c)=>`<button data-c="${r*4+c}" style="width:${S}px;height:${S}px;font-size:${S*.55}px;border-right:${c===1?4:1}px solid #C9B79D;border-bottom:${r===1?4:1}px solid #C9B79D;background:${fixed[r][c]?'#F6EFE4':conflict(r,c)?'#F8DADA':'#fff'}">${v<0?'':emo(SYM[v],'1.05em')}</button>`).join('')).join('')}</div>`;
     ar.querySelectorAll('[data-c]').forEach(b=>b.addEventListener('click',()=>{ const i=+b.dataset.c, r=Math.floor(i/4), c=i%4; if (fixed[r][c]){ note(220,.15,'sine',.08); return; }
       grid[r][c]=cur; popS(); draw(); if (grid.every((row,ri)=>row.every((v,ci)=>v===sol[ri][ci]) || false) || grid.every((row,ri)=>row.every((v,ci)=>v>=0&&!conflict(ri,ci)))){ confetti(); win('¡Sudoku resuelto!'); setTimeout(gen,2800); } }));
   }
@@ -218,7 +218,7 @@ function toyMaze(root){
     let l=''; walls.forEach((w,i)=>{ const x=ox+(i%N)*cell, y=oy+Math.floor(i/N)*cell;
       if(w.U) l+=`M${x} ${y}h${cell}`; if(w.L) l+=`M${x} ${y}v${cell}`; if(i%N===N-1&&w.R) l+=`M${x+cell} ${y}v${cell}`; if(Math.floor(i/N)===N-1&&w.D) l+=`M${x} ${y+cell}h${cell}`; });
     ar.innerHTML=`<svg class="abs" style="inset:0;width:100%;height:100%"><rect x="${ox}" y="${oy}" width="${cell*N}" height="${cell*N}" rx="6" fill="#fff"/><path d="${l}" stroke="#8AA368" stroke-width="${Math.max(3,cell/8)}" stroke-linecap="round" fill="none"/></svg>
-      <span class="abs" style="left:${ox+(goal%N)*cell}px;top:${oy+Math.floor(goal/N)*cell}px;width:${cell}px;height:${cell}px;font-size:${cell*.7}px;display:grid;place-items:center">🍎</span>
+      <span class="abs" style="left:${ox+(goal%N)*cell}px;top:${oy+Math.floor(goal/N)*cell}px;width:${cell}px;height:${cell}px;font-size:${cell*.7}px;display:grid;place-items:center">${emo('🍎','1em')}</span>
       <span id="me" class="abs" style="left:${ox+(pos%N)*cell}px;top:${oy+Math.floor(pos/N)*cell}px;width:${cell}px;height:${cell}px;display:grid;place-items:center;transition:left .15s,top .15s">${petMini(prof(),cell*.95)}</span>`;
   }
   function move(d){ if (walls[pos][d]){ note(180,.12,'sine',.08); const m=ar.querySelector('#me'); m.classList.add('wob'); setTimeout(()=>m.classList.remove('wob'),400); return; }
@@ -243,7 +243,7 @@ function toySlide(root){
   const nbrs=e=>{ const x=e%N,y=Math.floor(e/N); return [[x-1,y],[x+1,y],[x,y-1],[x,y+1]].filter(([a,b])=>a>=0&&b>=0&&a<N&&b<N).map(([a,b])=>b*N+a); };
   const swap=p=>{ t[empty]=t[p]; t[p]=0; empty=p; };
   function draw(){ const S=Math.min(ar.clientWidth-40, ar.clientHeight-140, 360)/N;
-    ar.innerHTML=`<p class="muted" style="font-weight:800;margin:0 0 var(--s-3)">Ordena los números del 1 al ${N*N-1}</p><div style="position:relative;width:${S*N+8}px;height:${S*N+8}px;background:#E9DFCF;border-radius:var(--r-md);padding:var(--s-1)">${t.map((v,i)=>v?`<button data-i="${i}" class="abs" style="left:${4+(i%N)*S}px;top:${4+Math.floor(i/N)*S}px;width:${S-6}px;height:${S-6}px;margin:3px;border-radius:var(--r-sm);background:${COL[(v-1)%8]};font-size:${S*.4}px;font-weight:800;box-shadow:inset 0 -5px 0 rgba(0,0,0,.08);transition:left .15s,top .15s">${v}</button>`:'').join('')}</div>`;
+    ar.innerHTML=`<p class="muted" style="font-weight:800;margin:0 0 var(--s-3)">Ordena los números del 1 al ${N*N-1}</p><div style="position:relative;width:${S*N+8}px;height:${S*N+8}px;background:#E9DFCF;border-radius:var(--r-md);padding:var(--s-1)">${t.map((v,i)=>v?`<button data-i="${i}" class="abs" style="left:${4+(i%N)*S}px;top:${4+Math.floor(i/N)*S}px;width:${S-6}px;height:${S-6}px;margin:3px;border-radius:var(--r-sm);background:${COL[(v-1)%8]};font-size:${S*.4}px;font-weight:800;color:var(--ink);border:3px solid rgba(255,255,255,.55);box-shadow:inset 0 -6px 0 rgba(0,0,0,.1),inset 0 5px 0 rgba(255,255,255,.45),var(--sh-btn);transition:left .15s,top .15s">${v}</button>`:'').join('')}</div>`;
     root.querySelector('#mv').textContent=`Movimientos: ${moves}`;
     ar.querySelectorAll('[data-i]').forEach(b=>b.addEventListener('click',()=>{ const i=+b.dataset.i; if(!nbrs(empty).includes(i)){ note(200,.1,'sine',.06); return; } swap(i); moves++; popS(); draw();
       if (t.every((v,k)=>k===N*N-1?v===0:v===k+1)){ confetti(); win(`¡Ordenado en ${moves} movimientos!`); setTimeout(gen,2800); } })); }
@@ -265,7 +265,7 @@ function toyCode(root){
     prog=[]; pos=start; draw(); tsay(lv===1?'Toca las flechas para darme órdenes y luego ▶️':'Escribe todo el camino con flechas y luego toca ▶️'); }
   function draw(){
     const W=ar.clientWidth, H=ar.clientHeight; cell=Math.floor(Math.min((W-24)/N,(H-190)/N)); ox=(W-cell*N)/2; oy=60;
-    let h=''; for(let i=0;i<N*N;i++){ const x=ox+(i%N)*cell, y=oy+Math.floor(i/N)*cell; h+=`<div class="abs" style="left:${x}px;top:${y}px;width:${cell-4}px;height:${cell-4}px;margin:2px;border-radius:var(--r-sm);background:${(i+Math.floor(i/N))%2?'#ECE5F7':'#E2DAF2'};display:grid;place-items:center;font-size:${cell*.6}px">${rocks.has(i)?'🪨':i===goal?'🍎':''}</div>`; }
+    let h=''; for(let i=0;i<N*N;i++){ const x=ox+(i%N)*cell, y=oy+Math.floor(i/N)*cell; h+=`<div class="abs" style="left:${x}px;top:${y}px;width:${cell-4}px;height:${cell-4}px;margin:2px;border-radius:var(--r-sm);background:${(i+Math.floor(i/N))%2?'#ECE5F7':'#E2DAF2'};display:grid;place-items:center;font-size:${cell*.6}px">${rocks.has(i)?emo('🪨','1em'):i===goal?emo('🍎','1em'):''}</div>`; }
     h+=`<span id="me" class="abs" style="left:${ox+(pos%N)*cell}px;top:${oy+Math.floor(pos/N)*cell}px;width:${cell}px;height:${cell}px;display:grid;place-items:center;transition:left .3s,top .3s;z-index:2">${petMini(prof(),cell*.95)}</span>`;
     h+=`<div class="abs" style="left:12px;right:12px;top:${oy+cell*N+14}px;background:var(--card);border:2px dashed var(--line);border-radius:var(--r-md);min-height:56px;padding:var(--s-2);display:flex;flex-wrap:wrap;gap:var(--s-1);font-size:var(--fs-2xl)">${prog.length?prog.map((d,k)=>`<span id="p${k}" style="padding:2px;border-radius:var(--r-xs)">${AR[d]}</span>`).join(''):'<span class="muted" style="font-size:var(--fs-sm);font-weight:700">Mi programa: toca las flechas</span>'}</div>`;
     ar.innerHTML=h; }

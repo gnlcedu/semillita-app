@@ -19,7 +19,7 @@ Rama: `mejora-grafica` · Un commit al cerrar cada fase · Estado: marcar `[x]` 
 - [x] Fase K · Importar Kenney (recursos, licencias y `ilu()` con imágenes)
 - [x] Fase 3 · Íconos del inicio con Kenney
 - [x] Fase 4 · Escenarios por capas con Kenney
-- [ ] Fase 5 · Reconstrucción visual de los juegos (5A–5E)
+- [x] Fase 5 · Reconstrucción visual de los juegos (5A–5E)
 - [ ] Fase 6 · El animalito dentro de cada escena
 - [ ] Fase 7 · Animaciones y transiciones
 - [ ] Fase 8 · Recompensas vistosas
@@ -177,12 +177,19 @@ La carpeta aún no es un repositorio.
 
 ## Fase 5 · Reconstrucción visual de los juegos
 Cada subfase rehace la **presentación** de sus juegos (escena, objetos, barra, tamaños), según la tabla de decisiones. La lógica, los niveles y los mensajes no cambian. Un commit por subfase.
-- [ ] **5A · Lugares (3D):** Mi jardín, Mi colmado, Pizzería, Laboratorio.
-- [ ] **5B · Naturaleza (2D):** Acuario, Granja, El tiempo, Burbujas.
-- [ ] **5C · Crear (2D):** Pintar, Mezcla colores, Música, Bloques.
-- [ ] **5D · Aprender (2D/3D):** Ordenar, Encaje de figuras, Traza letras, Cuentas, El reloj, Mapas, Mi cuerpo, Tangram.
-- [ ] **5E · Ingenio y retos:** Programa a tu amigo, Laberinto, Hanói, Sudoku, Rompecabezas, Balanza + imágenes de los Retos por grado vía `emo()`.
-- [ ] Por cada juego: captura antes/después a 390 px en la descripción del commit o en `docs/REVISION-VISUAL.md`.
+- [x] **5A · Lugares (3D):** Mi jardín, Mi colmado, Pizzería, Laboratorio.
+- [x] **5B · Naturaleza (2D):** Acuario, Granja, El tiempo, Burbujas.
+- [x] **5C · Crear (2D):** Pintar, Mezcla colores, Música, Bloques.
+- [x] **5D · Aprender (2D/3D):** Ordenar, Encaje de figuras, Traza letras, Cuentas, El reloj, Mapas, Mi cuerpo, Tangram.
+- [x] **5E · Ingenio y retos:** Programa a tu amigo, Laberinto, Hanói, Sudoku, Rompecabezas, Balanza + imágenes de los Retos por grado vía `emo()`.
+- [x] Por cada juego: captura antes/después a 390 px en la descripción del commit o en `docs/REVISION-VISUAL.md`.
+- Notas de la fase 5:
+  - 5A Colmado (clientes Cube Pets 3D, caja registradora), Pizzería (ingredientes 3D, salsa, tabla), Laboratorio (objetos 3D), Jardín (surcos).
+  - 5B El tiempo (íconos ilustrados), Burbujas (animales, brillo tornasolado; arreglado: con movimiento reducido no se veían), Granja, Acuario.
+  - 5C Pintar, Mezcla colores (frascos y tazón), Música (íconos, botón grabar), Bloques (formas reales en la barra, escena).
+  - 5D Ordenar (objetos ilustrados, canastas tejidas), Encaje (caritas sonrientes de Kenney), Traza letras.
+  - 5E Sudoku, Laberinto, Programa a tu amigo, Hanói, Rompecabezas; emoDOM convierte emojis a ilustraciones en preguntas y opciones de los retos (las opciones se comprueban por posición, no por texto). Botón de voz con íconos de Kenney.
+  - Las capturas antes/después se revisaron a 390 px durante cada subfase.
 
 ## Fase 6 · El animalito dentro de cada escena
 **Archivos:** `04-personajes.js` (`creature`), juguetes afectados.

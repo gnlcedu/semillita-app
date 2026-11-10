@@ -185,6 +185,23 @@ window.ilu=(nombre,tam=48,c)=>{ const t=tamCss(tam), k=KN()[nombre];
   const f=ILU[nombre]; if(!f) return '';
   return `<span class="ilu" data-ilu="${nombre}" style="width:${t};height:${t}">${c?f(c):f()}</span>`; };
 window.emo=(e,tam='1.1em')=> EMO[e]&&iluFuente(EMO[e]) ? ilu(EMO[e],tam) : e;
+/* ---------- emojis → ilustraciones dentro de las zonas de dibujo de los retos ----------
+   Solo en contenedores que el código nunca lee (.visual, .egrid, .lesson-v, .story-scene):
+   las opciones de los retos (.opts .opt) se comprueban por su posición (data-i), no por su texto;
+   las cartas de memoria sí se comparan por texto y NO se tocan. */
+const EMO_SEL='.visual,.egrid,.lesson-v,.story-scene,.opts .opt';
+let emoRe=null;
+const emoRegex=()=>emoRe||(emoRe=new RegExp('('+Object.keys(EMO).filter(e=>iluFuente(EMO[e])).sort((a,b)=>b.length-a.length).map(e=>e.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('|')+')\\uFE0F?','gu'));
+window.emoDOM=root=>{ if(!root) return; const re=emoRegex(); const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT); const list=[];
+  while(w.nextNode()){ re.lastIndex=0; if(re.test(w.currentNode.nodeValue)) list.push(w.currentNode); }
+  list.forEach(t=>{ const span=document.createElement('span'); re.lastIndex=0;
+    span.innerHTML=t.nodeValue.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])).replace(re,m=>emo(m.replace(/️$/,''))||m);
+    t.replaceWith(...span.childNodes); }); };
+if (typeof MutationObserver!=='undefined') new MutationObserver(ms=>{ const todo=new Set();
+  ms.forEach(m=>m.addedNodes.forEach(n=>{ const el=n.nodeType===1?n:n.parentElement; if(!el) return;
+    const c=el.closest&&el.closest(EMO_SEL); if(c) todo.add(c); if(n.nodeType===1&&n.querySelectorAll) n.querySelectorAll(EMO_SEL).forEach(x=>todo.add(x)); }));
+  todo.forEach(emoDOM); }).observe(document.documentElement,{childList:true,subtree:true});
+
 /* ícono ilustrado de un juguete o aventura (objeto de TOYS o id); si no hay pieza, su emoji */
 window.toyIcon=(t,tam='1.2em')=>{ const id=typeof t==='string'?t:t.id, n=TOY_ILU[id];
   return n&&iluFuente(n) ? ilu(n,tam) : (typeof t==='string'?'':t.icon); };
