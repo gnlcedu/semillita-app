@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Render Kenney</title>
+<!-- Página interna de scripts/kenney.mjs: renderiza modelos .glb de Kenney a PNG transparente. -->
+<script type="importmap">{ "imports": { "three": "/three/build/three.module.js", "three/addons/": "/three/examples/jsm/" } }</script>
+</head><body style="margin:0;background:transparent">
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+
+const SIZE = 512;
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(1); renderer.setSize(SIZE, SIZE);
+renderer.setClearColor(0x000000, 0);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.NoToneMapping;
+document.body.appendChild(renderer.domElement);
+const loader = new GLTFLoader();
+
+/* Luz suave tipo "juguete": cielo claro, rebote cálido desde el suelo y una luz principal arriba a la izquierda. */
+function lights(scene) {
+  scene.add(new THREE.HemisphereLight(0xffffff, 0xf3e3c9, 1.45));
+  const key = new THREE.DirectionalLight(0xffffff, 1.35); key.position.set(-3, 6, 4); scene.add(key);
+  const fill = new THREE.DirectionalLight(0xfff4e6, .4); fill.position.set(4, 2, 3); scene.add(fill);
+}
+
+/* render(url, {giro, altura}) → dataURL PNG. giro: grados alrededor del eje vertical; altura: grados de elevación. */
+window.render = async (url, o = {}) => {
+  const gltf = await loader.loadAsync(url);
+  const scene = new THREE.Scene(); lights(scene);
+  const obj = gltf.scene; obj.rotation.y = THREE.MathUtils.degToRad(o.giro ?? 0);
+  obj.traverse(m => { if (m.isMesh && m.material) { const mats = [].concat(m.material); mats.forEach(x => { x.side = THREE.DoubleSide; if ('metalness' in x) x.metalness = 0; if ('roughness' in x) x.roughness = .85; }); } });
+  scene.add(obj);
+  const box = new THREE.Box3().setFromObject(obj), c = box.getCenter(new THREE.Vector3()), s = box.getBoundingSphere(new THREE.Sphere());
+  const cam = new THREE.PerspectiveCamera(24, 1, .01, 1000);
+  const az = THREE.MathUtils.degToRad(o.azimut ?? 32), el = THREE.MathUtils.degToRad(o.altura ?? 26);
+  const dist = s.radius / Math.sin(THREE.MathUtils.degToRad(12)) * 1.02;
+  cam.position.set(c.x + dist * Math.cos(el) * Math.sin(az), c.y + dist * Math.sin(el), c.z + dist * Math.cos(el) * Math.cos(az));
+  cam.lookAt(c);
+  renderer.render(scene, cam);
+  return renderer.domElement.toDataURL('image/png');
+};
+window.ready = true;
+</script>
+</body></html>

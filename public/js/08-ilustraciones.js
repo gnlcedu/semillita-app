@@ -126,15 +126,29 @@ tambora:()=>svg(`${R(44,22,16,62,8,K.gris)}${[32,42,52,62,72].map(y=>[49,55].map
 };
 
 /* emoji → ilustración (solo para mostrar; los datos siguen guardando el emoji) */
-const EMO={'🌰':'semilla','🟤':'semilla','🌱':'brote','🌿':'planta','🌼':'capullo','🥀':'capullo','🍀':'arbusto','🍃':'arbusto','🥬':'arbusto','🌾':'arbusto','🪴':'arbusto','🌳':'arbol','🌴':'palmera',
+const EMO={'🌰':'semilla','🟤':'semilla','🌱':'brote','🌿':'planta','🌼':'flor_amarilla','🥀':'flor_roja','🍀':'arbusto','🍃':'arbusto','🥬':'arbusto','🌾':'arbusto','🪴':'arbusto','🌳':'arbol','🌴':'palmera',
  '🌻':'girasol','🌷':'tulipan','🌹':'rosa','🌺':'cayena','🍅':'tomate','🌽':'maiz','🍓':'fresa','🥕':'zanahoria','🍉':'sandia','🫛':'habichuela','🥭':'mango','💧':'gota','🧺':'canasta',
  '🍞':'pan','🥚':'huevo','🍌':'guineo','🥛':'leche','🧃':'jugo','🧀':'queso','🍫':'chocolate','🥑':'aguacate','🍬':'dulce','🍚':'arroz','🍋':'limon','🥤':'refresco','🛍️':'funda',
  '🐟':'pez','🐠':'pez_tropical','🐡':'pez_globo','🐙':'pulpo','🦑':'calamar','🦀':'cangrejo','🦞':'langosta','🐢':'tortuga','🐬':'delfin','🦈':'tiburon','🐳':'ballena','🪼':'medusa','🏰':'castillo','🪸':'coral','🐚':'concha',
  '🐄':'vaca','🐷':'cerdo','🐔':'gallina','🐑':'oveja','🐴':'caballo','🦆':'pato','🐶':'perro','🐱':'gato','🐐':'chivo','🏚️':'granero',
- '🎹':'piano','🎸':'guitarra','🪈':'flauta','🎻':'violin','🥁':'bateria'};
+ '🎹':'piano','🎸':'guitarra','🪈':'flauta','🎻':'violin','🥁':'bateria',
+ /* piezas que solo existen en Kenney */
+ '🍎':'manzana','🍐':'pera','🍇':'uvas','🍒':'cerezas','🍊':'naranja','🍍':'pina','🍕':'pizza',
+ '🐰':'conejo','🐻':'oso','🐵':'mono','🦉':'buho','🐸':'rana','🐼':'panda','🦜':'loro','🐘':'elefante','🦒':'jirafa','🐧':'pinguino','🐮':'vaca','🐖':'cerdo','🐓':'gallina','🐕':'perro',
+ '🫧':'burbuja','🪨':'roca'};
 
+/* ---------- Kenney (CC0) primero, SVG propio como respaldo ----------
+   window.KENNEY lo genera scripts/kenney.mjs en public/kenney/kenney.js: {nombre:[ancho, alto, esIcono]} */
+const KN=()=>window.KENNEY||{};
+const tamCss=tam=>typeof tam==='number'?tam+'px':tam;
 window.ILU=ILU; window.ILU_EMO=EMO;
-window.ilu=(nombre,tam=48,c)=>{ const f=ILU[nombre]; if(!f) return ''; const t=typeof tam==='number'?tam+'px':tam;
+/* origen de una pieza: 'kenney', 'svg' o '' si no existe */
+window.iluFuente=n=>KN()[n]&&!KN()[n][2]?'kenney':ILU[n]?'svg':'';
+window.ilu=(nombre,tam=48,c)=>{ const t=tamCss(tam), k=KN()[nombre];
+  if (k && !k[2]) return `<span class="ilu" data-ilu="${nombre}" style="width:${t};height:${t}"><img src="/kenney/${nombre}.webp" alt="" draggable="false" decoding="async"></span>`;
+  const f=ILU[nombre]; if(!f) return '';
   return `<span class="ilu" data-ilu="${nombre}" style="width:${t};height:${t}">${c?f(c):f()}</span>`; };
-window.emo=(e,tam='1.1em')=> EMO[e] ? ilu(EMO[e],tam) : e;
+window.emo=(e,tam='1.1em')=> EMO[e]&&iluFuente(EMO[e]) ? ilu(EMO[e],tam) : e;
+/* ícono monocromo de Kenney (Game Icons), toma el color del texto: kic('play') */
+window.kic=(nombre,tam='1em')=> KN()['kic_'+nombre] ? `<span class="kic" aria-hidden="true" style="width:${tamCss(tam)};height:${tamCss(tam)};--k:url(/kenney/kic_${nombre}.webp)"></span>` : '';
 })();

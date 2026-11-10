@@ -61,5 +61,116 @@ Para estos casos se siguen usando las ilustraciones SVG propias del mismo estilo
 
 ## Archivos en uso
 
-<!-- La fase K genera esta sección automáticamente desde scripts/kenney-manifiesto.json -->
-_Pendiente: se completa al importar los recursos (fase K)._
+<!-- Sección generada por scripts/kenney.mjs (npm run kenney) desde scripts/kenney-manifiesto.json -->
+108 piezas · 542 KB en `public/kenney/`.
+
+| Pieza en Semillita | Paquete de Kenney | Archivo original | Cómo se usa |
+| --- | --- | --- | --- |
+| `vaca` | Animal Pack Redux | `PNG/Round (outline)/cow.png` | PNG |
+| `cerdo` | Animal Pack Redux | `PNG/Round (outline)/pig.png` | PNG |
+| `gallina` | Animal Pack Redux | `PNG/Round (outline)/chicken.png` | PNG |
+| `pato` | Animal Pack Redux | `PNG/Round (outline)/duck.png` | PNG |
+| `caballo` | Animal Pack Redux | `PNG/Round (outline)/horse.png` | PNG |
+| `chivo` | Animal Pack Redux | `PNG/Round (outline)/goat.png` | PNG |
+| `perro` | Animal Pack Redux | `PNG/Round (outline)/dog.png` | PNG |
+| `conejo` | Animal Pack Redux | `PNG/Round (outline)/rabbit.png` | PNG |
+| `oso` | Animal Pack Redux | `PNG/Round (outline)/bear.png` | PNG |
+| `mono` | Animal Pack Redux | `PNG/Round (outline)/monkey.png` | PNG |
+| `buho` | Animal Pack Redux | `PNG/Round (outline)/owl.png` | PNG |
+| `rana` | Animal Pack Redux | `PNG/Round (outline)/frog.png` | PNG |
+| `panda` | Animal Pack Redux | `PNG/Round (outline)/panda.png` | PNG |
+| `loro` | Animal Pack Redux | `PNG/Round (outline)/parrot.png` | PNG |
+| `elefante` | Animal Pack Redux | `PNG/Round (outline)/elephant.png` | PNG |
+| `jirafa` | Animal Pack Redux | `PNG/Round (outline)/giraffe.png` | PNG |
+| `pinguino` | Animal Pack Redux | `PNG/Round (outline)/penguin.png` | PNG |
+| `morsa` | Animal Pack Redux | `PNG/Round (outline)/walrus.png` | PNG |
+| `narval` | Animal Pack Redux | `PNG/Round (outline)/narwhal.png` | PNG |
+| `ballena` | Animal Pack Redux | `PNG/Round (outline)/whale.png` | PNG |
+| `pez` | Fish Pack 2.0 | `Vector/fish_blue_outline.svg` | vector |
+| `pez_tropical` | Fish Pack 2.0 | `Vector/fish_orange_outline.svg` | vector |
+| `pez_rosa` | Fish Pack 2.0 | `Vector/fish_pink_outline.svg` | vector |
+| `pez_verde` | Fish Pack 2.0 | `Vector/fish_green_outline.svg` | vector |
+| `pez_rojo` | Fish Pack 2.0 | `Vector/fish_red_outline.svg` | vector |
+| `alga` | Fish Pack 2.0 | `Vector/seaweed_green_a_outline.svg` | vector |
+| `coral` | Fish Pack 2.0 | `Vector/seaweed_pink_a_outline.svg` | vector |
+| `roca` | Fish Pack 2.0 | `Vector/rock_a_outline.svg` | vector |
+| `burbuja` | Fish Pack 2.0 | `Vector/bubble_a.svg` | vector |
+| `pan` | Food Kit | `Models/GLB format/loaf.glb` | modelo 3D renderizado |
+| `huevo` | Food Kit | `Models/GLB format/egg.glb` | modelo 3D renderizado |
+| `guineo` | Food Kit | `Models/GLB format/banana.glb` | modelo 3D renderizado |
+| `leche` | Food Kit | `Models/GLB format/carton.glb` | modelo 3D renderizado |
+| `jugo` | Food Kit | `Models/GLB format/carton-small.glb` | modelo 3D renderizado |
+| `queso` | Food Kit | `Models/GLB format/cheese.glb` | modelo 3D renderizado |
+| `chocolate` | Food Kit | `Models/GLB format/chocolate.glb` | modelo 3D renderizado |
+| `aguacate` | Food Kit | `Models/GLB format/advocado-half.glb` | modelo 3D renderizado |
+| `dulce` | Food Kit | `Models/GLB format/lollypop.glb` | modelo 3D renderizado |
+| `limon` | Food Kit | `Models/GLB format/lemon.glb` | modelo 3D renderizado |
+| `refresco` | Food Kit | `Models/GLB format/soda.glb` | modelo 3D renderizado |
+| `funda` | Food Kit | `Models/GLB format/bag.glb` | modelo 3D renderizado |
+| `tomate` | Food Kit | `Models/GLB format/tomato.glb` | modelo 3D renderizado |
+| `maiz` | Food Kit | `Models/GLB format/corn.glb` | modelo 3D renderizado |
+| `fresa` | Food Kit | `Models/GLB format/strawberry.glb` | modelo 3D renderizado |
+| `zanahoria` | Food Kit | `Models/GLB format/carrot.glb` | modelo 3D renderizado |
+| `sandia` | Food Kit | `Models/GLB format/watermelon.glb` | modelo 3D renderizado |
+| `manzana` | Food Kit | `Models/GLB format/apple.glb` | modelo 3D renderizado |
+| `pera` | Food Kit | `Models/GLB format/pear.glb` | modelo 3D renderizado |
+| `uvas` | Food Kit | `Models/GLB format/grapes.glb` | modelo 3D renderizado |
+| `cerezas` | Food Kit | `Models/GLB format/cherries.glb` | modelo 3D renderizado |
+| `naranja` | Food Kit | `Models/GLB format/orange.glb` | modelo 3D renderizado |
+| `pina` | Food Kit | `Models/GLB format/pineapple.glb` | modelo 3D renderizado |
+| `pizza` | Food Kit | `Models/GLB format/pizza.glb` | modelo 3D renderizado |
+| `caja` | Mini Shop 2.1 | `Models/GLB format/cash-register.glb` | modelo 3D renderizado |
+| `canasta` | Mini Shop 2.1 | `Models/GLB format/shopping-basket.glb` | modelo 3D renderizado |
+| `puesto_frutas` | Mini Shop 2.1 | `Models/GLB format/display-fruit.glb` | modelo 3D renderizado |
+| `puesto_pan` | Mini Shop 2.1 | `Models/GLB format/display-bread.glb` | modelo 3D renderizado |
+| `brote` | Nature Kit 2.1 | `Models/GLTF format/crops_leafsStageA.glb` | modelo 3D renderizado |
+| `planta` | Nature Kit 2.1 | `Models/GLTF format/crops_leafsStageB.glb` | modelo 3D renderizado |
+| `arbusto` | Nature Kit 2.1 | `Models/GLTF format/plant_bush.glb` | modelo 3D renderizado |
+| `arbol` | Nature Kit 2.1 | `Models/GLTF format/tree_default.glb` | modelo 3D renderizado |
+| `palmera` | Nature Kit 2.1 | `Models/GLTF format/tree_palmShort.glb` | modelo 3D renderizado |
+| `flor_roja` | Nature Kit 2.1 | `Models/GLTF format/flower_redA.glb` | modelo 3D renderizado |
+| `flor_amarilla` | Nature Kit 2.1 | `Models/GLTF format/flower_yellowA.glb` | modelo 3D renderizado |
+| `flor_morada` | Nature Kit 2.1 | `Models/GLTF format/flower_purpleA.glb` | modelo 3D renderizado |
+| `maiz_a` | Nature Kit 2.1 | `Models/GLTF format/crops_cornStageA.glb` | modelo 3D renderizado |
+| `maiz_b` | Nature Kit 2.1 | `Models/GLTF format/crops_cornStageB.glb` | modelo 3D renderizado |
+| `maiz_c` | Nature Kit 2.1 | `Models/GLTF format/crops_cornStageC.glb` | modelo 3D renderizado |
+| `maiz_d` | Nature Kit 2.1 | `Models/GLTF format/crops_cornStageD.glb` | modelo 3D renderizado |
+| `mata_zanahoria` | Nature Kit 2.1 | `Models/GLTF format/crop_carrot.glb` | modelo 3D renderizado |
+| `calabaza` | Nature Kit 2.1 | `Models/GLTF format/crop_pumpkin.glb` | modelo 3D renderizado |
+| `melon` | Nature Kit 2.1 | `Models/GLTF format/crop_melon.glb` | modelo 3D renderizado |
+| `cliente_gato` | Cube Pets | `Models/GLB format/animal-cat.glb` | modelo 3D renderizado |
+| `cliente_perro` | Cube Pets | `Models/GLB format/animal-dog.glb` | modelo 3D renderizado |
+| `cliente_conejo` | Cube Pets | `Models/GLB format/animal-bunny.glb` | modelo 3D renderizado |
+| `cliente_pollito` | Cube Pets | `Models/GLB format/animal-chick.glb` | modelo 3D renderizado |
+| `cliente_vaca` | Cube Pets | `Models/GLB format/animal-cow.glb` | modelo 3D renderizado |
+| `cliente_cerdo` | Cube Pets | `Models/GLB format/animal-pig.glb` | modelo 3D renderizado |
+| `cliente_leon` | Cube Pets | `Models/GLB format/animal-lion.glb` | modelo 3D renderizado |
+| `cliente_mono` | Cube Pets | `Models/GLB format/animal-monkey.glb` | modelo 3D renderizado |
+| `cliente_tigre` | Cube Pets | `Models/GLB format/animal-tiger.glb` | modelo 3D renderizado |
+| `cliente_jirafa` | Cube Pets | `Models/GLB format/animal-giraffe.glb` | modelo 3D renderizado |
+| `cliente_elefante` | Cube Pets | `Models/GLB format/animal-elephant.glb` | modelo 3D renderizado |
+| `cliente_loro` | Cube Pets | `Models/GLB format/animal-parrot.glb` | modelo 3D renderizado |
+| `kic_play` | Game Icons | `PNG/Black/2x/right.png` | PNG |
+| `kic_pausa` | Game Icons | `PNG/Black/2x/pause.png` | PNG |
+| `kic_parar` | Game Icons | `PNG/Black/2x/stop.png` | PNG |
+| `kic_borrar` | Game Icons | `PNG/Black/2x/trashcan.png` | PNG |
+| `kic_deshacer` | Game Icons | `PNG/Black/2x/return.png` | PNG |
+| `kic_sonido` | Game Icons | `PNG/Black/2x/audioOn.png` | PNG |
+| `kic_silencio` | Game Icons | `PNG/Black/2x/audioOff.png` | PNG |
+| `kic_inicio` | Game Icons | `PNG/Black/2x/home.png` | PNG |
+| `kic_info` | Game Icons | `PNG/Black/2x/information.png` | PNG |
+| `kic_estrella` | Game Icons | `PNG/Black/2x/star.png` | PNG |
+| `kic_ajustes` | Game Icons | `PNG/Black/2x/gear.png` | PNG |
+| `kic_ok` | Game Icons | `PNG/Black/2x/checkmark.png` | PNG |
+| `kic_no` | Game Icons | `PNG/Black/2x/cross.png` | PNG |
+| `kic_mas` | Game Icons | `PNG/Black/2x/plus.png` | PNG |
+| `kic_menos` | Game Icons | `PNG/Black/2x/minus.png` | PNG |
+| `kic_musica` | Game Icons | `PNG/Black/2x/musicOn.png` | PNG |
+| `kic_pregunta` | Game Icons | `PNG/Black/2x/question.png` | PNG |
+| `kic_siguiente` | Game Icons | `PNG/Black/2x/next.png` | PNG |
+| `kic_anterior` | Game Icons | `PNG/Black/2x/previous.png` | PNG |
+| `kic_izq` | Game Icons | `PNG/Black/2x/left.png` | PNG |
+| `kic_der` | Game Icons | `PNG/Black/2x/right.png` | PNG |
+| `kic_arriba` | Game Icons | `PNG/Black/2x/up.png` | PNG |
+| `kic_abajo` | Game Icons | `PNG/Black/2x/down.png` | PNG |
+| `kic_lupa` | Game Icons | `PNG/Black/2x/zoom.png` | PNG |

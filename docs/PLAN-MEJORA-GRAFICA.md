@@ -16,7 +16,7 @@ Rama: `mejora-grafica` · Un commit al cerrar cada fase · Estado: marcar `[x]` 
 - [x] Fase 0 · Preparar git
 - [x] Fase 1 · Sistema visual unificado
 - [x] Fase 2 · Biblioteca de ilustraciones SVG (queda como respaldo de Kenney)
-- [ ] Fase K · Importar Kenney (recursos, licencias y `ilu()` con imágenes)
+- [x] Fase K · Importar Kenney (recursos, licencias y `ilu()` con imágenes)
 - [ ] Fase 3 · Íconos del inicio con Kenney
 - [ ] Fase 4 · Escenarios por capas con Kenney
 - [ ] Fase 5 · Reconstrucción visual de los juegos (5A–5E)
@@ -129,16 +129,24 @@ La carpeta aún no es un repositorio.
 
 ## Fase K · Importar Kenney
 **Archivos:** `scripts/kenney.mjs` (nuevo), `scripts/kenney-fuentes.json`, `scripts/kenney-manifiesto.json`, `public/kenney/` (imágenes ya procesadas), `public/js/08-ilustraciones.js`, `vite.config.js`, `package.json`, `.gitignore`, `docs/LICENCIAS.md`, `docs/catalogo.html`.
-- [ ] `scripts/kenney-fuentes.json`: URL de cada `.zip` en OpenGameArt.
-- [ ] `scripts/kenney.mjs` (`npm run kenney`): descarga los `.zip` a `vendor/kenney/` (fuera de git), los descomprime, y para cada pieza del manifiesto recorta el espacio vacío, la reduce a 256 px y la guarda como `.webp` en `public/kenney/`. Usa `sharp` (dependencia de desarrollo).
-- [ ] `scripts/kenney-manifiesto.json`: nombre en Semillita → paquete + archivo original. Una sola fuente de verdad.
-- [ ] `ilu()` y `emo()` usan primero la imagen de Kenney (`<img src="/kenney/…webp">`) y, si no existe, el SVG propio. Así **todos los lugares que ya usan `ilu()`/`emo()` cambian solos**, sin tocar la lógica.
-- [ ] Íconos monocromos (`kic('play')`) con `mask-image` para las barras de herramientas.
-- [ ] El script regenera la sección "Archivos en uso" de `docs/LICENCIAS.md` (pieza → paquete → archivo original).
-- [ ] `docs/catalogo.html` muestra cada pieza con su origen (Kenney o SVG propio).
-- [ ] Crédito a Kenney en la zona de adultos.
-- [ ] Incluir `.webp` en la caché de la PWA (`vite.config.js`); medir el peso total (meta: menos de 3 MB).
-- [ ] Revisar · build · commit `Fase K: importar Kenney`.
+- [x] `scripts/kenney-fuentes.json`: URL de cada `.zip` en OpenGameArt.
+- [x] `scripts/kenney.mjs` (`npm run kenney`): descarga los `.zip` a `vendor/kenney/` (fuera de git), los descomprime, y para cada pieza del manifiesto recorta el espacio vacío, la reduce a 256 px y la guarda como `.webp` en `public/kenney/`. Usa `sharp` (dependencia de desarrollo).
+- [x] `scripts/kenney-manifiesto.json`: nombre en Semillita → paquete + archivo original. Una sola fuente de verdad.
+- [x] `ilu()` y `emo()` usan primero la imagen de Kenney (`<img src="/kenney/…webp">`) y, si no existe, el SVG propio. Así **todos los lugares que ya usan `ilu()`/`emo()` cambian solos**, sin tocar la lógica.
+- [x] Íconos monocromos (`kic('play')`) con `mask-image` para las barras de herramientas.
+- [x] El script regenera la sección "Archivos en uso" de `docs/LICENCIAS.md` (pieza → paquete → archivo original).
+- [x] `docs/catalogo.html` muestra cada pieza con su origen (Kenney o SVG propio).
+- [x] Crédito a Kenney en la zona de adultos.
+- [x] Incluir `.webp` en la caché de la PWA (`vite.config.js`); medir el peso total (meta: menos de 3 MB).
+- [x] Revisar · build · commit `Fase K: importar Kenney`.
+- Notas de la fase K:
+  - Los renders PNG de los kits 3D venían diminutos (un pan de 30×38 px), así que el script **renderiza los modelos `.glb` originales** con three.js en Chrome sin ventana (`scripts/kenney-render.html`): 512 px, luz suave, fondo transparente. Los peces salen de sus vectores SVG. Dependencias de desarrollo: `sharp`, `adm-zip`, `three` (no llegan a la app).
+  - 108 piezas en 542 KB; la caché completa de la PWA pesa 1,2 MB.
+  - `emo()` ahora también traduce frutas, más animales, burbujas y rocas que solo existen en Kenney.
+  - Los peces del Fish Pack se voltean (`espejo`) para mirar a la izquierda como los emojis; el acuario los gira al nadar.
+  - Botones de barra con ícono + texto ahora en fila (`grid-auto-flow:column`).
+  - Pendiente para la fase 5: en Mi jardín conviven plantas 3D de Kenney con flores SVG propias; el cliente del colmado aún es una cara 2D (pasará a Cube Pets 3D).
+
 
 ## Fase 3 · Íconos del inicio con Kenney
 **Archivos:** `08-ilustraciones.js`, `04-personajes.js` (`vHome`), `02-juguetes.js` (`vToy`), `styles.css`.

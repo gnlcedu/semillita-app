@@ -234,6 +234,9 @@ th{color:var(--soft);font-weight:700;font-size:var(--fs-xs)}
 /* ilustraciones SVG (08-ilustraciones.js) */
 .ilu{display:inline-block;vertical-align:middle;line-height:0;flex:none}
 .ilu svg{width:100%;height:100%;display:block;overflow:visible}
+.ilu img{width:100%;height:100%;display:block;object-fit:contain;pointer-events:none;user-select:none;-webkit-user-drag:none}
+/* íconos monocromos de Kenney: se pintan con el color del texto */
+.kic{display:inline-block;vertical-align:-.15em;flex:none;background:currentColor;-webkit-mask:var(--k) center/contain no-repeat;mask:var(--k) center/contain no-repeat}
 /* sala de juegos */
 .toyhead{display:flex;align-items:center;gap:var(--s-2);margin-bottom:var(--s-3)}
 .toyhead h2{font-size:var(--fs-md);line-height:1.15;flex:1;min-width:0;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow-wrap:anywhere}
@@ -243,6 +246,7 @@ th{color:var(--soft);font-weight:700;font-size:var(--fs-xs)}
 .tbar,.pbar{position:absolute;left:0;right:0;bottom:0;background:rgba(255,255,255,.94);border-top:var(--bw) solid var(--line);z-index:6;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
 .tbar{height:var(--tbar-h);display:flex;align-items:center;gap:var(--s-2);overflow-x:auto;padding:0 var(--s-3);scrollbar-width:none;touch-action:pan-x}
 .tbar button,.prow button,.fl button{flex:none;min-width:var(--tap);height:var(--tap);border-radius:var(--r-sm);font-size:var(--fs-md);background:var(--card);border:var(--bw) solid var(--line-2);display:grid;place-items:center;padding:0 var(--s-3);font-weight:800}
+.tbar button,.prow button{grid-auto-flow:column;gap:2px}
 .tbar button.on,.prow button.on,.fl button.on{border-color:var(--ink);background:var(--butter)}
 .tbar .sw-c{width:44px;min-width:44px;height:44px;border-radius:50%}
 .tbar .sep{flex:none;width:2px;height:30px;background:var(--line)}

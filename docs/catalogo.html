@@ -18,42 +18,53 @@ import '@fontsource/nunito/400.css'; import '@fontsource/nunito/700.css'; import
   .it b{display:block;margin-top:var(--s-2);font-size:var(--fs-sm)}
   .it code{font-size:var(--fs-2xs);color:var(--soft)}
   .bar{position:sticky;top:0;z-index:5;background:var(--bg);padding:var(--s-2) 0;display:flex;gap:var(--s-2);flex-wrap:wrap;border-bottom:var(--bw) solid var(--line)}
+  .src{display:inline-block;margin-top:4px;font-size:var(--fs-2xs);font-weight:800;border-radius:var(--r-pill);padding:1px 8px;background:var(--line)}
+  .src.kenney{background:var(--mint)}
   .bg-dark .it{background:#2F2B3A;border-color:#2F2B3A}
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="logo">Semi<span>llita</span> · ilustraciones</div>
-  <p class="muted" style="font-weight:700;margin:var(--s-1) 0 var(--s-3)">Todas las piezas de <code>public/js/08-ilustraciones.js</code> a 96, 48 y 32 px. Uso: <code>ilu('girasol', 48)</code> o <code>emo('🌻')</code>.</p>
+  <p class="muted" style="font-weight:700;margin:var(--s-1) 0 var(--s-3)">Piezas de Kenney (<code>public/kenney/</code>, CC0) y SVG propios (<code>public/js/08-ilustraciones.js</code>) a 96, 48 y 32 px. Origen de cada una en <code>docs/LICENCIAS.md</code>. Uso: <code>ilu('girasol', 48)</code> o <code>emo('🌻')</code>.</p>
   <div class="bar" id="bar"></div>
   <div id="out"></div>
 </div>
 <!-- shade() vive en 04-personajes.js; aquí va una copia para no cargar toda la app -->
 <script>function shade(h,a){ const n=parseInt(h.slice(1),16); const f=c=>Math.max(0,Math.min(255,Math.round(a<0?c*(1+a):c+(255-c)*a))); return '#'+[n>>16,n>>8&255,n&255].map(f).map(x=>x.toString(16).padStart(2,'0')).join(''); }</script>
+<script src="/kenney/kenney.js"></script>
 <script src="/js/08-ilustraciones.js"></script>
 <script>
 const GROUPS=[
   ['Jardín',['semilla','brote','planta','girasol','tulipan','rosa','cayena','tomate','maiz','fresa','zanahoria','sandia','habichuela','mango','platano','regadera']],
-  ['Jardín · extras',['capullo','arbusto','arbol','palmera','gota','canasta']],
-  ['Colmado',['pan','huevo','guineo','leche','jugo','queso','chocolate','aguacate','dulce','arroz','limon','refresco','funda','caja']],
+  ['Jardín · extras',['capullo','arbusto','arbol','palmera','gota','canasta','flor_roja','flor_amarilla','flor_morada','maiz_a','maiz_b','maiz_c','maiz_d','mata_zanahoria','calabaza','melon']],
+  ['Colmado',['pan','huevo','guineo','leche','jugo','queso','chocolate','aguacate','dulce','arroz','limon','refresco','funda','caja','canasta','puesto_frutas','puesto_pan']],
+  ['Frutas',['manzana','pera','uvas','cerezas','naranja','pina','pizza']],
   ['Mar',['pez','pez_tropical','pez_globo','pulpo','calamar','cangrejo','langosta','tortuga','delfin','tiburon','ballena','medusa','castillo','coral']],
-  ['Mar · extras',['concha','alga']],
+  ['Mar · extras',['concha','alga','roca','burbuja','pez_rosa','pez_verde','pez_rojo','narval','morsa','pinguino']],
   ['Granja',['vaca','cerdo','gallina','oveja','caballo','pato','perro','gato','chivo']],
   ['Granja · extras',['granero']],
+  ['Animales',['conejo','oso','mono','buho','rana','panda','loro','elefante','jirafa']],
+  ['Clientes del colmado',[]],
   ['Música',['piano','guitarra','flauta','violin','bateria','xilofono','tambora']],
   ['Inicio · juguetes',[]],['Inicio · aventuras',[]]
 ];
+const ALL=[...new Set([...Object.keys(ILU),...Object.keys(KENNEY).filter(k=>!KENNEY[k][2])])];
+GROUPS.find(g=>g[0]==='Clientes del colmado')[1]=ALL.filter(k=>k.startsWith('cliente_'));
 const known=new Set(GROUPS.flatMap(g=>g[1]));
-const rest=Object.keys(ILU).filter(k=>!known.has(k));
+const rest=ALL.filter(k=>!known.has(k));
 // Las piezas de inicio (fase 3) empiezan por "ic_"
 GROUPS.find(g=>g[0]==='Inicio · juguetes')[1]=rest.filter(k=>k.startsWith('ic_')&&!k.startsWith('ic_av_'));
 GROUPS.find(g=>g[0]==='Inicio · aventuras')[1]=rest.filter(k=>k.startsWith('ic_av_'));
 const other=rest.filter(k=>!k.startsWith('ic_')); if(other.length) GROUPS.push(['Otras',other]);
+const KIC=Object.keys(KENNEY).filter(k=>KENNEY[k][2]).map(k=>k.slice(4));
 const emoOf=Object.fromEntries(Object.entries(ILU_EMO).map(([e,n])=>[n,e]));
-let total=0;
-document.getElementById('out').innerHTML=GROUPS.filter(g=>g[1].length).map(([t,ks])=>{ total+=ks.length;
-  return `<h2 class="h-sec" id="${t}">${t} <small class="muted">(${ks.length})</small></h2><div class="grid">${ks.map(k=>`<div class="it"><div class="sizes">${ilu(k,96)}${ilu(k,48)}${ilu(k,32)}</div><b>${k}</b><code>${emoOf[k]?emoOf[k]+' · ':''}ilu('${k}')</code></div>`).join('')}</div>`; }).join('');
-document.getElementById('bar').innerHTML=GROUPS.filter(g=>g[1].length).map(([t])=>`<a class="chip" href="#${t}" style="text-decoration:none;color:inherit;display:inline-grid;place-items:center">${t}</a>`).join('')+`<button class="chip" id="dk">🌙 Fondo oscuro</button><span class="stars-pill" style="display:grid;place-items:center">${total} piezas</span>`;
+const fuente=k=>iluFuente(k)==='kenney'?'<span class="src kenney">Kenney</span>':'<span class="src">SVG propio</span>';
+let total=0, nk=0;
+document.getElementById('out').innerHTML=GROUPS.filter(g=>g[1].length).map(([t,ks])=>{ total+=ks.length; nk+=ks.filter(k=>iluFuente(k)==='kenney').length;
+  return `<h2 class="h-sec" id="${t}">${t} <small class="muted">(${ks.length})</small></h2><div class="grid">${ks.map(k=>`<div class="it"><div class="sizes">${ilu(k,96)}${ilu(k,48)}${ilu(k,32)}</div><b>${k}</b><code>${emoOf[k]?emoOf[k]+' · ':''}ilu('${k}')</code><br>${fuente(k)}</div>`).join('')}</div>`; }).join('')
+ +`<h2 class="h-sec" id="Íconos">Íconos de barra <small class="muted">(${KIC.length}) · kic('nombre') · toman el color del texto</small></h2><div class="grid">${KIC.map(k=>`<div class="it"><div class="sizes" style="color:var(--ink)">${kic(k,48)}<span style="color:var(--lavD)">${kic(k,32)}</span></div><b>${k}</b><code>kic('${k}')</code><br><span class="src kenney">Kenney</span></div>`).join('')}</div>`;
+document.getElementById('bar').innerHTML=GROUPS.filter(g=>g[1].length).map(([t])=>`<a class="chip" href="#${t}" style="text-decoration:none;color:inherit;display:inline-grid;place-items:center">${t}</a>`).join('')+`<a class="chip" href="#Íconos" style="text-decoration:none;color:inherit;display:inline-grid;place-items:center">Íconos</a><button class="chip" id="dk">🌙 Fondo oscuro</button><span class="stars-pill" style="display:grid;place-items:center">${total} piezas · ${nk} de Kenney</span>`;
 document.getElementById('dk').onclick=()=>document.body.classList.toggle('bg-dark');
 </script>
 </body>

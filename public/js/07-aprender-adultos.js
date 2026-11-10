@@ -221,6 +221,7 @@ vAdults=function(){
       <tr><td>Su amigo</td><td>${LEVELN[lvl-1]} · ${p.xp||0} puntos</td></tr><tr><td>Stickers</td><td>${(p.stickers||[]).length} de ${STK.length}</td></tr>
       <tr><td>Cálculo mental</td><td>${p.math?`🔥 ${p.math.streak} días · récord ${p.math.best}`:'—'}</td></tr>
       <tr><td>Lectura (palabras correctas/min)</td><td>${fl.length?fl.map(f=>`${f.d}: <b>${f.wcpm}</b>`).join('<br>'):'—'}</td></tr></table></div>`; });
+  html+=`<p class="muted" style="font-size:var(--fs-xs);text-align:center;margin:var(--s-5) 0 0">Gráficos de <b>Kenney</b> (www.kenney.nl), licencia CC0 · Ilustraciones y animalitos hechos para Semillita.</p>`;
   app.insertAdjacentHTML('beforeend',html);
   bind('[data-lim]',el=>{ S.settings.limit=+el.dataset.lim; save(); render(); });
   bind('[data-unl]',el=>{ S.settings.unlocked=today()+el.dataset.unl; save(); el.textContent='✅ Listo: tiempo libre hoy'; });

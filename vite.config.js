@@ -5,7 +5,7 @@ export default defineConfig({
   plugins: [
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['icons/*.png', 'css/*.css', 'js/*.js'],
+      includeAssets: ['icons/*.png', 'css/*.css', 'js/*.js', 'kenney/*'],
       manifest: {
         name: 'Semillita · Aprende jugando',
         short_name: 'Semillita',
@@ -23,7 +23,7 @@ export default defineConfig({
         ]
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,png,svg,woff2,mp3,ogg}'],
+        globPatterns: ['**/*.{js,css,html,png,svg,webp,woff2,mp3,ogg}'],
         maximumFileSizeToCacheInBytes: 5 * 1024 * 1024
       }
     })
