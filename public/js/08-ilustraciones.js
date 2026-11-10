@@ -128,7 +128,11 @@ tambora:()=>svg(`${R(44,22,16,62,8,K.gris)}${[32,42,52,62,72].map(y=>[49,55].map
 /* ================= ÍCONOS DEL INICIO (los que Kenney no tiene) ================= */
 const heart='M50 86 Q14 62 14 38 Q14 18 32 18 Q44 18 50 30 Q56 18 68 18 Q86 18 86 38 Q86 62 50 86Z';
 const drop=(x,y,s,c)=>`<g transform="translate(${x} ${y}) scale(${s})">${P('M0 -22 Q16 -2 16 8 Q16 22 0 22 Q-16 22 -16 8 Q-16 -2 0 -22Z',c)}${luz(-6,6,3,6,15)}</g>`;
+const rayos=(cx,cy,r1,r2,n,c)=>Array.from({length:n},(_,i)=>{const a=i*2*Math.PI/n; return L(`M${(cx+r1*Math.cos(a)).toFixed(1)} ${(cy+r1*Math.sin(a)).toFixed(1)} L${(cx+r2*Math.cos(a)).toFixed(1)} ${(cy+r2*Math.sin(a)).toFixed(1)}`,c,5);}).join('');
+const nubeSvg=(x,y,s=1)=>`<g transform="translate(${x} ${y}) scale(${s})">${P('M-26 10 Q-34 10 -34 2 Q-34 -8 -22 -8 Q-20 -22 -6 -22 Q8 -24 12 -12 Q26 -14 28 0 Q36 2 34 10 Q32 14 26 14 H-22 Q-26 14 -26 10Z',K.blanco)}${luz(-10,-12,6,3)}</g>`;
 Object.assign(ILU,{
+sol:()=>svg(`${rayos(50,50,34,46,12,'#F7C948')}${C(50,50,28,K.amarillo)}${luz(40,38,8,5)}${cara(50,54,1.1,9)}`),
+ic_weather:()=>svg(`<g transform="translate(-10 -8) scale(.8)">${rayos(50,50,34,46,10,'#F7C948')}${C(50,50,26,K.amarillo)}${luz(40,40,7,4)}</g>${nubeSvg(60,66,1.25)}`),
 ic_paint:()=>svg(`${P('M50 12 Q88 12 90 46 Q92 68 72 66 Q60 66 62 78 Q64 92 44 88 Q10 82 10 50 Q10 12 50 12Z','#F2D3A6')}${C(34,38,7,K.rojo)}${C(52,28,7,K.amarillo)}${C(70,36,7,K.cie)}${C(30,60,7,K.hoja)}${C(54,56,6,'#F2D3A6')}${luz(26,28,7,4)}`),
 ic_mix:()=>svg(`${drop(36,46,1.15,K.rosa)}${drop(64,46,1.15,K.cie)}${drop(50,68,1.15,K.amarillo)}${D(50,54,6,K.lav,.9)}`),
 ic_bubble:()=>svg(`${[[38,56,26],[72,34,16],[72,74,12]].map(([x,y,r])=>`<circle cx="${x}" cy="${y}" r="${r}" fill="#DCEFFB" fill-opacity=".75" stroke="${o(K.cie)}" stroke-width="${SW}"/>${luz(x-r*.35,y-r*.35,r*.28,r*.16)}${L(`M${x+r*.2} ${y+r*.55} q${r*.3} -${r*.2} ${r*.4} -${r*.5}`,'#fff',2.5)}`).join('')}`),
@@ -147,7 +151,7 @@ ic_av_math:()=>svg(`${P('M58 6 L24 54 H46 L38 94 L76 40 H54Z',K.amarillo)}${luz(
 ic_av_fluency:()=>svg(`${P('M50 30 Q32 20 12 24 V80 Q32 76 50 86Z',K.blanco)}${P('M50 30 Q68 20 88 24 V80 Q68 76 50 86Z',K.blanco)}${L('M20 38 Q32 36 42 40 M20 50 Q32 48 42 52 M58 40 Q68 36 80 38 M58 52 Q68 48 80 50',shade(K.cie,-.2),2.5)}${L('M50 30 V86',o(K.blanco),2.5)}${L('M70 8 Q78 14 74 22 M80 4 Q92 14 84 26',K.rosa,3.5)}`)
 });
 /* juguete → pieza para su ícono (Kenney si existe, si no SVG propio) */
-const TOY_ILU={paint:'ic_paint',mix:'ic_mix',music:'guitarra',blocks:'ladrillo',garden:'flor_roja',aqua:'pez_tropical',bubble:'ic_bubble',dress:'figura',pizza:'pizza',sort:'canasta',shapes:'figura',weather:'clima',trace:'letra_a',beads:'ic_beads',
+const TOY_ILU={paint:'ic_paint',mix:'ic_mix',music:'guitarra',blocks:'ladrillo',garden:'flor_roja',aqua:'pez_tropical',bubble:'ic_bubble',dress:'figura',pizza:'pizza',sort:'canasta',shapes:'figura',weather:'ic_weather',trace:'letra_a',beads:'ic_beads',
  shop:'caja',farm:'vaca',clock:'ic_clock',maps:'ic_maps',body:'ic_body',lab:'ic_lab',tangram:'ic_tangram',code:'robot',maze:'ic_maze',hanoi:'ic_hanoi',sudoku:'uvas',slide:'ic_slide',balance:'ic_balance',
  /* aventuras */ learn:'ic_av_learn',math:'ic_av_math',fluency:'ic_av_fluency',eng:'loro',story:'buho'};
 window.TOY_ILU=TOY_ILU;

@@ -62,7 +62,7 @@ Para estos casos se siguen usando las ilustraciones SVG propias del mismo estilo
 ## Archivos en uso
 
 <!-- Sección generada por scripts/kenney.mjs (npm run kenney) desde scripts/kenney-manifiesto.json -->
-162 piezas · 677 KB en `public/kenney/`.
+160 piezas · 665 KB en `public/kenney/`.
 
 | Pieza en Semillita | Paquete de Kenney | Archivo original | Cómo se usa |
 | --- | --- | --- | --- |
@@ -174,7 +174,7 @@ Para estos casos se siguen usando las ilustraciones SVG propias del mismo estilo
 | `kic_arriba` | Game Icons | `PNG/Black/2x/up.png` | PNG |
 | `kic_abajo` | Game Icons | `PNG/Black/2x/down.png` | PNG |
 | `kic_lupa` | Game Icons | `PNG/Black/2x/zoom.png` | PNG |
-| `sol` | Background Elements Redux | `PNG/Default/sun.png` | PNG |
+| `sol_k` | Background Elements Redux | `PNG/Default/sun.png` | PNG |
 | `luna` | Background Elements Redux | `PNG/Default/moon.png` | PNG |
 | `nube1` | Background Elements Redux | `PNG/Default/cloud1.png` | PNG |
 | `nube2` | Background Elements Redux | `PNG/Default/cloud3.png` | PNG |
@@ -188,7 +188,6 @@ Para estos casos se siguen usando las ilustraciones SVG propias del mismo estilo
 | `arbusto_fondo` | Background Elements Redux | `PNG/Default/bush1.png` | PNG |
 | `arbusto_fondo2` | Background Elements Redux | `PNG/Default/bushAlt1.png` | PNG |
 | `cerca` | Background Elements Redux | `PNG/Default/fence.png` | PNG |
-| `clima` | Background Elements Redux | `PNG/Default/sun.png` | PNG |
 | `arena` | Fish Pack 2.0 | `Vector/terrain_sand_top_a.svg` | vector |
 | `arena_fondo` | Fish Pack 2.0 | `Vector/terrain_sand_a.svg` | vector |
 | `alga_fondo1` | Fish Pack 2.0 | `Vector/background_seaweed_a.svg` | vector |
@@ -199,7 +198,6 @@ Para estos casos se siguen usando las ilustraciones SVG propias del mismo estilo
 | `alga2` | Fish Pack 2.0 | `Vector/seaweed_green_c_outline.svg` | vector |
 | `estante_cajas` | Mini Shop 2.1 | `Models/GLB format/shelf-boxes.glb` | modelo 3D renderizado |
 | `estante_fundas` | Mini Shop 2.1 | `Models/GLB format/shelf-bags.glb` | modelo 3D renderizado |
-| `latas` | Mini Shop 2.1 | `Models/GLB format/display-cans.glb` | modelo 3D renderizado |
 | `nevera` | Mini Shop 2.1 | `Models/GLB format/freezer.glb` | modelo 3D renderizado |
 | `puesto_flores` | Mini Shop 2.1 | `Models/GLB format/display-flowers.glb` | modelo 3D renderizado |
 | `estrella_oro` | Physics Assets | `PNG/Other/starGold.png` | PNG |

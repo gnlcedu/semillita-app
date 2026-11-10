@@ -18,7 +18,7 @@ Rama: `mejora-grafica` · Un commit al cerrar cada fase · Estado: marcar `[x]` 
 - [x] Fase 2 · Biblioteca de ilustraciones SVG (queda como respaldo de Kenney)
 - [x] Fase K · Importar Kenney (recursos, licencias y `ilu()` con imágenes)
 - [x] Fase 3 · Íconos del inicio con Kenney
-- [ ] Fase 4 · Escenarios por capas con Kenney
+- [x] Fase 4 · Escenarios por capas con Kenney
 - [ ] Fase 5 · Reconstrucción visual de los juegos (5A–5E)
 - [ ] Fase 6 · El animalito dentro de cada escena
 - [ ] Fase 7 · Animaciones y transiciones
@@ -163,11 +163,17 @@ La carpeta aún no es un repositorio.
 
 ## Fase 4 · Escenarios por capas con Kenney
 **Archivos:** `public/js/09-escenarios.js` (nuevo), juguetes afectados, `styles.css`.
-- [ ] `scene(nombre)` arma capas: cielo (CSS), fondo (Background Elements: colinas, árboles, nubes), suelo y detalles.
-- [ ] Escenas: Mi jardín (huerto con cercas y árboles), Acuario (arena, rocas y algas del Fish Pack), Mi colmado (estantes y exhibidores del Mini Shop), Granja (granero, cerca y árboles), El tiempo (sol, luna, nubes), Música (escenario sencillo), Laboratorio (mesa y estantes).
-- [ ] Parallax suave al tocar o al inclinar el celular; capas fijas con `prefers-reduced-motion`.
-- [ ] Capas con `pointer-events:none` para no romper toques ni arrastres.
-- [ ] Revisar · build · commit `Fase 4: escenarios`.
+- [x] `scene(nombre)` arma capas: cielo (CSS), fondo (Background Elements: colinas, árboles, nubes), suelo y detalles.
+- [x] Escenas: Mi jardín (huerto con cercas y árboles), Acuario (arena, rocas y algas del Fish Pack), Mi colmado (estantes y exhibidores del Mini Shop), Granja (granero, cerca y árboles), El tiempo (sol, luna, nubes), Música (escenario sencillo), Laboratorio (mesa y estantes).
+- [x] Parallax suave al tocar o al inclinar el celular; capas fijas con `prefers-reduced-motion`.
+- [x] Capas con `pointer-events:none` para no romper toques ni arrastres.
+- [x] Revisar · build · commit `Fase 4: escenarios`.
+- Notas de la fase 4:
+  - Kenney: nubes, colinas, árboles, casas y cercas (Background Elements), algas, rocas y arena (Fish Pack), estantes 3D (Mini Shop).
+  - CSS ilustrado donde Kenney no tiene nada: telón y piso de madera (Música), azulejos y mesa (Laboratorio).
+  - Sol SVG propio con carita (el de Kenney se veía pálido); también nuevo ícono de El tiempo.
+  - De noche (Jardín, Acuario, El tiempo) las capas se oscurecen con la clase night.
+  - Pendiente para la fase 9: Laboratorio no cabe entero en el encabezado a 390 px.
 
 ## Fase 5 · Reconstrucción visual de los juegos
 Cada subfase rehace la **presentación** de sus juegos (escena, objetos, barra, tamaños), según la tabla de decisiones. La lógica, los niveles y los mensajes no cambian. Un commit por subfase.

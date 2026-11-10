@@ -403,22 +403,23 @@ function toyWeather(root){
   let rainT=null, night=false;
   addHTML(root, `<div id="sk" class="abs" style="inset:0 0 var(--tbar-h) 0;background:linear-gradient(#BFE1F7,#EAF6FD);transition:background 1.2s;overflow:hidden">
     <div id="st" class="abs" style="inset:0;opacity:0;transition:opacity 1.2s">${times(24,()=>`<span class="abs" style="left:${rnd(2,96)}%;top:${rnd(2,45)}%;font-size:${rnd(10,18)}px;animation:twinkle ${rnd(2,4)}s ${Math.random()*2}s infinite">✦</span>`).join('')}</div>
-    <div id="sun" class="abs" style="right:12%;top:8%;font-size:var(--fs-8xl);transition:top 1.2s,opacity 1.2s">☀️</div>
-    <div id="moon" class="abs" style="right:14%;top:60%;font-size:var(--fs-7xl);opacity:0;transition:top 1.2s,opacity 1.2s">🌙</div>
-    <div id="rb" class="abs" style="left:-10%;top:12%;font-size:220px;opacity:0;transition:opacity 1.2s;pointer-events:none">🌈</div>
-    <div id="cl" class="abs" style="left:0;right:0;top:4%;opacity:.0;transition:opacity 1s;font-size:var(--fs-8xl);white-space:nowrap">☁️☁️☁️☁️☁️</div>
+    ${scene('tiempo','inset:0')}
+    <div id="sun" class="abs" style="right:12%;top:8%;font-size:var(--fs-8xl);transition:top 1.2s,opacity 1.2s">${ilu('sol','1.1em')}</div>
+    <div id="moon" class="abs" style="right:14%;top:60%;font-size:var(--fs-7xl);opacity:0;transition:top 1.2s,opacity 1.2s">${ilu('luna','1em')}</div>
+    <div id="rb" class="rainbow"></div>
+    <div id="cl" class="abs" style="left:0;right:0;top:4%;opacity:.0;transition:opacity 1s;height:30%">${[['nube1',-4,0,34],['nube2',22,8,30],['nube3',48,0,36],['nube1',72,10,32]].map(([n,x,y,w])=>`<img src="/kenney/${n}.webp" alt="" draggable="false" style="position:absolute;left:${x}%;top:${y}%;width:${w}%">`).join('')}</div>
     <div id="rn" class="abs" style="inset:0"></div>
     <div class="abs" style="left:0;right:0;bottom:0;height:30%;background:#CFE6B8;border-radius:50% 50% 0 0/30px 30px 0 0"></div>
-    <div id="palm" class="abs" style="left:8%;bottom:18%;font-size:110px;transform-origin:50% 100%;transition:transform .5s">🌴</div>
-    <div class="abs" style="left:56%;bottom:20%;font-size:84px">🏡</div>
+    <div id="palm" class="abs" style="left:6%;bottom:22%;font-size:120px;line-height:0;transform-origin:50% 100%;transition:transform .5s">${ilu('palmera_fondo','1em')}</div>
+    <div class="abs" style="left:56%;bottom:24%;font-size:84px;line-height:0">${ilu('casa','1em')}</div>
     <div class="abs" style="left:36%;bottom:12%;text-align:center"><span id="ac" style="position:absolute;left:52px;top:-18px;font-size:var(--fs-4xl)"></span><span style="display:inline-block;animation:bob 2.6s ease-in-out infinite">${petMini(prof(),80)}</span></div>
     <div id="fl" class="abs" style="inset:0;background:var(--card);opacity:0;pointer-events:none"></div></div>
   <div class="tbar"><button data-w="dia">☀️</button><button data-w="noche">🌙</button><button data-w="nubes">☁️</button><button data-w="lluvia">🌧️</button><button data-w="tormenta">⛈️</button><button data-w="arcoiris">🌈</button><button data-w="viento">💨</button></div>`);
-  const $r=id=>root.querySelector('#'+id);
+  const $r=id=>root.querySelector('#'+id); sceneParallax(root);
   const rain=(on,heavy)=>{ clearInterval(rainT); $r('rn').innerHTML=''; if(!on) return; rainT=setInterval(()=>{ for(let k=0;k<(heavy?4:2);k++){ const d=document.createElement('span'); d.className='abs';
     d.style.cssText=`left:${rnd(0,100)}%;top:-20px;width:3px;height:18px;border-radius:3px;background:#7FAFD3;animation:drop ${(Math.random()*.4+.7).toFixed(2)}s linear forwards`; $r('rn').appendChild(d); setTimeout(()=>d.remove(),1200);} },70); };
   function set(w){
-    const sk=$r('sk'); $r('palm').style.animation='none'; $r('rb').style.opacity=0; $r('ac').textContent='';
+    const sk=$r('sk'); if (w==='noche'||w==='dia') root.classList.toggle('night',w==='noche'); $r('palm').style.animation='none'; $r('rb').style.opacity=0; $r('ac').textContent='';
     if (w==='noche'||w==='dia'){ night = w==='noche'; rain(false); $r('cl').style.opacity=0; }
     sk.style.background = night?'linear-gradient(#2B3566,#5B6AA8)':(w==='lluvia'||w==='tormenta'||w==='nubes')?'linear-gradient(#AEB9C6,#DCE3EA)':'linear-gradient(#BFE1F7,#EAF6FD)';
     const cloudy=['lluvia','tormenta','nubes'].includes(w); $r('st').style.opacity = night?1:0; $r('sun').style.opacity=night?0:(cloudy?.3:1); $r('sun').style.top=night?'60%':'8%'; $r('moon').style.opacity=night?1:0; $r('moon').style.top=night?'8%':'60%';

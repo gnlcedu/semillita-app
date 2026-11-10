@@ -19,12 +19,13 @@ function toyShop(root){
   const money=(v,s=1)=> v<50 ? `<span style="display:inline-grid;place-items:center;width:${(30+v*.6)*s}px;height:${(30+v*.6)*s}px;border-radius:50%;background:${v===25||v===1?'#E9C46A':'#C9CCD3'};border:3px solid rgba(0,0,0,.12);font-size:${11*s}px;font-weight:800">${v}</span>`
     : `<span style="display:inline-grid;place-items:center;width:${64*s}px;height:${34*s}px;border-radius:6px;background:${{50:'#C9B8EE',100:'#F7C59F',200:'#F5B8D0',500:'#A9D3F0'}[v]};border:var(--bw) solid rgba(0,0,0,.12);font-size:${13*s}px;font-weight:800">RD$${v}</span>`;
   addHTML(root, `<div class="abs" style="inset:0 0 var(--tbar-h) 0;background:linear-gradient(#FFF4E4 0 38%,#F3E3C9 38%)"></div>
-    <div class="abs" style="left:0;right:0;top:0;height:30px;background:repeating-linear-gradient(90deg,var(--c-rosa) 0 30px,var(--white) 30px 60px);border-radius:0 0 50% 50%/0 0 14px 14px"></div>
+    ${scene('colmado','inset:0 0 var(--tbar-h) 0')}
+    <div class="abs" style="left:0;right:0;top:0;height:30px;background:repeating-linear-gradient(90deg,var(--c-rosa) 0 30px,var(--white) 30px 60px);border-radius:0 0 50% 50%/0 0 14px 14px;z-index:1"></div>
     <div id="cu" class="abs" style="left:14px;top:46px;display:flex;align-items:flex-end;gap:var(--s-2);max-width:92%"></div>
     <div id="sh" class="abs" style="left:10px;right:10px;top:150px;display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s-2)"></div>
     <div id="bg" class="abs" style="left:10px;right:10px;bottom:84px;min-height:64px;background:var(--card);border:2px dashed var(--line);border-radius:var(--r-md);padding:var(--s-2);display:flex;flex-wrap:wrap;gap:var(--s-2);align-items:center"></div>
     <div class="tbar" id="tb2"></div>`);
-  const cu=root.querySelector('#cu'), sh=root.querySelector('#sh'), bg=root.querySelector('#bg'), tb=root.querySelector('#tb2');
+  const cu=root.querySelector('#cu'), sh=root.querySelector('#sh'), bg=root.querySelector('#bg'), tb=root.querySelector('#tb2'); sceneParallax(root);
   sh.innerHTML=PROD.map((p,i)=>`<button data-p="${i}" style="background:var(--card);border:var(--bw) solid var(--line);border-radius:var(--r-md);padding:var(--s-2) 2px;display:flex;flex-direction:column;align-items:center"><span style="font-size:var(--fs-4xl)">${emo(p[0])}</span>${lv>1?`<small style="font-weight:800;background:var(--butter);border-radius:var(--r-xs);padding:0 var(--s-2)">RD$${p[3]}</small>`:`<small style="font-weight:700">${p[1]}</small>`}</button>`).join('');
   function newCustomer(){
     bag=[]; cash=[]; const who=pick(CUST); const k = lv===1?1:lv===2?rnd(1,2):rnd(2,3);
@@ -66,10 +67,10 @@ function toyFarm(root){
   const A=[['🐄','vaca','¡Muuu!','moo','cow','🌾'],['🐷','cerdo','¡Oinc, oinc!','oink','pig','🍎'],['🐔','gallina','¡Coc, coc, coc!','cluck','hen','🌽'],['🐑','oveja','¡Beee!','baa','sheep','🌿'],['🐴','caballo','¡Iiiiih!','neigh','horse','🥕'],['🦆','pato','¡Cuac, cuac!','quack','duck','🐛'],['🐶','perro','¡Guau, guau!','woof','dog','🦴'],['🐱','gato','¡Miau!','meow','cat','🐟'],['🐐','chivo','¡Meee!','maa','goat','🍃']];
   let food=null, quiz=null;
   addHTML(root, `<div class="abs" style="inset:0 0 var(--tbar-h) 0;background:linear-gradient(#D6ECFA 0 30%,#CFE6B8 30%)"></div>
-    <div class="abs" style="right:14px;top:34px;font-size:var(--fs-8xl)">${emo('🏚️')}</div><div class="abs" style="left:16px;top:34px;font-size:var(--fs-8xl)">${emo('🌳')}</div>
+    ${scene('granja','inset:0 0 var(--tbar-h) 0')}
     <div id="fm" class="abs" style="left:8px;right:8px;top:30%;display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s-2)"></div>
     <div class="tbar" id="ft"></div>`);
-  const fm=root.querySelector('#fm'), ft=root.querySelector('#ft');
+  const fm=root.querySelector('#fm'), ft=root.querySelector('#ft'); sceneParallax(root);
   fm.innerHTML=A.map((a,i)=>`<button data-a="${i}" style="font-size:var(--fs-7xl);padding:var(--s-2);border-radius:var(--r-md);display:flex;flex-direction:column;align-items:center"><span style="display:inline-block">${emo(a[0])}</span><small style="font-size:var(--fs-xs);font-weight:800">${lv===3?a[4]:a[1]}</small></button>`).join('');
   ft.innerHTML = lv===1 ? `<span class="muted" style="font-weight:800;padding:0 var(--s-2)">Toca un animal 🔊</span>` : lv===2 ? A.map(a=>`<button data-f="${a[5]}">${['🌽','🥕','🐟'].includes(a[5])?emo(a[5]):a[5]}</button>`).join('') : `<button id="q">❓ Which animal says…?</button>`;
   fm.querySelectorAll('[data-a]').forEach(b=>b.addEventListener('click',()=>{ const a=A[+b.dataset.a]; const s=b.querySelector('span'); s.style.animation='none'; void s.offsetWidth; s.style.animation='hop .7s';
@@ -186,9 +187,9 @@ function toyBody(root){
 /* ---------- Laboratorio ---------- */
 function toyLab(root){
   const lv=LV(); let mode='flota', cleanup=[];
-  addHTML(root, `<div id="lb" class="abs" style="inset:0 0 var(--tbar-h) 0;background:var(--paper);overflow:hidden"></div>
+  addHTML(root, `${scene('laboratorio','inset:0 0 var(--tbar-h) 0')}<div id="lb" class="abs" style="inset:0 0 var(--tbar-h) 0;overflow:hidden"></div>
     <div class="tbar"><button data-m="flota" class="on">🛁 ¿Flota o se hunde?</button><button data-m="iman">🧲 Imanes</button><button data-m="volcan">🌋 Volcán</button></div>`);
-  const lb=root.querySelector('#lb');
+  const lb=root.querySelector('#lb'); sceneParallax(root);
   function flota(){
     const OB=[['🪵','madera',1],['🪨','piedra',0],['🍎','manzana',1],['🔑','llave',0],['🦆','pato de goma',1],['⚓','ancla',0],['🧽','esponja',1],['🔩','tornillo',0],['🏐','pelota',1],['🥄','cuchara',0]];
     const W=lb.clientWidth, H=lb.clientHeight, wt=H*.42;

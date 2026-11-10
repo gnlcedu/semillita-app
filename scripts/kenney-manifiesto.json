@@ -227,7 +227,7 @@
    "icono": true
   }
  ],
- "sol": ["background-elements-redux", "PNG/Default/sun.png"],
+ "sol_k": ["background-elements-redux", "PNG/Default/sun.png"],
  "luna": ["background-elements-redux", "PNG/Default/moon.png"],
  "nube1": ["background-elements-redux", "PNG/Default/cloud1.png"],
  "nube2": ["background-elements-redux", "PNG/Default/cloud3.png"],
@@ -241,18 +241,6 @@
  "arbusto_fondo": ["background-elements-redux", "PNG/Default/bush1.png"],
  "arbusto_fondo2": ["background-elements-redux", "PNG/Default/bushAlt1.png"],
  "cerca": ["background-elements-redux", "PNG/Default/fence.png"],
- "clima": ["background-elements-redux", "PNG/Default/sun.png",
-  {
-   "capas": [
-    ["background-elements-redux", "PNG/Default/cloud1.png",
-     0.66,
-     0.68,
-     1.25
-    ]
-   ],
-   "margen": 0.35
-  }
- ],
  "arena": ["fish-pack-0", "Vector/terrain_sand_top_a.svg",
   {
    "tam": 128
@@ -271,7 +259,6 @@
  "alga2": ["fish-pack-0", "Vector/seaweed_green_c_outline.svg"],
  "estante_cajas": ["mini-shop", "Models/GLB format/shelf-boxes.glb"],
  "estante_fundas": ["mini-shop", "Models/GLB format/shelf-bags.glb"],
- "latas": ["mini-shop", "Models/GLB format/display-cans.glb"],
  "nevera": ["mini-shop", "Models/GLB format/freezer.glb"],
  "puesto_flores": ["mini-shop", "Models/GLB format/display-flowers.glb"],
  "estrella_oro": ["physics-assets", "PNG/Other/starGold.png"],

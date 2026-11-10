@@ -144,9 +144,9 @@ function toyGarden2(root){
   let tool='seed', seed=0, day=true, inv={}, order=null, tick, bugs=lv>=2;
   const plots=[];
   addHTML(root, `<div id="sky" class="abs" style="inset:0 0 var(--tbar-h) 0;background:linear-gradient(#CDE8FA 0%,#EEF7FD 46%,#C8A27E 46%,#B98F6A 100%);transition:background 1s"></div>
-    <div id="sun" class="abs" style="top:16px;left:18px;font-size:var(--fs-7xl);transition:opacity 1s;animation:bob 4s ease-in-out infinite">☀️</div>
-    <div id="moon" class="abs" style="top:16px;left:18px;font-size:var(--fs-6xl);opacity:0;transition:opacity 1s">🌙</div>
-    <div class="abs" style="top:36px;left:42%;font-size:var(--fs-5xl);opacity:.85;animation:drift 40s linear infinite">☁️</div>
+    ${scene('jardin','inset:0 0 var(--tbar-h) 0')}
+    <div id="sun" class="abs" style="top:16px;left:18px;font-size:var(--fs-7xl);transition:opacity 1s;animation:bob 4s ease-in-out infinite">${ilu('sol','1em')}</div>
+    <div id="moon" class="abs" style="top:16px;left:18px;font-size:var(--fs-6xl);opacity:0;transition:opacity 1s">${ilu('luna','1em')}</div>
     <div id="rain" class="abs" style="inset:0 0 var(--tbar-h) 0;pointer-events:none"></div>
     <div id="plotsA" class="abs" style="left:4%;right:4%;top:40%;display:flex;justify-content:space-evenly;align-items:flex-end;transform:scale(.86);transform-origin:50% 100%"></div>
     <div id="plotsB" class="abs" style="left:2%;right:2%;bottom:84px;display:flex;justify-content:space-evenly;align-items:flex-end"></div>
@@ -156,6 +156,7 @@ function toyGarden2(root){
   const mk=(parent,big)=>{ const p=document.createElement('button'); p.style.cssText=`position:relative;width:${big?30:28}%;max-width:120px;height:150px;display:flex;flex-direction:column;justify-content:flex-end;align-items:center`;
     p.innerHTML=`<span class="bug abs" style="top:24px;right:6px;font-size:var(--fs-2xl);display:none">🐛</span><span class="thirst abs" style="top:0;left:6px;font-size:var(--fs-md);display:none">💧❗</span><span class="pt" style="font-size:var(--fs-7xl);line-height:1;transform-origin:50% 100%;transition:filter .5s,transform .5s"></span><span class="meter" style="font-size:var(--fs-2xs);height:12px;letter-spacing:-1px"></span><span style="width:100%;height:24px;border-radius:50% 50% 14px 14px;background:#7E5A3E;box-shadow:inset 0 4px 0 rgba(0,0,0,.12)"></span>`;
     parent.appendChild(p); const pl={el:p,t:null,st:0,prog:0,water:0,bug:false,fert:0}; plots.push(pl); p.addEventListener('click',()=>tap(pl)); };
+  sceneParallax(root);
   const A=root.querySelector('#plotsA'), B=root.querySelector('#plotsB'); for(let i=0;i<3;i++) mk(A,false); for(let i=0;i<3;i++) mk(B,true);
   const P=pl=>PL[pl.t];
   function show(pl,anim=true){ const s=pl.el.querySelector('.pt');
@@ -187,7 +188,7 @@ function toyGarden2(root){
   function visitor(){ if (root.querySelectorAll('.vis').length>=4) return; const b=document.createElement('div'); b.className='abs vis'; b.textContent=pick(['🦋','🐝','🐞','🐦']); b.style.cssText=`left:${rnd(10,70)}%;top:${rnd(14,32)}%;font-size:var(--fs-3xl);animation:flutter ${rnd(5,8)}s ease-in-out infinite;z-index:3;pointer-events:none`; root.appendChild(b); }
   function rainNow(){ const r=root.querySelector('#rain'); let n=0; const iv=setInterval(()=>{ for(let k=0;k<3;k++){ const d=document.createElement('span'); d.className='abs'; d.style.cssText=`left:${rnd(0,100)}%;top:-20px;width:3px;height:16px;border-radius:3px;background:#7FAFD3;animation:drop ${(.6+Math.random()*.4).toFixed(2)}s linear forwards`; r.appendChild(d); setTimeout(()=>d.remove(),1100); } if(++n>40) clearInterval(iv); },60);
     plots.forEach(pl=>{ if(pl.t!==null) pl.water=3; show(pl,false); }); noiseS(1.4,.08,1200); tsay('¡Llueve! Todas las plantas tienen agua'); }
-  function setDay(d){ day=d; root.querySelector('#sky').style.background = d?'linear-gradient(#CDE8FA 0%,#EEF7FD 46%,#C8A27E 46%,#B98F6A 100%)':'linear-gradient(#2B3566 0%,#5B6AA8 46%,#7C6450 46%,#6A5443 100%)';
+  function setDay(d){ day=d; root.classList.toggle('night',!d); root.querySelector('#sky').style.background = d?'linear-gradient(#CDE8FA 0%,#EEF7FD 46%,#C8A27E 46%,#B98F6A 100%)':'linear-gradient(#2B3566 0%,#5B6AA8 46%,#7C6450 46%,#6A5443 100%)';
     root.querySelector('#sun').style.opacity=d?1:0; root.querySelector('#moon').style.opacity=d?0:1; root.querySelector('#dn').textContent=d?'🌙':'☀️'; tsay(d?'¡Buenos días! Con el sol, las plantas crecen':'De noche las plantas descansan'); }
   function newOrder(){ if (lv<3) return; const opts=PL.filter(p=>p[2].length<=4); const k=sample(opts,2); order=Object.fromEntries(k.map(p=>[p[0],rnd(1,3)]));
     root.querySelector('#ord').innerHTML='🧾 Pedido de la vecina:<br>'+Object.entries(order).map(([n,c])=>`${c} ${emo(PL.find(p=>p[0]===n)[1])}`).join(' '); }
@@ -264,11 +265,11 @@ function toyAquarium2(root){
   const fish=[], food=[]; let raf, bub, night=false;
   addHTML(root, `<div id="tk" class="abs" style="inset:0 0 var(--tbar-h) 0;background:linear-gradient(#CFE8F6,#8FC3E6);overflow:hidden;transition:background 1s">
       <div id="rays" class="abs" style="inset:0;background:repeating-linear-gradient(105deg,rgba(255,255,255,.18) 0 18px,transparent 18px 70px);pointer-events:none"></div>
-      <div class="abs" style="left:0;right:0;bottom:0;height:46px;background:#EBD9B4;border-radius:50% 50% 0 0/20px 20px 0 0"></div>
+      ${scene('acuario','inset:0')}
       ${[8,30,66,88].map(x=>`<span class="abs" style="left:${x}%;bottom:26px;font-size:var(--fs-6xl);transform-origin:50% 100%;animation:palm 4s ease-in-out ${-x/20}s infinite;pointer-events:none">${ilu('alga','1.1em')}</span>`).join('')}
       <div id="cnt" class="abs" style="left:12px;top:12px;background:rgba(255,255,255,.85);border-radius:var(--r-sm);padding:var(--s-1) var(--s-3);font-weight:800;font-size:var(--fs-xs)"></div></div>
     <div class="tbar"><button id="ad">➕${emo('🐠')}</button><button id="dc">${emo('🏰')}</button><button id="lt">💡</button><button id="cl">🔄</button></div>`);
-  const tk=root.querySelector('#tk'); const Wt=()=>tk.clientWidth, Ht=()=>tk.clientHeight;
+  const tk=root.querySelector('#tk'); const Wt=()=>tk.clientWidth, Ht=()=>tk.clientHeight; sceneParallax(root);
   const count=()=>{ const g={}; fish.forEach(f=>g[f.n]=(g[f.n]||0)+1); root.querySelector('#cnt').innerHTML=Object.entries(g).map(([n,c])=>`${c} ${emo(FISH.find(x=>x[1]===n)[0],'1.5em')}`).join('  ')||'Acuario vacío'; };
   function add(i){ if (fish.length>=18){ tsay('¡El acuario está lleno!'); return; } const [e,n,fact]=FISH[i];
     const el=document.createElement('span'); el.className='abs'; el.innerHTML=emo(e); el.style.cssText=`left:0;top:0;font-size:${n==='ballena'?62:n==='medusa'?38:42}px;will-change:transform;cursor:pointer`;
@@ -294,7 +295,7 @@ function toyAquarium2(root){
     o.querySelectorAll('[data-f]').forEach(b=>b.addEventListener('click',()=>{ add(+b.dataset.f); speak(FISH[+b.dataset.f][1]); })); });
   root.querySelector('#dc').addEventListener('click',()=>{ const o=sheet(`<h3>${emo('🏰')} Decora tu acuario</h3><p class="muted" style="margin:var(--s-1) 0 var(--s-3)">Luego arrástralo a donde quieras</p><div class="thumbs" style="grid-template-columns:repeat(4,1fr)">${DECO.map(d=>`<button data-d="${d}" style="font-size:var(--fs-4xl);aspect-ratio:auto;padding:var(--s-2)">${emo(d)}</button>`).join('')}</div>`);
     o.querySelectorAll('[data-d]').forEach(b=>b.addEventListener('click',()=>{ o.remove(); const el=document.createElement('div'); el.className='abs'; el.innerHTML=emo(b.dataset.d); el.style.cssText=`left:${rnd(10,Wt()-70)}px;top:${Ht()-100}px;font-size:${b.dataset.d==='🏰'?64:46}px;z-index:1`; tk.appendChild(el); dragify(el,tk,{}); plopS(); })); });
-  root.querySelector('#lt').addEventListener('click',()=>{ night=!night; tk.style.background=night?'linear-gradient(#1D2A4D,#2C4372)':'linear-gradient(#CFE8F6,#8FC3E6)'; root.querySelector('#rays').style.opacity=night?0:1; tsay(night?'Luces apagadas. ¡Shhh, los peces duermen!':'¡Buenos días, peces!'); });
+  root.querySelector('#lt').addEventListener('click',()=>{ night=!night; root.classList.toggle('night',night); tk.style.background=night?'linear-gradient(#1D2A4D,#2C4372)':'linear-gradient(#CFE8F6,#8FC3E6)'; root.querySelector('#rays').style.opacity=night?0:1; tsay(night?'Luces apagadas. ¡Shhh, los peces duermen!':'¡Buenos días, peces!'); });
   root.querySelector('#cl').addEventListener('click',()=>{ fish.splice(0).forEach(f=>f.el.remove()); count(); tsay('Acuario vacío'); });
   add(0); add(1); add(5); loop();
   setTimeout(()=>tsay('Toca un animal para conocerlo. Toca el agua para darles comida'),2400);
@@ -383,10 +384,10 @@ function toyMusic3(root){
     tamboraP:()=>{ noiseS(.06,.3,2600); note(420,.06,'square',.05); }, guira:()=>noiseS(.11,.16,6500), guiraL:()=>noiseS(.32,.12,6000)};
   const NOTES=[[261.63,'do'],[293.66,'re'],[329.63,'mi'],[349.23,'fa'],[392,'sol'],[440,'la'],[493.88,'si'],[523.25,'do']];
   const SHARP=[[277.18,0],[311.13,1],[369.99,3],[415.3,4],[466.16,5]];
-  addHTML(root, `<div class="abs" style="left:8px;right:8px;top:10px;display:flex;gap:var(--s-2);overflow-x:auto;z-index:4;scrollbar-width:none">${Object.entries(INFO).map(([k,v])=>`<button class="chip" data-in="${k}" style="flex:none;gap:var(--s-1);display:inline-flex;align-items:center">${ilu(MI[k],26)} ${v[1]}</button>`).join('')}</div>
+  addHTML(root, `${scene('musica','inset:0 0 var(--tbar-h) 0')}<div class="abs" style="left:8px;right:8px;top:10px;display:flex;gap:var(--s-2);overflow-x:auto;z-index:4;scrollbar-width:none">${Object.entries(INFO).map(([k,v])=>`<button class="chip" data-in="${k}" style="flex:none;gap:var(--s-1);display:inline-flex;align-items:center">${ilu(MI[k],26)} ${v[1]}</button>`).join('')}</div>
     <div id="st" class="abs" style="left:8px;right:8px;top:58px;bottom:80px"></div>
     <div class="tbar"><button id="inf">ℹ️ Aprende</button><button id="tw">⭐ Canción</button><button id="bt">🔁 Ritmo</button><button id="rc">⏺️</button><button id="pl">▶️</button></div>`);
-  const st=root.querySelector('#st');
+  const st=root.querySelector('#st'); sceneParallax(root);
   const floatNote=(el)=>{ const r=root.getBoundingClientRect(), a=el.getBoundingClientRect(); const m=document.createElement('span'); m.className='abs'; m.textContent=pick(['🎵','🎶','♪']); m.style.cssText=`left:${a.left-r.left+a.width/2-10}px;top:${a.top-r.top-6}px;font-size:var(--fs-xl);animation:up 1.1s ease-out forwards;z-index:4;pointer-events:none`; root.appendChild(m); setTimeout(()=>m.remove(),1100); };
   const bump=el=>{ el.style.animation='none'; void el.offsetWidth; el.style.animation='hit .3s ease'; };
   const log=(k,a,b)=>{ if (rec) rec.push([k,a,b,performance.now()-recStart]); };
