@@ -83,11 +83,11 @@ function toyMix(root){
     return [n,c]; }
   addHTML(root, `<div style="position:absolute;inset:0 0 var(--tbar-h) 0;display:flex;flex-direction:column;align-items:center;justify-content:space-around;padding:50px var(--s-3) var(--s-3)">
     <div style="position:relative;width:220px;height:150px"><div id="liq" style="position:absolute;left:14px;right:14px;bottom:14px;height:0;border-radius:0 0 100px 100px;background:#F4EFE8;transition:height .5s,background .7s"></div>
-      <div style="position:absolute;inset:0;border:6px solid #D9D2C7;border-top:none;border-radius:0 0 110px 110px"></div></div>
+      <div class="bowl"></div></div>
     <div style="text-align:center;min-height:62px"><div id="nm" style="font-size:var(--fs-3xl);font-weight:800"></div><div id="en" class="muted" style="font-weight:700"></div></div>
-    <div style="display:flex;gap:var(--s-4);flex-wrap:wrap;justify-content:center">${Object.entries(POTS).map(([k,[n,c]])=>`<button data-k="${k}" style="display:flex;flex-direction:column;align-items:center;gap:var(--s-2);font-weight:800"><span style="width:64px;height:78px;border-radius:14px 14px 20px 20px;background:${c};border:3px solid rgba(0,0,0,.08);box-shadow:inset 0 10px 0 rgba(255,255,255,.35)"></span>${n}</button>`).join('')}</div></div>
+    <div style="display:flex;gap:var(--s-4);flex-wrap:wrap;justify-content:center">${Object.entries(POTS).map(([k,[n,c]])=>`<button data-k="${k}" style="display:flex;flex-direction:column;align-items:center;gap:var(--s-2);font-weight:800"><span class="jar" style="--c:${c}"></span>${n}</button>`).join('')}</div></div>
     <div id="goal" class="abs" style="left:12px;top:12px;background:var(--card);border:var(--bw) solid var(--line);border-radius:var(--r-md);padding:var(--s-2) var(--s-3);font-weight:800;display:none"></div>
-    <div class="tbar"><button id="em">🔄 Vaciar</button></div>`);
+    <div class="tbar"><button id="em">${kic('borrar')} Vaciar</button></div>`);
   const liq=root.querySelector('#liq');
   const GOALS = LV()===2 ? ['anaranjado','verde','morado','marrón'] : ['anaranjado','verde','morado','marrón','rosado','celeste','lila','verde claro','salmón'];
   let goal=null; const gEl=root.querySelector('#goal');

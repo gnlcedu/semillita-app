@@ -29,7 +29,7 @@ function toyPaint2(root){
   const undo=[], redo=[];
   addHTML(root, `<div id="cw" class="abs" style="left:0;right:0;top:0;bottom:118px;background:var(--card)">
       <canvas id="c1" class="abs" style="inset:0;width:100%;height:100%"></canvas><canvas id="c2" class="abs" style="inset:0;width:100%;height:100%;pointer-events:none"></canvas><canvas id="c3" class="abs" style="inset:0;width:100%;height:100%;touch-action:none"></canvas></div>
-    <div class="fl"><button id="un" title="Deshacer">↶</button><button id="re" title="Rehacer">↷</button><button id="pg" title="Dibujos">🖼️</button><button id="sy" title="Simetría">🪞</button><button id="sv" title="Guardar">💾</button><button id="ga" title="Galería">🗂️</button><button id="nw" title="Hoja nueva">🗑️</button></div>
+    <div class="fl"><button id="un" title="Deshacer" aria-label="Deshacer">${kic('deshacer')}</button><button id="re" title="Rehacer" aria-label="Rehacer"><span style="display:inline-block;transform:scaleX(-1)">${kic('deshacer')}</span></button><button id="pg" title="Dibujos">🖼️</button><button id="sy" title="Simetría">🪞</button><button id="sv" title="Guardar">💾</button><button id="ga" title="Galería">🗂️</button><button id="nw" title="Hoja nueva" aria-label="Hoja nueva">${kic('borrar')}</button></div>
     <div class="pbar"><div class="prow" id="r1"></div><div class="prow" id="r2"></div></div>`);
   const cw=root.querySelector('#cw'), c1=root.querySelector('#c1'), c2=root.querySelector('#c2'), c3=root.querySelector('#c3');
   const x1=c1.getContext('2d',{willReadFrequently:true}), x2=c2.getContext('2d',{willReadFrequently:true}), x3=c3.getContext('2d'); const dpr=Math.min(2,window.devicePixelRatio||1); let W=0,H=0;
@@ -248,7 +248,7 @@ function toyMusic2(root){
   root.querySelector('#oc').addEventListener('click',e=>{ oct = oct===1?2:oct===2?.5:1; e.currentTarget.textContent = oct===2?'⬆️ Muy agudo':oct===.5?'⬇️ Grave':'⬆️ Agudo'; tsay(oct===2?'Sonido agudo':oct===.5?'Sonido grave':'Sonido normal'); });
   root.querySelector('#bt').addEventListener('click',e=>{ const b=e.currentTarget; if (loop){ clearInterval(loop); loop=null; b.classList.remove('on'); return; } b.classList.add('on'); let k=0; const pat=[[0,4],[3],[1,5],[3],[0],[3,4],[1],[3]];
     loop=setInterval(()=>{ pat[k%8].forEach(d=>drum(d,false)); k++; },250); tsay('¡Ritmo! Toca encima de él'); });
-  root.querySelector('#rc').addEventListener('click',e=>{ const b=e.currentTarget; if (!rec){ rec=[]; recStart=performance.now(); b.textContent='⏹️'; b.classList.add('on'); tsay('¡Grabando!'); } else { b.textContent='⏺️'; b.classList.remove('on'); root._song=rec; tsay(rec.length?'¡Canción guardada! Toca ▶️':'No tocaste nada'); rec=null; } });
+  root.querySelector('#rc').addEventListener('click',e=>{ const b=e.currentTarget; if (!rec){ rec=[]; recStart=performance.now(); b.innerHTML=kic('parar'); b.classList.add('on'); tsay('¡Grabando!'); } else { b.innerHTML='<span class="recdot"></span>'; b.classList.remove('on'); root._song=rec; tsay(rec.length?'¡Canción guardada! Toca ▶️':'No tocaste nada'); rec=null; } });
   root.querySelector('#pl').addEventListener('click',()=>{ const s=root._song; if(!s||!s.length){ tsay('Primero graba tu canción con ⏺️'); return; } timers.forEach(clearTimeout); timers=s.map(([k,i,t])=>setTimeout(()=>k==='n'?hit(i,false):drum(i,false),t)); });
   const seq=(arr,gap=430)=>{ timers.forEach(clearTimeout); timers=arr.map((x,k)=>setTimeout(()=>{ if(x!==null) hit(x,false); },k*gap)); };
   root.querySelector('#tw').addEventListener('click',()=>{ simon=null; seq([0,0,4,4,5,5,4,null,3,3,2,2,1,1,0]); });
@@ -308,12 +308,12 @@ function toyBlocks2(root){
   const ICON={cuadrado:'🟧',rectángulo:'▬',torre:'▮',triángulo:'🔺',arco:'🌙',círculo:'🔵',puerta:'🚪',ventana:'🪟',techo:'🔻',estrella:'⭐'};
   const COLS=['#F4A6A6','#F7C59F','#F6E39A','#B9E3C6','#A9D3F0','#C9B8EE','#F5B8D0','#D9B38C','#E8505B','#3D8BD9','#4CAF6A','#F7C948'];
   const blocks=[]; let col=null, goalN = LV()===1?0:LV()===2?4:7, reached=false;
-  addHTML(root, `<div class="abs" style="inset:0 0 var(--tbar-h) 0;background:linear-gradient(#EAF6FD,var(--paper))"></div>
+  addHTML(root, `<div class="abs" style="inset:0 0 var(--tbar-h) 0;background:linear-gradient(#EAF6FD,var(--paper))"></div>${scene('bloques','inset:0 0 var(--tbar-h) 0')}
     <div id="gr" class="abs" style="left:0;right:0;bottom:70px;height:34px;background:#DCE8C8;border-top:3px solid #C3D6A6"></div>
     <div id="tr" class="abs" style="left:10px;bottom:80px;font-size:var(--fs-3xl);width:56px;height:56px;border-radius:var(--r-md);background:var(--card);border:2px dashed var(--line);display:grid;place-items:center;z-index:1">🗑️</div>
     <div id="cl2" class="abs" style="right:8px;top:10px;display:flex;flex-direction:column;gap:var(--s-1);z-index:5">${COLS.map(c=>`<button data-c="${c}" style="width:26px;height:26px;border-radius:50%;background:${c};border:3px solid var(--white);box-shadow:0 0 0 1px var(--line)"></button>`).join('')}<button data-c="" style="width:26px;height:26px;border-radius:50%;background:conic-gradient(var(--c-rosa),var(--c-mantequilla),var(--c-menta),var(--c-cielo),var(--c-lavanda),var(--c-rosa));border:3px solid var(--white);box-shadow:0 0 0 2px var(--ink)"></button></div>
     ${goalN?`<div id="bg" class="abs" style="left:12px;top:12px;background:var(--card);border:var(--bw) solid var(--line);border-radius:var(--r-md);padding:var(--s-2) var(--s-3);font-weight:800">🎯 Torre de ${goalN} bloques</div>`:''}
-    <div class="tbar">${Object.keys(SH).map(k=>`<button data-s="${k}">${ICON[k]}</button>`).join('')}<button data-s="amigo">${petMini(prof(),34)}</button><span class="sep"></span><button id="cl">🧹</button></div>`);
+    <div class="tbar">${Object.keys(SH).map((k,i)=>{ const [w,h,css]=SH[k], s=Math.min(30/w,30/h); return `<button data-s="${k}" aria-label="${k}"><span class="bshape" style="width:${Math.round(w*s)}px;height:${Math.round(h*s)}px;${css.replace(/(\d+)px/g,(m,n)=>Math.max(2,Math.round(n*s))+'px')};background-color:${COLS[i%8]}"></span></button>`; }).join('')}<button data-s="amigo">${petMini(prof(),34)}</button><span class="sep"></span><button id="cl" aria-label="Borrar todo">${kic('borrar')}</button></div>`);
   const W=()=>root.clientWidth, groundY=()=>root.clientHeight-70-34;
   function settle(){
     const order=blocks.slice().sort((a,b)=>(b.y+b.h)-(a.y+a.h)); const done=[];
@@ -325,7 +325,7 @@ function toyBlocks2(root){
   function add(kind){
     const isF=kind==='amigo'; const s=isF?[66,66,'']:SH[kind]; const el=document.createElement('div');
     const b={el,w:s[0],h:s[1],x:Math.max(8,Math.min(W()-s[0]-44, W()/2-s[0]/2+rnd(-60,60))),y:10,kind,rot:0};
-    el.className='abs'; el.style.cssText=`left:${b.x}px;top:10px;width:${b.w}px;height:${b.h}px;${isF?'':`background-color:${col||pick(COLS.slice(0,8))};box-shadow:inset 0 -6px 0 rgba(0,0,0,.08);${s[2]}`};transition:top .45s cubic-bezier(.5,0,.6,1.3),left .2s,width .2s,height .2s;z-index:2`;
+    el.className='abs'; el.style.cssText=`left:${b.x}px;top:10px;width:${b.w}px;height:${b.h}px;${isF?'':`background-color:${col||pick(COLS.slice(0,8))};box-shadow:inset 0 -6px 0 rgba(0,0,0,.1),inset 0 5px 0 rgba(255,255,255,.45);${s[2]}`};transition:top .45s cubic-bezier(.5,0,.6,1.3),left .2s,width .2s,height .2s;z-index:2`;
     if (isF) el.innerHTML=petMini(prof(),66);
     root.appendChild(el); blocks.push(b); let down=null;
     el.addEventListener('pointerdown',e=>{ down=[e.clientX,e.clientY]; },true);
@@ -386,7 +386,7 @@ function toyMusic3(root){
   const SHARP=[[277.18,0],[311.13,1],[369.99,3],[415.3,4],[466.16,5]];
   addHTML(root, `${scene('musica','inset:0 0 var(--tbar-h) 0')}<div class="abs" style="left:8px;right:8px;top:10px;display:flex;gap:var(--s-2);overflow-x:auto;z-index:4;scrollbar-width:none">${Object.entries(INFO).map(([k,v])=>`<button class="chip" data-in="${k}" style="flex:none;gap:var(--s-1);display:inline-flex;align-items:center">${ilu(MI[k],26)} ${v[1]}</button>`).join('')}</div>
     <div id="st" class="abs" style="left:8px;right:8px;top:58px;bottom:80px"></div>
-    <div class="tbar"><button id="inf">ℹ️ Aprende</button><button id="tw">⭐ Canción</button><button id="bt">🔁 Ritmo</button><button id="rc">⏺️</button><button id="pl">▶️</button></div>`);
+    <div class="tbar"><button id="inf">${kic('info')} Aprende</button><button id="tw">${kic('estrella')} Canción</button><button id="bt">${kic('musica')} Ritmo</button><button id="rc" aria-label="Grabar"><span class="recdot"></span></button><button id="pl" aria-label="Escuchar">${kic('play')}</button></div>`);
   const st=root.querySelector('#st'); sceneParallax(root);
   const floatNote=(el)=>{ const r=root.getBoundingClientRect(), a=el.getBoundingClientRect(); const m=document.createElement('span'); m.className='abs'; m.textContent=pick(['🎵','🎶','♪']); m.style.cssText=`left:${a.left-r.left+a.width/2-10}px;top:${a.top-r.top-6}px;font-size:var(--fs-xl);animation:up 1.1s ease-out forwards;z-index:4;pointer-events:none`; root.appendChild(m); setTimeout(()=>m.remove(),1100); };
   const bump=el=>{ el.style.animation='none'; void el.offsetWidth; el.style.animation='hit .3s ease'; };
@@ -444,7 +444,7 @@ function toyMusic3(root){
   root.querySelector('#bt').addEventListener('click',e=>{ const b=e.currentTarget; if (loop){ clearInterval(loop); loop=null; b.classList.remove('on'); return; } b.classList.add('on'); let k=0;
     const pat = inst==='merengue' ? [['tamboraG','guira'],['guira'],['tamboraP','guira'],['guiraL'],['tamboraG','guira'],['guira'],['tamboraP','tamboraP'],['guira']] : [['bombo','hihat'],['hihat'],['caja','hihat'],['hihat'],['bombo','hihat'],['bombo','hihat'],['caja','hihat'],['hihat']];
     loop=setInterval(()=>{ pat[k%8].forEach(d=>DRUM[d]()); k++; }, inst==='merengue'?190:250); tsay(inst==='merengue'?'¡Ritmo de merengue!':'¡Ritmo! Toca encima de él'); });
-  root.querySelector('#rc').addEventListener('click',e=>{ const b=e.currentTarget; if (!rec){ rec=[]; recStart=performance.now(); b.textContent='⏹️'; b.classList.add('on'); tsay('¡Grabando!'); } else { b.textContent='⏺️'; b.classList.remove('on'); root._song=rec; tsay(rec.length?'¡Canción guardada! Toca ▶️':'No tocaste nada'); rec=null; } });
+  root.querySelector('#rc').addEventListener('click',e=>{ const b=e.currentTarget; if (!rec){ rec=[]; recStart=performance.now(); b.innerHTML=kic('parar'); b.classList.add('on'); tsay('¡Grabando!'); } else { b.innerHTML='<span class="recdot"></span>'; b.classList.remove('on'); root._song=rec; tsay(rec.length?'¡Canción guardada! Toca ▶️':'No tocaste nada'); rec=null; } });
   root.querySelector('#pl').addEventListener('click',()=>{ const s=root._song; if(!s||!s.length){ tsay('Primero graba con ⏺️'); return; } timers.forEach(clearTimeout); timers=s.map(([k,a,b,t])=>setTimeout(()=>{ playEv(k,a,b); dance(); },t)); });
   draw();
   return ()=>{ timers.forEach(clearTimeout); if(loop) clearInterval(loop); bowStop(); };

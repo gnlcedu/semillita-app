@@ -31,6 +31,8 @@ const SC={
   colmado:()=>capa(.2,sp('estante_cajas','right:3%;top:44px;height:88px')+sp('estante_fundas','right:29%;top:50px;height:80px'),'opacity:.95'),
   /* El tiempo: colinas y árboles lejanos (el pasto propio del juguete va delante) */
   tiempo:()=>capa(.3,colinas('#B9DCA6','#A6D190','58%')+sp('pino','left:62%;bottom:28%;width:10%;max-width:54px')+sp('arbol_peq','left:80%;bottom:27%;width:10%;max-width:54px')+sp('arbusto_fondo','left:26%;bottom:27%;width:12%;max-width:60px')),
+  /* Bloques: cielo con nubes y colinas suaves detrás del pasto */
+  bloques:()=>capa(.15,nubes('6%'))+capa(.35,colinas('#D2EAC0','#C3E1AC','66%','30%')),
   /* Música: escenario con telón y piso de madera (CSS) */
   musica:()=>capa(.1,`<div class="stage-wall"></div><div class="spot" style="left:30%"></div><div class="spot" style="left:62%"></div>`)
     +capa(.35,`<div class="curtain l"></div><div class="curtain r"></div><div class="valance"></div><div class="floor-wood"></div>`),
