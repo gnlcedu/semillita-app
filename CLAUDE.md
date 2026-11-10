@@ -18,9 +18,10 @@ App educativa para niños de 5 a 12 años (República Dominicana), estilo Pok Po
   11. `10-animaciones.js` — entrada de pantallas (envuelve `go`), `squash()`, `landSquash()`.
   12. `11-recompensas.js` — `flyStars()`, `showLevelUp()`; envuelve `win`, `giveSticker` y `addXP` (misma lógica y datos).
   13. `15-mapa-rd.js` — **generado** por `npm run mapa`: provincias de la República Dominicana (`window.MAPA_RD`, contornos de MapSVG, CC0). No se edita a mano.
-  14. `05-juguetes-nuevos.js` — colmado, granja, reloj, mapas (Mi país, Provincias, Mundo), cuerpo, laboratorio, tangram.
-  15. `06-juguetes-completos.js` — Pintar, Mi jardín, Música (7 instrumentos), Acuario y Bloques completos.
-  16. `07-aprender-adultos.js` — cuentos, lectura, cálculo mental, inglés, modo aula, reporte, límite de tiempo e **inicio de la app** (`render()` al final).
+  14. `16-mapa-mundo.js` — **generado** por `npm run mapa`: continentes del mundo (`window.MAPA_MUNDO`, contornos de MapSVG, CC0, proyección Equal Earth). No se edita a mano.
+  15. `05-juguetes-nuevos.js` — colmado, granja, reloj, mapas (Mi país, Provincias, Mundo), cuerpo, laboratorio, tangram.
+  16. `06-juguetes-completos.js` — Pintar, Mi jardín, Música (7 instrumentos), Acuario y Bloques completos.
+  17. `07-aprender-adultos.js` — cuentos, lectura, cálculo mental, inglés, modo aula, reporte, límite de tiempo e **inicio de la app** (`render()` al final).
 - Varias funciones se **sobrescriben** en archivos posteriores (`vHome`, `mascot`, `win`, `finish`, `vAdults`, `go`, `tsay`, `giveSticker`, `addXP`). Antes de editar una función, busca si se redefine más adelante.
 - Vistas extra se registran en `window.VIEWS[nombre]`.
 - `src/main.js` es un módulo ES: solo carga la letra Nunito y registra la PWA.

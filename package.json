@@ -9,7 +9,7 @@
     "build": "vite build",
     "preview": "vite preview --host",
     "kenney": "node scripts/kenney.mjs",
-    "mapa": "node scripts/mapa-rd.mjs"
+    "mapa": "node scripts/mapa-rd.mjs && node scripts/mapa-mundo.mjs"
   },
   "dependencies": {
     "@fontsource/nunito": "^5.0.0"

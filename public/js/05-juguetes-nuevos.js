@@ -134,24 +134,15 @@ function toyMaps(root){
   const REG={N:{n:'Norte (Cibao)',c:['#BFE3B4','#A9D69B','#D2EBC6','#9CCB8E']},S:{n:'Sur',c:['#F8E3A3','#F2D27F','#FBEDC2','#EBC66B']},E:{n:'Este',c:['#F7C9AE','#F1B291','#FADCCB','#EAA07C']}};
   const colP=p=>REG[p.r].c[p.t%4];
   const G=M.lugares, FN=G['Frontera norte'], FS=G['Frontera sur'], PD=G['Pico Duarte'], LE=G['Lago Enriquillo'];
-  const VB_RD=[-34,-10,M.w+44,M.h+20], VB_MUNDO=[0,0,400,224];
+  const VB_RD=[-34,-10,M.w+44,M.h+20], VB_MUNDO=[0,-6,400,(window.MAPA_MUNDO?window.MAPA_MUNDO.h:176)+34];
   /* lugar, x, y, nivel, lado de la etiqueta respecto al pin (u arriba, d abajo, l izquierda, r derecha) */
   const PL=[['Santo Domingo',...G['Santo Domingo'],1,'u'],['Santiago',...G['Santiago'],1,'l'],['Punta Cana',...G['Punta Cana'],1,'u'],['Pico Duarte',...PD,1,'r'],['Puerto Plata',...G['Puerto Plata'],2,'r'],['Samaná',...G['Samaná'],2,'u'],['Lago Enriquillo',...LE,2,'u'],['Barahona',...G['Barahona'],3,'d'],['La Romana',...G['La Romana'],3,'d'],['Haití',-14,118,3,'d']];
   const FACIL=['25','11','18','20','04','13','22','02','15','16','32','12','21','06','05'];
-  /* El mundo: contornos simplificados a partir de coordenadas reales (lon/lat proyectadas a 400×224), suavizados con curvas */
-  /* curva que pasa por cada punto de la costa (Catmull-Rom), así no se pierden las penínsulas */
-  const suave=pts=>{ const n=pts.length, P=k=>pts[(k+n)%n], r=v=>Math.round(v*10)/10; let d='M'+pts[0].join(' ');
-    for(let k=0;k<n;k++){ const p0=P(k-1),p1=P(k),p2=P(k+1),p3=P(k+2); d+=' C'+[r(p1[0]+(p2[0]-p0[0])/6),r(p1[1]+(p2[1]-p0[1])/6),r(p2[0]-(p3[0]-p1[0])/6),r(p2[1]-(p3[1]-p1[1])/6),p2[0],p2[1]].join(' '); } return d+'Z'; };
-  const CONT=[['América del Norte',suave([[13,21],[33,12],[67,12],[94,9],[111,15],[128,27],[139,42],[128,53],[117,63],[110,75],[111,83],[100,77],[92,81],[92,93],[102,98],[108,107],[113,108],[104,101],[94,96],[83,90],[76,78],[69,71],[62,60],[62,48],[50,35],[33,30],[17,30]])+suave([[139,4],[172,2],[178,12],[153,30],[139,18]]),82,52],
-    ['América del Sur',suave([[113,108],[131,105],[144,120],[161,129],[158,141],[147,159],[136,177],[127,192],[122,203],[118,195],[120,165],[121,147],[111,128],[111,117]]),134,140],
-    ['Europa',suave([[189,66],[190,54],[198,48],[194,39],[206,33],[206,27],[217,15],[231,14],[244,20],[250,33],[244,51],[231,59],[229,66],[217,63],[213,54],[203,56],[194,66]]),218,42],
-    ['África',suave([[181,89],[189,68],[211,65],[236,74],[239,78],[248,102],[257,104],[247,123],[244,143],[239,158],[222,173],[219,164],[213,143],[210,122],[206,113],[191,113],[183,104]]),222,112],
-    ['Asia',suave([[244,51],[250,33],[244,20],[267,15],[289,9],[322,5],[356,12],[389,17],[396,21],[378,30],[358,42],[356,60],[336,75],[333,87],[320,93],[317,105],[311,116],[309,98],[300,87],[289,98],[286,108],[280,90],[273,83],[263,83],[258,95],[249,101],[239,75],[240,66],[231,59]]),306,46],
-    ['Oceanía',suave([[327,153],[336,146],[344,138],[352,138],[358,137],[362,149],[370,159],[367,176],[356,177],[344,168],[329,173],[327,162]]),348,158],
-    ['Antártida','M14 220 Q60 210 110 214 Q160 206 200 212 Q250 206 300 213 Q350 208 386 220Z',200,214]];
+  /* El mundo: continentes reales (16-mapa-mundo.js, MapSVG CC0, proyección Equal Earth). La Antártida no viene en el archivo: es una franja propia. */
+  const W2=window.MAPA_MUNDO, AY=W2.h+13;
+  const CONT=W2.cont.map(c=>[c.n,c.d,c.c[0],c.c[1]]).concat([['Antártida',`M10 ${AY+9} Q60 ${AY-7} 112 ${AY-2} Q160 ${AY-9} 204 ${AY-3} Q252 ${AY-9} 300 ${AY-2} Q348 ${AY-7} 390 ${AY+9}Z`,200,AY+3]]);
   const CCOL={'América del Norte':'#F7C59F','América del Sur':'#B9E3C6','Europa':'#C9B8EE','África':'#F6E39A','Asia':'#F5B8D0','Oceanía':'#A3D69B','Antártida':'#FFFFFF'};
   const MAR='#BFE1F5', BAJO='#D9EEF9', COSTA='#7FA066', TXT_MAR='#35628A';
-  const trazo=c=>`fill="${c}" stroke="${shade(c==='#FFFFFF'?'#C3C8D6':c,c==='#FFFFFF'?0:-.32)}" stroke-width="1.6" vector-effect="non-scaling-stroke" stroke-linejoin="round"`;
   const monte=(x,y,s=1)=>`<path d="M${x-7*s} ${y+5*s} L${x} ${y-7*s} L${x+7*s} ${y+5*s}Z" fill="#8FBF7E" stroke="#6C9A5C" stroke-width="1.6" vector-effect="non-scaling-stroke" stroke-linejoin="round"/><path d="M${x-2.6*s} ${y-2.6*s} L${x} ${y-7*s} L${x+2.6*s} ${y-2.6*s}Z" fill="#FFFFFF"/>`;
   const rosa=(x,y)=>`<g transform="translate(${x} ${y})"><circle r="13" fill="#FFFFFF" stroke="#9CC4E4" stroke-width="1.6" vector-effect="non-scaling-stroke"/><path d="M0 -11 L3 0 L0 11 L-3 0Z" fill="#8DBDE6"/><path d="M0 -11 L3 0 L-3 0Z" fill="#EE8A8A"/><text y="-15" font-size="8" text-anchor="middle" fill="${TXT_MAR}" font-weight="800" font-family="Nunito">N</text></g>`;
   const olas=(n,vb)=>Array.from({length:n},(_,i)=>{ const x=vb[0]+16+((i*97)%(vb[2]-40)), y=vb[1]+12+((i*53)%(vb[3]-24)); return `<path d="M${x} ${y} q5 -4 10 0 q5 4 10 0" fill="none" stroke="#FFFFFF" stroke-width="1.6" stroke-linecap="round" opacity=".8"/>`; }).join('');
@@ -177,10 +168,10 @@ function toyMaps(root){
     turno++; const W=mp.clientWidth, H=mp.clientHeight, rd=mode!=='mundo', vb=rd?VB_RD:VB_MUNDO;
     const sc=Math.min((W-20)/vb[2],(H*.5)/vb[3]), mw=vb[2]*sc, mh=vb[3]*sc, ox=(W-mw)/2, oy=18;
     const px=(x,y)=>[ox+(x-vb[0])*sc, oy+(y-vb[1])*sc];
-    const cuerpo = rd ? svgRD(sc, mode==='isla') : `<rect width="400" height="224" fill="${MAR}"/>${olas(12,vb)}<g fill="${BAJO}" stroke="${BAJO}" stroke-width="7" stroke-linejoin="round">${CONT.map(c=>`<path d="${c[1]}"/>`).join('')}</g>${CONT.map(c=>`<path d="${c[1]}" ${trazo(CCOL[c[0]])}/>`).join('')}${rosa(28,196)}`;
+    const cuerpo = rd ? svgRD(sc, mode==='isla') : `<rect x="${vb[0]}" y="${vb[1]}" width="${vb[2]}" height="${vb[3]}" fill="${MAR}"/>${olas(12,vb)}<g fill="${BAJO}" stroke="${BAJO}" stroke-width="6" stroke-linejoin="round">${CONT.map(c=>`<path d="${c[1]}"/>`).join('')}</g>${CONT.map(c=>{ const col=CCOL[c[0]], bor=col==='#FFFFFF'?'#C3C8D6':shade(col,-.32); return `<path d="${c[1]}" fill="${bor}" stroke="${bor}" stroke-width="${4.2/sc}" stroke-linejoin="round"/><path d="${c[1]}" fill="${col}" stroke="${col}" stroke-width="${1.4/sc}" stroke-linejoin="round"/>`; }).join('')}${rosa(30,W2.h-34)}`;
     mp.innerHTML=`<div class="abs" style="left:${ox-4}px;top:${oy-4}px;width:${mw+8}px;height:${mh+8}px;background:var(--card);border-radius:var(--r-md);box-shadow:var(--sh-2)"></div>
       <svg id="mapa" class="abs" style="left:${ox}px;top:${oy}px;width:${mw}px;height:${mh}px;border-radius:var(--r-sm);overflow:hidden" viewBox="${vb.join(' ')}" role="img" aria-label="${rd?'Mapa de la República Dominicana':'Mapa del mundo'}">${cuerpo}</svg>
-      <div id="ley" class="abs" style="left:0;right:0;top:${oy+mh+12}px;display:flex;justify-content:center;gap:var(--s-3);font-size:var(--fs-2xs);font-weight:800;color:#5A566B">${rd?Object.values(REG).map(r=>`<span style="display:inline-flex;align-items:center;gap:4px"><i style="width:12px;height:12px;border-radius:4px;background:${r.c[1]};border:1.6px solid ${shade(r.c[1],-.32)};display:inline-block"></i>${r.n}</span>`).join(''):'Mapa simplificado del mundo'}</div>`;
+      <div id="ley" class="abs" style="left:0;right:0;top:${oy+mh+12}px;display:flex;justify-content:center;gap:var(--s-3);font-size:var(--fs-2xs);font-weight:800;color:#5A566B">${rd?Object.values(REG).map(r=>`<span style="display:inline-flex;align-items:center;gap:4px"><i style="width:12px;height:12px;border-radius:4px;background:${r.c[1]};border:1.6px solid ${shade(r.c[1],-.32)};display:inline-block"></i>${r.n}</span>`).join(''):'Los continentes del mundo'}</div>`;
     const svg=mp.querySelector('#mapa'), top0=oy+mh+40;
     if (rd){ /* ballenas jorobadas frente a Samaná y un velero en el Caribe */
       [['ballena',352,36,34,5,2600],['velero',150,M.h-26,26,-4,2200]].forEach(([n,x,y,t,dy,ms])=>{ const d=document.createElement('div'); d.className='abs'; const s=Math.max(20,t*sc), [a,b]=px(x,y);
