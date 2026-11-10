@@ -2,12 +2,17 @@
 
 Semillita es de uso personal. Aun así, este archivo anota **de dónde sale cada recurso** para poder rastrearlo, actualizarlo o reemplazarlo.
 
+## Estado (2026-11-10)
+
+Desde la versión de estilo plano, **la app ya no muestra imágenes de Kenney**. Todas las ilustraciones son SVG propios (`public/js/12-estilo-plano.js`, `13-plano-lugares.js` y `14-plano-mundo.js`). Los archivos de `public/kenney/` siguen en el repositorio como respaldo, pero ninguna pantalla los usa. La tabla de abajo queda como historial.
+
 ## Resumen
 
 | Recurso | Autor | Licencia | Atribución obligatoria |
 | --- | --- | --- | --- |
 | Paquetes de Kenney (tabla de abajo) | Kenney Vleugels · [kenney.nl](https://kenney.nl) | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/) | No (se agradece) |
-| Ilustraciones SVG propias (`public/js/08-ilustraciones.js`) | Hechas para Semillita | Del proyecto | — |
+| Ilustraciones SVG propias en estilo plano (`public/js/12-estilo-plano.js`, `13-plano-lugares.js`, `14-plano-mundo.js`) | Hechas para Semillita | Del proyecto | — |
+| Ilustraciones SVG antiguas (`public/js/08-ilustraciones.js`, redibujadas en plano por `14-plano-mundo.js`) | Hechas para Semillita | Del proyecto | — |
 | Animalitos `creature()` (`public/js/04-personajes.js`) | Hechos para Semillita | Del proyecto | — |
 | Letra Nunito (`@fontsource/nunito`) | Vernon Adams y colaboradores | SIL Open Font License 1.1 | Incluida en el paquete npm |
 

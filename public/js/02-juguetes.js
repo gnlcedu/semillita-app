@@ -394,7 +394,7 @@ function toyShapes(root){
       const h=document.createElement('div'); h.className='abs'; h.style.cssText=`left:${x}px;top:${y}px;width:${S}px;height:${S}px`; h.innerHTML=shapeSVG(s[0],'#E4D5C0','#C9B79D','6 5'); ar.appendChild(h); return {t:s[0],x,y}; });
     const top0=54+S*2+66, rowH=Math.max(S+12,(H-top0-10)/2); const slots=shuffle(times(NN,k=>[12+((W-24)/C)*(k%C+.5)-S/2+rnd(-6,6), top0+Math.floor(k/C)*rowH+rnd(0,Math.max(0,rowH-S-8))]));
     set.forEach((s,i)=>{ const el=document.createElement('div'); el.className='abs'; const [x,y]=slots[i];
-      el.style.cssText=`left:${x}px;top:${y}px;width:${S}px;height:${S}px;z-index:3;transition:left .35s,top .35s;animation:popin .4s ${i*.06}s both`; el.innerHTML=shapeSVG(s[0],s[1],s[2])+(iluFuente('cara_a')?`<img class="shface" src="/kenney/cara_a.webp" alt="" draggable="false">`:''); ar.appendChild(el);
+      el.style.cssText=`left:${x}px;top:${y}px;width:${S}px;height:${S}px;z-index:3;transition:left .35s,top .35s;animation:popin .4s ${i*.06}s both`; el.innerHTML=shapeSVG(s[0],s[1],s[2])+`<span class="shface">${ilu('carita','100%')}</span>`; ar.appendChild(el);
       dragify(el, ar, {start:()=>speak(s[0]), drop:(el)=>{ const h=holes.find(h=>h.t===s[0]); const cx=parseFloat(el.style.left), cy=parseFloat(el.style.top);
         if (Math.hypot(cx-h.x,cy-h.y)<S*.6){ el.style.left=h.x+'px'; el.style.top=h.y+'px'; el.dataset.lock=1; el.style.zIndex=2; note(784,.25,'sine',.13); sparkAt(ar,h.x+S/2,h.y+S/2); left--;
           if (left===0){ confetti(); win('¡Encajaste todas las figuras!'); setTimeout(round,2800); } }
@@ -407,35 +407,35 @@ function toyShapes(root){
 /* ---------- 12. ¿Qué tiempo hace? ---------- */
 function toyWeather(root){
   let rainT=null, night=false;
-  addHTML(root, `<div id="sk" class="abs" style="inset:0 0 var(--tbar-h) 0;background:linear-gradient(#BFE1F7,#EAF6FD);transition:background 1.2s;overflow:hidden">
+  addHTML(root, `<div id="sk" class="abs" style="inset:0 0 var(--tbar-h) 0;background:#CDE7F8;transition:background 1.2s;overflow:hidden">
     <div id="st" class="abs" style="inset:0;opacity:0;transition:opacity 1.2s">${times(24,()=>`<span class="abs" style="left:${rnd(2,96)}%;top:${rnd(2,45)}%;font-size:${rnd(10,18)}px;animation:twinkle ${rnd(2,4)}s ${Math.random()*2}s infinite">✦</span>`).join('')}</div>
     ${scene('tiempo','inset:0')}
     <div id="sun" class="abs" style="right:12%;top:8%;font-size:var(--fs-8xl);transition:top 1.2s,opacity 1.2s">${ilu('sol','1.1em')}</div>
     <div id="moon" class="abs" style="right:14%;top:60%;font-size:var(--fs-7xl);opacity:0;transition:top 1.2s,opacity 1.2s">${ilu('luna','1em')}</div>
     <div id="rb" class="rainbow"></div>
-    <div id="cl" class="abs" style="left:0;right:0;top:4%;opacity:.0;transition:opacity 1s;height:30%">${[['nube1',-4,0,34],['nube2',22,8,30],['nube3',48,0,36],['nube1',72,10,32]].map(([n,x,y,w])=>`<img src="/kenney/${n}.webp" alt="" draggable="false" style="position:absolute;left:${x}%;top:${y}%;width:${w}%">`).join('')}</div>
+    <div id="cl" class="abs" style="left:0;right:0;top:4%;opacity:.0;transition:opacity 1s;height:30%">${[[-4,0,34],[22,8,30],[48,0,36],[72,10,32]].map(([x,y,w],i)=>`<div class="${i%2?'drift slow':'drift'}" style="position:absolute;left:${x}%;top:${y}%;width:${w}%">${ilu('nube1','100%')}</div>`).join('')}</div>
     <div id="rn" class="abs" style="inset:0"></div>
-    <div class="abs" style="left:0;right:0;bottom:0;height:30%;background:#CFE6B8;border-radius:50% 50% 0 0/30px 30px 0 0"></div>
+    <div class="abs" style="left:0;right:0;bottom:0;height:30%;background:#CFE6B8;border-top:1.6px solid #9FC48A;border-radius:50% 50% 0 0/30px 30px 0 0"></div><div class="charcos" aria-hidden="true"><i style="left:18%;bottom:8%"></i><i style="left:62%;bottom:5%;width:80px"></i><i style="left:80%;bottom:14%;width:46px"></i></div>
     <div id="palm" class="abs" style="left:6%;bottom:22%;font-size:120px;line-height:0;transform-origin:50% 100%;transition:transform .5s">${ilu('palmera_fondo','1em')}</div>
     <div class="abs" style="left:56%;bottom:24%;font-size:84px;line-height:0">${ilu('casa','1em')}</div>
     <div class="abs" style="left:36%;bottom:12%;text-align:center"><span id="ac" style="position:absolute;left:52px;top:-18px;font-size:var(--fs-4xl)"></span><span style="display:inline-block;animation:bob 2.6s ease-in-out infinite">${petMini(prof(),80)}</span></div>
     <div id="fl" class="abs" style="inset:0;background:var(--card);opacity:0;pointer-events:none"></div></div>
   <div class="tbar">${[['dia','sol','Día'],['noche','luna','Noche'],['nubes','w_nubes','Nublado'],['lluvia','w_lluvia','Lluvia'],['tormenta','w_tormenta','Tormenta'],['arcoiris','w_arcoiris','Arcoíris'],['viento','w_viento','Viento']].map(([w,n,t])=>`<button data-w="${w}" aria-label="${t}">${ilu(n,'1.15em')}</button>`).join('')}</div>`);
   const $r=id=>root.querySelector('#'+id); sceneParallax(root);
-  const rain=(on,heavy)=>{ clearInterval(rainT); $r('rn').innerHTML=''; if(!on) return; rainT=setInterval(()=>{ for(let k=0;k<(heavy?4:2);k++){ const d=document.createElement('span'); d.className='abs';
+  const rain=(on,heavy)=>{ clearInterval(rainT); $r('rn').innerHTML=''; root.classList.toggle('lloviendo',!!on); if(!on) return; rainT=setInterval(()=>{ for(let k=0;k<(heavy?4:2);k++){ const d=document.createElement('span'); d.className='abs';
     d.style.cssText=`left:${rnd(0,100)}%;top:-20px;width:3px;height:18px;border-radius:3px;background:#7FAFD3;animation:drop ${(Math.random()*.4+.7).toFixed(2)}s linear forwards`; $r('rn').appendChild(d); setTimeout(()=>d.remove(),1200);} },70); };
   function set(w){
     const sk=$r('sk'); if (w==='noche'||w==='dia') root.classList.toggle('night',w==='noche'); $r('palm').style.animation='none'; $r('rb').style.opacity=0; $r('ac').textContent='';
     if (w==='noche'||w==='dia'){ night = w==='noche'; rain(false); $r('cl').style.opacity=0; }
-    sk.style.background = night?'linear-gradient(#2B3566,#5B6AA8)':(w==='lluvia'||w==='tormenta'||w==='nubes')?'linear-gradient(#AEB9C6,#DCE3EA)':'linear-gradient(#BFE1F7,#EAF6FD)';
+    sk.style.background = night?'#3F4A7C':(w==='lluvia'||w==='tormenta'||w==='nubes')?'#C9D2DC':'#CDE7F8';
     const cloudy=['lluvia','tormenta','nubes'].includes(w); $r('st').style.opacity = night?1:0; $r('sun').style.opacity=night?0:(cloudy?.3:1); $r('sun').style.top=night?'60%':'8%'; $r('moon').style.opacity=night?1:0; $r('moon').style.top=night?'8%':'60%';
     if (w==='noche'){ $r('ac').textContent='💤'; tsay('Es de noche. ¡Buenas noches! Good night.'); }
     if (w==='dia'){ tsay('¡Es de día! Hace sol. It is sunny.'); }
     if (w==='nubes'){ rain(false); $r('cl').style.opacity=1; tsay('Está nublado. It is cloudy.'); }
     if (w==='lluvia'){ $r('cl').style.opacity=1; rain(true); $r('ac').textContent='☂️'; tsay('¡Está lloviendo! It is rainy.'); }
-    if (w==='tormenta'){ $r('cl').style.opacity=1; rain(true,true); $r('ac').textContent='😮'; const f=$r('fl'); f.style.animation='none'; void f.offsetWidth; f.style.animation='flash .9s'; setTimeout(()=>note(55,1.4,'sawtooth',.12),300); tsay('¡Una tormenta! Primero se ve el rayo y luego se oye el trueno.'); }
-    if (w==='arcoiris'){ rain(false); $r('cl').style.opacity=0; $r('rb').style.opacity=.9; tsay('¡Un arcoíris! Sale cuando hay sol y gotitas de lluvia. Rainbow.'); react('happy'); }
-    if (w==='viento'){ $r('palm').style.animation='palm .6s ease-in-out infinite'; for(let k=0;k<8;k++){ const l=document.createElement('span'); l.className='abs'; l.textContent='🍃'; l.style.cssText=`left:-30px;top:${rnd(20,70)}%;font-size:var(--fs-2xl);transition:transform ${rnd(2,3)}s linear`; $r('sk').appendChild(l);
+    if (w==='tormenta'){ $r('cl').style.opacity=1; rain(true,true); $r('ac').textContent='😮'; const f=$r('fl'); f.style.animation='none'; void f.offsetWidth; f.style.animation='flash .9s'; relampago($r('sk')); setTimeout(()=>note(55,1.4,'sawtooth',.12),300); tsay('¡Una tormenta! Primero se ve el rayo y luego se oye el trueno.'); }
+    if (w==='arcoiris'){ rain(false); $r('cl').style.opacity=0; $r('rb').style.opacity=.9; if($r('rb').animate&&!RM) $r('rb').animate([{transform:'scale(.7)',opacity:0},{transform:'scale(1)',opacity:.9}],{duration:1100,easing:'cubic-bezier(.3,1.2,.5,1)'}); tsay('¡Un arcoíris! Sale cuando hay sol y gotitas de lluvia. Rainbow.'); react('happy'); }
+    if (w==='viento'){ $r('palm').style.animation='palm .6s ease-in-out infinite'; for(let k=0;k<8;k++){ const l=document.createElement('span'); l.className='abs'; l.innerHTML=ilu('hojita','1em'); l.style.cssText=`left:-30px;top:${rnd(20,70)}%;font-size:var(--fs-2xl);transition:transform ${rnd(2,3)}s linear`; $r('sk').appendChild(l);
       setTimeout(()=>{ l.style.transform=`translate(${root.clientWidth+80}px,${rnd(-60,60)}px) rotate(540deg)`; },k*180+30); setTimeout(()=>l.remove(),4200); } tsay('¡Hace viento! It is windy.'); }
   }
   root.querySelectorAll('[data-w]').forEach(b=>b.addEventListener('click',()=>{ root.querySelectorAll('[data-w]').forEach(x=>x.classList.toggle('on',x===b)); set(b.dataset.w); }));

@@ -23,7 +23,7 @@ function toyBubbles2(root){
   const ANIM=[['🐶','perro','dog'],['🐱','gato','cat'],['🐮','vaca','cow'],['🐷','cerdo','pig'],['🐸','rana','frog'],['🐵','mono','monkey'],['🦁','león','lion'],['🐔','gallina','hen'],['🐰','conejo','rabbit'],['🐴','caballo','horse']];
   const MIXES=[['verde','amarillo y azul'],['anaranjado','rojo y amarillo'],['morado','rojo y azul'],['rosado','rojo y blanco']];
   let mode='n', it, target=null, hits=0; const lv=LV(); const maxN = lv===1?10:lv===2?20:50;
-  addHTML(root, `<div id="bz" class="abs" style="inset:0 0 var(--tbar-h) 0;background:linear-gradient(#EAF4FB,var(--bg));overflow:hidden"></div>
+  addHTML(root, `<div id="bz" class="abs" style="inset:0 0 var(--tbar-h) 0;background:#EAF4FB;overflow:hidden"></div>
   <div class="tbar"><button data-m="n" class="on">123</button><button data-m="l">ABC</button><button data-m="c" aria-label="Colores">${ilu('ic_mix','1.15em')}</button><button data-m="a" aria-label="Animales">${ilu('perro','1.15em')}</button></div>`);
   const bz=root.querySelector('#bz'); const tg=banner(root); tg.style.display='none';
   function content(forceKey){
@@ -47,10 +47,10 @@ function toyBubbles2(root){
     const c = (target && Math.random()<.35) ? content(target.key) : content();
     const b=document.createElement('button'); const sz=rnd(78,104); const bg=c.bg||'rgba(255,255,255,.55)';
     b.className='abs bubble-b'; b.innerHTML=`<span style="display:grid;place-items:center;width:100%;height:100%;animation:sway ${rnd(3,5)}s ease-in-out infinite">${mode==='a'?emo(c.txt,'1.25em'):(c.txt??'')}</span>`;
-    b.style.cssText=`left:${rnd(2,80)}%;bottom:${RM?rnd(6,68)+'%':'-120px'};width:${sz}px;height:${sz}px;border-radius:50%;font-size:${mode==='a'?40:32}px;font-weight:800;color:var(--ink);background:radial-gradient(circle at 30% 30%,rgba(255,255,255,.95) 0 12%,transparent 13%),${bg};border:3px solid rgba(255,255,255,.9);box-shadow:inset -6px -8px 14px rgba(140,170,210,.35);animation:rise2 ${lv===3?rnd(6,9):rnd(8,12)}s linear forwards`;
+    b.style.cssText=`left:${rnd(2,80)}%;bottom:${RM?rnd(6,68)+'%':'-120px'};width:${sz}px;height:${sz}px;border-radius:50%;font-size:${mode==='a'?40:32}px;font-weight:800;color:var(--ink);background:${bg};border:2px solid #8DBDE6;animation:rise2 ${lv===3?rnd(6,9):rnd(8,12)}s linear forwards`;
     b.addEventListener('pointerdown',e=>{ e.preventDefault();
       if (target && c.key!==target.key){ note(220,.2,'sine',.1); b.classList.add('wob'); setTimeout(()=>b.classList.remove('wob'),500); return; }
-      popS(); speak(c.say, c.lang||'es-ES'); b.style.transition='transform .2s,opacity .2s'; b.style.animationPlayState='paused'; b.style.transform+=' scale(1.5)'; b.style.opacity='0'; setTimeout(()=>b.remove(),220);
+      popS(); speak(c.say, c.lang||'es-ES'); { const p=animPos(b,bz); gotitas(bz,p.x,p.y,{n:6,c:'#D6ECFA',alto:34}); ondas(bz,p.x,p.y,{n:1,ancho:p.w*1.3,c:'#8DBDE6'}); } b.style.transition='transform .2s,opacity .2s'; b.style.animationPlayState='paused'; b.style.transform+=' scale(1.5)'; b.style.opacity='0'; setTimeout(()=>b.remove(),220);
       if (target){ hits++; tg.querySelector('.muted').textContent=`${hits}/5`; if (hits>=5){ win('¡Lo encontraste 5 veces!'); setTimeout(newTarget,2200); } } });
     b.addEventListener('animationend',ev=>{ if(ev.animationName==='rise2') b.remove(); });
     if (RM) setTimeout(()=>b.remove(),7000); /* sin movimiento: aparecen quietas y se van solas */
@@ -93,7 +93,7 @@ function toySort2(root){
       el.dataset.x=x; el.dataset.y=y; ar.appendChild(el);
       dragify(el, ar, {start:()=>{ popS(); if(isTxt) speak(e, cur==='eng'?'en-US':'es-ES'); }, drop:(el,px,py)=>{
         const a=ar.getBoundingClientRect(); const hit=baskets.findIndex(b=>{ const r=b.getBoundingClientRect(); return px>r.left-a.left-10 && px<r.right-a.left+10 && py>r.top-a.top-30 && py<r.bottom-a.top; });
-        if (hit===k){ baskets[k].querySelector('.in').insertAdjacentHTML('beforeend',`<span style="animation:popin .3s both;margin:1px">${isTxt?'•':emo(e,'1.7em')}</span>`); el.remove(); left--; note(660,.2,'sine',.12);
+        if (hit===k){ volar(el,baskets[k],el.innerHTML,{arco:-30,ms:380,fin:.6}); baskets[k].querySelector('.in').insertAdjacentHTML('beforeend',`<span style="animation:popin .3s both;margin:1px">${isTxt?'•':emo(e,'1.7em')}</span>`); el.remove(); left--; note(660,.2,'sine',.12);
           baskets[k].style.transform='scale(1.08)'; setTimeout(()=>baskets[k].style.transform='',200);
           if (left===0){ confetti(); win('¡Todo en su lugar!'); setTimeout(round,2600); } }
         else { el.style.left=el.dataset.x+'px'; el.style.top=el.dataset.y+'px'; if (hit>=0){ el.classList.add('wob'); setTimeout(()=>el.classList.remove('wob'),500); tsay('Hmm... ¿y en otra canasta?'); } } }}); });

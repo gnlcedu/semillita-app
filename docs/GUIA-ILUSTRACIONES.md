@@ -50,9 +50,7 @@ girasol: () => svg(`${tallo('M50 96 V54')}${petalos(50,36,12,18,6.5,11,K.amarill
 - Íconos de juguetes: `ti_<id>`. Se conectan solos con `toyIcon()`.
 
 ## Estado
-- **Ya en estilo plano:** inicio, Mi jardín, el animalito, Mi colmado (clientes = animalitos de la app), Pizzería, Laboratorio y Mezcla colores.
-- **Pendiente** (aún con Kenney o SVG antiguos):
-  - Grupo B: Acuario, Granja, El tiempo y Burbujas.
-  - Grupo C: Pintar, Música y Bloques (Encaje ya usa figuras planas).
-  - Grupo D: Ordenar, Torre de Hanói y Sudoku, además de las demás pantallas de aprender.
-  - Recompensas: las medallas de subir de nivel.
+- **Toda la app está en estilo plano** (453 piezas): inicio, los 26 juguetes, retos, cuentos, inglés, Mi amigo, stickers, recompensas y medallas.
+- Las piezas viejas de `08-ilustraciones.js` se redibujan solas en plano con los ayudantes de `14-plano-mundo.js`.
+- Kenney ya no se muestra; sus archivos siguen en `public/kenney/` como respaldo.
+- Para un emoji nuevo: dibuja la pieza en 13 o 14 y añádelo a `ILU_EMO`. `emoDOM` lo convierte en toda la app.

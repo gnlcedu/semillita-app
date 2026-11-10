@@ -193,11 +193,11 @@ window.emo=(e,tam='1.1em')=> EMO[e]&&iluFuente(EMO[e]) ? ilu(EMO[e],tam) : e;
    Solo en contenedores que el código nunca lee (.visual, .egrid, .lesson-v, .story-scene):
    las opciones de los retos (.opts .opt) se comprueban por su posición (data-i), no por su texto;
    las cartas de memoria sí se comparan por texto y NO se tocan. */
-const EMO_SEL='.visual,.egrid,.lesson-v,.story-scene,.opts .opt,.tbub';
+const EMO_SEL='#app,#toast,.stk-peel,.lvup';
 let emoRe=null;
 const emoRegex=()=>emoRe||(emoRe=new RegExp('('+Object.keys(EMO).filter(e=>iluFuente(EMO[e])).sort((a,b)=>b.length-a.length).map(e=>e.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('|')+')\\uFE0F?','gu'));
 window.emoDOM=root=>{ if(!root) return; const re=emoRegex(); const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT); const list=[];
-  while(w.nextNode()){ re.lastIndex=0; if(re.test(w.currentNode.nodeValue)) list.push(w.currentNode); }
+  while(w.nextNode()){ const pe=w.currentNode.parentElement; if(!pe||pe.closest('svg,textarea,option,script,style,title')) continue; re.lastIndex=0; if(re.test(w.currentNode.nodeValue)) list.push(w.currentNode); }
   list.forEach(t=>{ const span=document.createElement('span'); re.lastIndex=0;
     span.innerHTML=t.nodeValue.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])).replace(re,m=>emo(m.replace(/️$/,''))||m);
     t.replaceWith(...span.childNodes); }); };

@@ -14,11 +14,12 @@ App educativa para niños de 5 a 12 años (República Dominicana), estilo Pok Po
   7. `09-escenarios.js` — `scene()`, `sceneParallax()`, `scenePet()`, `setPetProp()`; envuelve `tsay` para la expresión de sorpresa.
   8. `12-estilo-plano.js` — **estilo plano** (`PLANO`, paleta `PAL`); envuelve `ilu`, `kic` e `iluFuente` para usar primero las piezas planas, y reemplaza la escena del jardín.
   9. `13-plano-lugares.js` — piezas planas de colmado, pizzería, laboratorio y mezcla; animaciones `volar`, `entrar`/`salir`, `temblar`, `ondas`, `gotitas`, `burbujitas`, `hornear`, `vapor`, `migas`, `remolino`; `sparks` plano; escena del colmado.
-  10. `10-animaciones.js` — entrada de pantallas (envuelve `go`), `squash()`, `landSquash()`.
-  11. `11-recompensas.js` — `flyStars()`, `showLevelUp()`; envuelve `win`, `giveSticker` y `addXP` (misma lógica y datos).
-  12. `05-juguetes-nuevos.js` — colmado, granja, reloj, mapas, cuerpo, laboratorio, tangram.
-  13. `06-juguetes-completos.js` — Pintar, Mi jardín, Música (7 instrumentos), Acuario y Bloques completos.
-  14. `07-aprender-adultos.js` — cuentos, lectura, cálculo mental, inglés, modo aula, reporte, límite de tiempo e **inicio de la app** (`render()` al final).
+  10. `14-plano-mundo.js` — redibuja en plano las piezas SVG antiguas de 08 y agrega el resto (mar, granja, música, retos, stickers, personas, ropa…); íconos monocromos; escenas del acuario, granja, tiempo y bloques; `sonar()`, `relampago()`.
+  11. `10-animaciones.js` — entrada de pantallas (envuelve `go`), `squash()`, `landSquash()`.
+  12. `11-recompensas.js` — `flyStars()`, `showLevelUp()`; envuelve `win`, `giveSticker` y `addXP` (misma lógica y datos).
+  13. `05-juguetes-nuevos.js` — colmado, granja, reloj, mapas, cuerpo, laboratorio, tangram.
+  14. `06-juguetes-completos.js` — Pintar, Mi jardín, Música (7 instrumentos), Acuario y Bloques completos.
+  15. `07-aprender-adultos.js` — cuentos, lectura, cálculo mental, inglés, modo aula, reporte, límite de tiempo e **inicio de la app** (`render()` al final).
 - Varias funciones se **sobrescriben** en archivos posteriores (`vHome`, `mascot`, `win`, `finish`, `vAdults`, `go`, `tsay`, `giveSticker`, `addXP`). Antes de editar una función, busca si se redefine más adelante.
 - Vistas extra se registran en `window.VIEWS[nombre]`.
 - `src/main.js` es un módulo ES: solo carga la letra Nunito y registra la PWA.
@@ -54,24 +55,22 @@ TOYS.push({id:'nuevo', name:'Nombre', icon:'🎈', c:'mint', open:toyNuevo, hi:'
   - Página de prueba: `/docs/componentes.html`.
 - **Estilo único: plano** (`docs/GUIA-ILUSTRACIONES.md`, catálogo en `/docs/estilo-plano.html`).
   - Formas planas, contorno suave de 1,6 px en un tono más oscuro del relleno, paleta pastel `PAL`, sin brillos ni 3D, sin caras en objetos.
-  - Toda pieza nueva se dibuja en `12-estilo-plano.js`. No se agregan más imágenes de Kenney ni emojis visibles.
-  - Ya están en estilo plano: inicio, Mi jardín, el animalito, Mi colmado, Pizzería, Laboratorio y Mezcla colores. Los demás juguetes se pasan por grupos (B naturaleza, C crear, D aprender e ingenio).
+  - Toda pieza nueva se dibuja con los ayudantes de `PLANO_KIT` (en 12, 13 o 14) y se conecta a su emoji en `ILU_EMO`. No se agregan más imágenes de Kenney ni emojis visibles.
+  - Toda la app está en estilo plano: 453 piezas cubren los 386 emojis del código. Kenney ya no se muestra en ninguna pantalla.
   - Cada juguete pasado al estilo plano lleva animaciones que cuentan lo que pasa (ver `13-plano-lugares.js`), siempre con versión quieta para `RM`.
-- **Gráficos anteriores (en retirada): Kenney y SVG con brillo como respaldo.**
+- **Funciones de gráficos** (las piezas planas tienen prioridad; Kenney y los SVG con brillo solo quedan como respaldo, sin uso):
   - `ilu('nombre', tam)` muestra la pieza.
   - `emo('🍎')` muestra la ilustración de un emoji. Los datos y las comparaciones siguen usando el emoji.
   - `kic('play')` da un ícono monocromo que toma el color del texto.
   - `toyIcon(t)` da el ícono de un juguete.
   - Catálogo: `/docs/catalogo.html`.
-- **Agregar una imagen de Kenney:**
+- **Agregar una imagen de Kenney** (ya no se usa; solo como referencia):
   1. Añádela a `scripts/kenney-manifiesto.json`. Puede ser `.png`, `.svg` o `.glb`; los modelos 3D se renderizan solos.
   2. Corre `npm run kenney`, que necesita Chrome o Edge instalado.
   3. El script regenera `public/kenney/`, `kenney.js` y la tabla de `docs/LICENCIAS.md`.
   4. Los `.zip` viven en `vendor/` (fuera de git) y se descargan de OpenGameArt. kenney.nl bloquea las descargas automáticas: no lo esquives.
-- **Decisión 2D/3D:** el motor siempre es 2D.
-  - "3D" = renders de modelos de Kenney, en los lugares con objetos (colmado, pizzería, jardín, laboratorio, ordenar, sudoku).
-  - 2D plano en figuras, letras, lógica y personajes.
-- **`emoDOM`:** convierte emojis a ilustraciones solo en `.visual`, `.egrid`, `.lesson-v`, `.story-scene` y `.opts .opt`. Las opciones se comprueban por posición (`data-i`). **No lo apliques a elementos cuyo texto lea el código**, como las cartas de memoria.
+- **Motor:** siempre 2D (HTML + SVG). Todo es plano; ya no hay renders 3D.
+- **`emoDOM`:** convierte a dibujo cualquier emoji que aparezca en `#app`, `#toast`, `.stk-peel` y `.lvup`, salvo dentro de SVG, `textarea` u `option`. Funciona porque ningún código lee el texto visible: las opciones se comprueban por `data-i` y las cartas de memoria por índice. **Si un código nuevo necesita leer el texto de un elemento, guarda el valor en un `data-` atributo.**
 - **Escenas y animalito:**
   - `scene('jardin'|'granja'|'acuario'|'colmado'|'tiempo'|'musica'|'laboratorio'|'bloques')` va detrás del juego, sin recibir toques.
   - `scenePet(root, {at, size, prop, cls})` pone el animalito del niño. `react('happy'|'sad'|'surprised'|'think')` lo hace reaccionar.

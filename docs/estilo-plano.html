@@ -26,8 +26,10 @@
 <script>function shade(h,a){ const n=parseInt(h.slice(1),16); const f=c=>Math.max(0,Math.min(255,Math.round(a<0?c*(1+a):c+(255-c)*a))); return '#'+[n>>16,n>>8&255,n&255].map(f).map(x=>x.toString(16).padStart(2,'0')).join(''); }</script>
 <script src="/kenney/kenney.js"></script>
 <script src="/js/08-ilustraciones.js"></script>
-<script>window.SCENES={};</script>
+<script>window.SCENES={}; function rnd(a,b){return a+Math.floor(Math.random()*(b-a+1));}</script>
 <script src="/js/12-estilo-plano.js"></script>
+<script src="/js/13-plano-lugares.js"></script>
+<script src="/js/14-plano-mundo.js"></script>
 <script>
 const bgs=['bg-mint','bg-sky','bg-peach','bg-lav','bg-butter','bg-rose','bg-sage'];
 const ks=Object.keys(PLANO), G=[['Jardín',ks.filter(k=>!k.startsWith('ti_')&&!k.startsWith('ic_'))],['Juguetes y aventuras',ks.filter(k=>k.startsWith('ti_'))],['Inicio',ks.filter(k=>k.startsWith('ic_'))]];
