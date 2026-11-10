@@ -63,7 +63,8 @@ peluche:()=>svg(`${C(30,26,10,K.cafe)}${C(70,26,10,K.cafe)}${D(30,26,5,K.madera)
 lapiz:()=>svg(`<g transform="rotate(-35 50 50)">${R(42,14,16,58,2,K.amarillo)}${P('M42 72 L50 90 L58 72Z',K.madera)}${D(50,86,2.5,K.tinta)}${R(42,8,16,10,3,K.ros)}</g>`),
 media:()=>svg(`${P('M34 14 H62 V54 L76 68 Q86 80 76 88 Q66 94 56 86 L38 70 Q32 64 34 58Z',K.ros)}${L('M34 26 H62 M34 36 H62',K.blanco,4)}${R(32,8,32,10,3,shade(K.ros,-.1))}`),
 globo:()=>svg(`${L('M50 72 Q44 84 52 96',K.grisO,1.8)}${E(50,40,24,30,K.coral)}${P('M46 70 L54 70 L50 76Z',K.coral)}`),
-iman:()=>svg(`${Lo('M30 30 V56 Q30 80 50 80 Q70 80 70 56 V30',K.coral,16)}${R(19,14,22,16,3,K.gris)}${R(59,14,22,16,3,K.gris)}`),
+/* polos hacia abajo: los objetos se pegan en las puntas */
+iman:()=>svg(`${Lo('M30 70 V44 Q30 20 50 20 Q70 20 70 44 V70',K.coral,16)}${R(19,70,22,16,3,K.gris)}${R(59,70,22,16,3,K.gris)}`),
 botella:()=>svg(`${R(42,8,16,12,3,K.blanco)}${P('M38 20 H62 V30 Q74 36 74 50 V86 Q74 92 68 92 H32 Q26 92 26 86 V50 Q26 36 38 30Z','#EAF4FC')}${R(28,52,44,24,4,K.mant)}`),
 gotero:()=>svg(`${R(40,6,20,24,8,K.grisO)}${P('M44 30 H56 L54 66 Q50 74 46 66Z',K.blanco)}${gotaG(50,84,.45,K.coral)}`),
 tina:()=>svg(`${L('M22 40 V20 Q22 12 30 12 Q36 12 36 18',K.grisO,3)}${P('M12 50 H88 Q86 80 64 82 H36 Q14 80 12 50Z',K.blanco)}${F('M15 54 H85 Q83 66 77 72 H23 Q17 66 15 54Z',K.cielo)}${R(8,42,84,9,4,K.blanco)}${L('M28 82 L24 92 M72 82 L76 92',K.grisO,3)}`),
@@ -135,7 +136,7 @@ window.burbujitas=(cont,x,y,{n=3,sube=70,c='#FFFFFF',borde='#8DBDE6',tam=[6,12]}
     e.animate([{transform:'translate(-50%,-50%) translate(0,0)',opacity:0},{opacity:1,offset:.15},{transform:`translate(-50%,-50%) translate(${rnd(-10,10)}px,${-sube}px)`,opacity:0}],{duration:900+i*120,delay:i*170,easing:'ease-out',fill:'backwards'}).onfinish=()=>e.remove(); } };
 
 /* la pizza entra al horno: el horno sube, las llamas bailan, baja y sale el vapor */
-window.hornear=(root,pz,ms=1600)=>{ const p=pos(pz,root), s=p.w*1.22;
+window.hornear=(root,pz,ms=1600)=>{ const p=pos(pz,root), s=p.w*1.45;
   const h=pieza(root,'horno-ov',`left:${p.x}px;top:${p.y}px;width:${s}px;height:${s}px`,ilu('horno','100%'));
   const out=()=>{ if(quieto()){ h.remove(); return; } h.animate([{transform:'translate(-50%,-50%)',opacity:1},{transform:'translate(-50%,-50%) translateY(40%)',opacity:0}],{duration:260,easing:'ease-in',fill:'forwards'}).onfinish=()=>h.remove(); };
   if (!quieto()) h.animate([{transform:'translate(-50%,-50%) translateY(60%)',opacity:0},{transform:'translate(-50%,-50%)',opacity:1}],{duration:320,easing:'cubic-bezier(.3,1.3,.5,1)'});

@@ -488,10 +488,10 @@ const S=window.SCENES;
 S.acuario=()=>capa(.2,ilus('alga','left:4%;bottom:30px;width:18%;max-width:110px','sway')+ilus('alga','left:42%;bottom:30px;width:13%;max-width:80px','sway slow')+ilus('alga','right:4%;bottom:30px;width:20%;max-width:120px','sway'),'opacity:.5')
   +capa(.45,lam('0 0 400 60',`${P('M-10 60 V30 Q60 14 140 26 Q220 40 300 22 Q360 14 410 24 V60Z','#F2DDB0')}${P('M96 32 Q104 18 120 22 Q132 26 128 34Z',K.gris)}${P('M270 30 Q276 20 290 22 Q300 26 296 32Z',shade(K.gris,-.05))}${D(60,44,3,shade('#F2DDB0',-.1))}${D(200,48,2.5,shade('#F2DDB0',-.1))}${D(340,42,3,shade('#F2DDB0',-.1))}`,'left:0;width:100%;bottom:0;height:64px')+ilus('coral','left:24%;bottom:24px;width:12%;max-width:64px')+ilus('alga','left:56%;bottom:26px;width:10%;max-width:56px','sway'));
 S.granja=()=>capa(.12,`<div class="sp spin" style="right:6%;top:3%;width:16%;max-width:70px">${ilu('sol','100%')}</div>`+ilus('nube1','left:8%;top:5%;width:24%;max-width:120px','drift')+ilus('nube1','left:56%;top:calc(5% + 18px);width:18%;max-width:96px','drift slow'))
-  +capa(.3,lam('0 0 400 110',`${colinas('#CDE8BE','#BCDDA8')}${arbolito(30,100,1.1)}${arbolito(62,104,.8,'#93CC9A')}${PL.granero().replace('<svg ','<svg x="300" y="38" width="76" height="76" ')}`,'left:0;width:100%;bottom:70%;height:20%'))
+  +capa(.3,lam('0 0 400 110',`${colinas('#CDE8BE','#BCDDA8')}${arbolito(30,100,1.1)}${arbolito(62,104,.8,'#93CC9A')}${PL.granero().replace('<svg ','<svg x="300" y="38" width="76" height="76" ')}`,'left:0;width:100%;bottom:calc(70% - 8px);height:calc(20% + 8px)'))
   +capa(.45,lam('0 0 400 40',cercaPlana(),'left:0;width:100%;bottom:calc(70% - 3px);height:6%'));
-S.tiempo=()=>capa(.3,lam('0 0 400 110',`${colinas('#C3E2B0','#B2D89C')}${pino(250,104,1)}${pino(270,108,.8)}${arbolito(330,104,1)}${arbolito(110,106,.8,'#93CC9A')}`,'left:0;width:100%;bottom:29%;height:18%'));
+S.tiempo=()=>capa(.3,lam('0 0 400 110',`${colinas('#C3E2B0','#B2D89C')}${pino(250,104,1)}${pino(270,108,.8)}${arbolito(330,104,1)}${arbolito(110,106,.8,'#93CC9A')}`,'left:0;width:100%;bottom:21%;height:26%'));
 S.bloques=()=>capa(.15,ilus('nube1','left:8%;top:6%;width:24%;max-width:120px','drift')+ilus('nube1','left:52%;top:calc(6% + 22px);width:18%;max-width:96px','drift slow'))
-  +capa(.35,lam('0 0 400 110',colinas('#D6EBC6','#C8E3B2'),'left:0;width:100%;bottom:30px;height:22%'));
+  +capa(.35,lam('0 0 400 110',colinas('#D6EBC6','#C8E3B2'),'left:0;width:100%;bottom:14px;height:24%'));
 
 })();

@@ -187,7 +187,7 @@ const arbusto=(x,y,s,c=K.hoja)=>`<g transform="translate(${x} ${y}) scale(${s})"
 const cerca=()=>{ let s=''; for(let x=0;x<400;x+=16) s+=P(`M${x+2} 40 V10 L${x+7} 4 L${x+12} 10 V40Z`,K.crema);
   return s+R(-4,16,408,5,2,K.crema)+R(-4,28,408,5,2,K.crema); };
 const JARDIN=()=>capa(.15,`<div class="sp drift" style="left:6%;top:5%;width:26%;max-width:140px">${ilu('nube1','100%')}</div><div class="sp drift slow" style="left:60%;top:calc(5% + 26px);width:20%;max-width:110px">${ilu('nube1','100%')}</div>`)
-  +capa(.3,lam('0 0 400 110',`${P('M-20 112 Q50 34 160 62 Q230 80 270 112Z','#CDE8BE')}${P('M140 112 Q250 40 420 70 V112Z','#BCDDA8')}${arbolito(34,90,1.1)}${arbolito(66,94,.8,'#93CC9A')}${casita(226,90)}${palma(330,98,1.05)}${arbolito(372,96,.9)}`,'left:0;width:100%;bottom:54%;height:24%'))
+  +capa(.3,lam('0 0 400 110',`${P('M-20 112 Q50 34 160 62 Q230 80 270 112Z','#CDE8BE')}${P('M140 112 Q250 40 420 70 V112Z','#BCDDA8')}${arbolito(34,90,1.1)}${arbolito(66,94,.8,'#93CC9A')}${casita(226,90)}${palma(330,98,1.05)}${arbolito(372,96,.9)}`,'left:0;width:100%;bottom:calc(54% - 8px);height:calc(24% + 8px)'))
   +capa(.5,lam('0 0 400 40',cerca(),'left:0;width:100%;bottom:calc(54% - 3px);height:7%')+lam('0 0 400 40',`${arbusto(70,40,.9)}${arbusto(300,40,.75,K.verde)}`,'left:0;width:100%;bottom:calc(54% - 3px);height:7%'));
 if (window.SCENES) window.SCENES.jardin=JARDIN;
 })();

@@ -129,10 +129,25 @@ function toyClock(root){
 /* ---------- Mapas ---------- */
 function toyMaps(root){
   const lv=LV(); let mode='isla';
-  const ISLA='M25 55 L70 48 L110 40 L150 37 L190 34 L232 28 L262 36 L292 52 L318 54 L346 68 L322 78 L304 80 L334 96 L366 110 L386 130 L370 150 L338 152 L300 156 L256 160 L230 168 L206 176 L192 202 L172 196 L160 176 L140 168 L110 171 L60 168 L20 160 L8 150 L40 140 L90 138 L114 124 L100 106 L70 96 L40 86 L25 70Z';
-  const BORDE='M166 36 L170 58 L162 82 L170 104 L160 126 L166 150 L160 176';
-  const PL=[['Santo Domingo',258,154,1],['Santiago',220,62,1],['Punta Cana',376,128,1],['Pico Duarte',204,86,1],['Puerto Plata',236,40,2],['Samaná',318,66,2],['Lago Enriquillo',182,142,2],['Barahona',206,164,3],['La Romana',310,148,3],['Haití',80,120,3]];
-  const CONT=[['América del Norte','M30 30 Q70 10 130 26 Q150 50 120 70 Q100 90 86 96 Q60 70 30 60Z',80,52],['América del Sur','M110 104 Q140 100 150 124 Q140 170 122 200 Q108 160 104 130Z',126,140],['Europa','M184 34 Q206 24 222 34 Q218 56 196 60 Q182 50 184 34Z',202,46],['África','M188 74 Q226 66 246 88 Q246 130 222 168 Q204 150 196 118 Q180 100 188 74Z',218,112],['Asia','M226 24 Q300 10 368 32 Q372 70 330 90 Q290 106 262 90 Q236 74 226 24Z',300,56],['Oceanía','M318 140 Q350 130 372 146 Q366 172 336 174 Q314 164 318 140Z',344,156],['Antártida','M60 208 Q200 196 340 208 Q200 222 60 208Z',200,209]];
+  /* contornos simplificados a partir de coordenadas reales (lon/lat proyectadas a 400×224), suavizados con curvas */
+  /* curva que pasa por cada punto de la costa (Catmull-Rom), así no se pierden las penínsulas */
+  const suave=pts=>{ const n=pts.length, P=k=>pts[(k+n)%n], r=v=>Math.round(v*10)/10; let d='M'+pts[0].join(' ');
+    for(let k=0;k<n;k++){ const p0=P(k-1),p1=P(k),p2=P(k+1),p3=P(k+2); d+=' C'+[r(p1[0]+(p2[0]-p0[0])/6),r(p1[1]+(p2[1]-p0[1])/6),r(p2[0]-(p3[0]-p1[0])/6),r(p2[1]-(p3[1]-p1[1])/6),p2[0],p2[1]].join(' '); } return d+'Z'; };
+  const ISLA=suave([[77,32],[115,20],[154,35],[189,28],[250,32],[301,44],[346,70],[349,74],[320,78],[333,90],[355,98],[401,128],[399,136],[384,148],[360,142],[339,140],[301,138],[262,160],[250,144],[224,160],[204,206],[182,174],[134,158],[54,160],[10,128],[32,124],[96,140],[144,132],[122,88],[122,60],[102,46]]);
+  const BORDE='M188 30 Q186 42 187 52 Q191 70 186 88 Q181 110 180 136 Q184 156 182 174';
+  const PL=[['Santo Domingo',301,136,1],['Santiago',250,62,1],['Punta Cana',388,134,1],['Pico Duarte',228,94,1],['Puerto Plata',248,40,2],['Samaná',336,80,2],['Lago Enriquillo',194,136,2],['Barahona',222,154,3],['La Romana',358,138,3],['Haití',112,96,3]];
+  const CONT=[['América del Norte',suave([[13,21],[33,12],[67,12],[94,9],[111,15],[128,27],[139,42],[128,53],[117,63],[110,75],[111,83],[100,77],[92,81],[92,93],[102,98],[108,107],[113,108],[104,101],[94,96],[83,90],[76,78],[69,71],[62,60],[62,48],[50,35],[33,30],[17,30]])+suave([[139,4],[172,2],[178,12],[153,30],[139,18]]),82,52],
+    ['América del Sur',suave([[113,108],[131,105],[144,120],[161,129],[158,141],[147,159],[136,177],[127,192],[122,203],[118,195],[120,165],[121,147],[111,128],[111,117]]),134,140],
+    ['Europa',suave([[189,66],[190,54],[198,48],[194,39],[206,33],[206,27],[217,15],[231,14],[244,20],[250,33],[244,51],[231,59],[229,66],[217,63],[213,54],[203,56],[194,66]]),218,42],
+    ['África',suave([[181,89],[189,68],[211,65],[236,74],[239,78],[248,102],[257,104],[247,123],[244,143],[239,158],[222,173],[219,164],[213,143],[210,122],[206,113],[191,113],[183,104]]),222,112],
+    ['Asia',suave([[244,51],[250,33],[244,20],[267,15],[289,9],[322,5],[356,12],[389,17],[396,21],[378,30],[358,42],[356,60],[336,75],[333,87],[320,93],[317,105],[311,116],[309,98],[300,87],[289,98],[286,108],[280,90],[273,83],[263,83],[258,95],[249,101],[239,75],[240,66],[231,59]]),306,46],
+    ['Oceanía',suave([[327,153],[336,146],[344,138],[352,138],[358,137],[362,149],[370,159],[367,176],[356,177],[344,168],[329,173],[327,162]]),348,158],
+    ['Antártida','M14 220 Q60 210 110 214 Q160 206 200 212 Q250 206 300 213 Q350 208 386 220Z',200,214]];
+  const CCOL={'América del Norte':'#F7C59F','América del Sur':'#B9E3C6','Europa':'#C9B8EE','África':'#F6E39A','Asia':'#F5B8D0','Oceanía':'#A3D69B','Antártida':'#FFFFFF'};
+  const trazo=c=>`fill="${c}" stroke="${shade(c==='#FFFFFF'?'#C3C8D6':c,c==='#FFFFFF'?0:-.32)}" stroke-width="1.6" vector-effect="non-scaling-stroke" stroke-linejoin="round"`;
+  const montes=[[214,92],[230,84],[246,96],[200,104],[262,104]].map(([x,y])=>`<path d="M${x-9} ${y+6} L${x} ${y-8} L${x+9} ${y+6}Z" fill="#B7D79F" stroke="#7FA066" stroke-width="1.6" vector-effect="non-scaling-stroke" stroke-linejoin="round"/><path d="M${x-3} ${y-3} L${x} ${y-8} L${x+3} ${y-3}Z" fill="#FFFFFF"/>`).join('');
+  const rosa=(x,y)=>`<g transform="translate(${x} ${y})"><circle r="13" fill="#FFFFFF" stroke="#9CC4E4" stroke-width="1.6" vector-effect="non-scaling-stroke"/><path d="M0 -11 L3 0 L0 11 L-3 0Z" fill="#8DBDE6"/><path d="M0 -11 L3 0 L-3 0Z" fill="#EE8A8A"/><text y="-15" font-size="8" text-anchor="middle" fill="#6FA3CB" font-weight="800" font-family="Nunito">N</text></g>`;
+  const olas=(n)=>Array.from({length:n},(_,i)=>{ const x=20+((i*97)%360), y=12+((i*53)%200); return `<path d="M${x} ${y} q5 -4 10 0 q5 4 10 0" fill="none" stroke="#FFFFFF" stroke-width="1.6" stroke-linecap="round" opacity=".8"/>`; }).join('');
   addHTML(root, `<div class="abs" style="inset:0 0 var(--tbar-h) 0;background:#E3F0FA"></div><div id="mp" class="abs" style="inset:0 0 var(--tbar-h) 0"></div>
     <div class="tbar"><button data-m="isla" class="on">🏝️ Mi isla</button><button data-m="mundo">🌎 El mundo</button><button id="rs">🔄</button></div>`);
   const mp=root.querySelector('#mp');
@@ -140,9 +155,10 @@ function toyMaps(root){
     const W=mp.clientWidth, H=mp.clientHeight; const sc=Math.min((W-16)/400,(H*.5)/224), ox=(W-400*sc)/2, oy=56;
     const isla=mode==='isla'; const items = isla ? PL.filter(p=>p[3]<=lv) : CONT.slice(0, lv===1?4:7);
     let svg=`<svg class="abs" style="left:${ox}px;top:${oy}px;width:${400*sc}px;height:${224*sc}px" viewBox="0 0 400 224">`;
-    if (isla) svg+=`<path d="${ISLA}" fill="#CFE6B8" stroke="#8AA368" stroke-width="2.5"/><path d="${BORDE}" stroke="#8AA368" stroke-width="2" stroke-dasharray="5 4" fill="none"/><text x="70" y="70" font-size="12" fill="#8AA368" font-weight="700" font-family="Nunito">HAITÍ</text><text x="230" y="110" font-size="12" fill="#6F8A55" font-weight="700" font-family="Nunito">REP. DOMINICANA</text><text x="300" y="20" font-size="11" fill="#6FA3CB" font-family="Nunito">Océano Atlántico</text><text x="230" y="214" font-size="11" fill="#6FA3CB" font-family="Nunito">Mar Caribe</text>`;
-    else svg+=CONT.map(c=>`<path d="${c[1]}" fill="#CFE6B8" stroke="#8AA368" stroke-width="2"/>`).join('');
-    if (lv<3) svg+=items.map(it=>{ const [x,y]=isla?[it[1],it[2]]:[it[2],it[3]]; return `<circle cx="${x}" cy="${y}" r="7" fill="#fff" stroke="#D9946C" stroke-width="3"/>`; }).join('');
+    svg+=`<rect x="0" y="0" width="400" height="224" rx="16" fill="#BFE1F5"/>${olas(isla?9:12)}`;
+    if (isla) svg+=`<ellipse cx="98" cy="104" rx="17" ry="5" ${trazo('#CFE6B8')}/><ellipse cx="378" cy="162" rx="10" ry="3.5" ${trazo('#CFE6B8')}/><path d="${ISLA}" ${trazo('#CFE6B8')}/>${montes}<path d="${BORDE}" stroke="#7FA066" stroke-width="1.6" stroke-dasharray="4 4" fill="none" vector-effect="non-scaling-stroke"/><text x="60" y="84" font-size="12" fill="#6F8A55" font-weight="800" font-family="Nunito">HAITÍ</text><text x="258" y="124" font-size="11" fill="#6F8A55" font-weight="800" font-family="Nunito" text-anchor="middle">REP. DOMINICANA</text><text x="250" y="16" font-size="10" fill="#5F93BB" font-weight="700" font-family="Nunito">Océano Atlántico</text><text x="70" y="206" font-size="10" fill="#5F93BB" font-weight="700" font-family="Nunito">Mar Caribe</text>${rosa(26,30)}`;
+    else svg+=CONT.map(c=>`<path d="${c[1]}" ${trazo(CCOL[c[0]])}/>`).join('')+rosa(28,196);
+    if (lv<3) svg+=items.map(it=>{ const [x,y]=isla?[it[1],it[2]]:[it[2],it[3]]; return `<circle cx="${x}" cy="${y}" r="6" fill="#FFFFFF" stroke="#E07A6A" stroke-width="2.4" vector-effect="non-scaling-stroke"/><circle cx="${x}" cy="${y}" r="2.2" fill="#E07A6A"/>`; }).join('');
     svg+='</svg>'; mp.innerHTML=svg+`<div class="abs" style="left:0;right:0;top:${oy+224*sc+6}px;text-align:center;font-size:var(--fs-2xs)" class="muted">${isla?'Mapa simplificado de la isla La Española':'Mapa simplificado del mundo'}</div>`;
     let left=items.length; const top0=oy+224*sc+30;
     shuffle(items).forEach((it,j)=>{ const name=it[0]; const [tx,ty]=isla?[it[1],it[2]]:[it[2],it[3]];
@@ -221,7 +237,7 @@ function toyLab(root){
     const mg=document.createElement('div'); mg.className='abs'; mg.innerHTML=ilu('iman','1em'); mg.style.cssText=`left:${W/2-30}px;top:60px;font-size:var(--fs-7xl);z-index:5`; lb.appendChild(mg);
     let found=0; const total=OB.filter(o=>o[2]).length;
     const tick=()=>{ const mx=parseFloat(mg.style.left)+30, my=parseFloat(mg.style.top)+40;
-      items.forEach((it,k)=>{ if (it.stuck){ it.el.style.left=(mx-20+((k%3)-1)*22)+'px'; it.el.style.top=(my+10+Math.floor(k/3)%2*14)+'px'; return; }
+      items.forEach((it,k)=>{ if (it.stuck){ it.el.style.left=(mx-20+((k%3)-1)*22)+'px'; it.el.style.top=(my+2+Math.floor(k/3)%2*12)+'px'; return; }
         if (it.o[2] && Math.hypot(it.x+18-mx,it.y+18-my)<80){ it.stuck=true; note(1046,.12,'triangle',.08); temblar(mg,{px:3,ms:300}); if(it.el.animate&&!RM) it.el.animate([{transform:'scale(1.35)'},{transform:'scale(1)'}],{duration:320,easing:'ease-out'}); speak(`¡El imán atrae ${it.o[1]==='tijeras'?'las':'el'} ${it.o[1]}!`); found++;
           if (found===total){ setTimeout(()=>win(lv>1?'¡Encontraste todo! El imán atrae los objetos de hierro y acero':'¡Lo encontraste todo!'),600); } } }); };
     dragify(mg, lb, {drop:tick}); const iv=setInterval(()=>{ if(mg.classList.contains('drag')) tick(); },120); cleanup.push(()=>clearInterval(iv));
