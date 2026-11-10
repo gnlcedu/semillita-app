@@ -6,12 +6,13 @@
 - [ ] Publicar una primera versión (`npm run build` + Netlify o Vercel).
 
 ## Fase 2 · Mejora gráfica (2–3 semanas)
-- [ ] Crear `public/js/ilustraciones.js` con la biblioteca SVG (guía en GUIA-ILUSTRACIONES.md).
-- [ ] Cambiar los emojis de los juguetes más usados: Pintar, Mi jardín, Colmado, Música y Acuario.
-- [ ] Íconos ilustrados para las 27 tarjetas del inicio.
-- [ ] Escenarios por capas (cielo, fondo, suelo) con movimiento suave al tocar.
-- [ ] El animalito dentro de cada escena (regando, atendiendo, tocando).
-- [ ] Transiciones entre pantallas y animaciones de rebote y aplastado.
+- [x] Biblioteca de ilustraciones: SVG propios (`08-ilustraciones.js`) + gráficos de Kenney CC0 (`npm run kenney`).
+- [x] Cambiar los emojis de los juguetes más usados: Pintar, Mi jardín, Colmado, Música y Acuario.
+- [x] Íconos ilustrados para las 27 tarjetas del inicio.
+- [x] Escenarios por capas (cielo, fondo, suelo) con movimiento suave al tocar.
+- [x] El animalito dentro de cada escena (regando, atendiendo, tocando).
+- [x] Transiciones entre pantallas y animaciones de rebote y aplastado.
+- Detalle completo en `docs/PLAN-MEJORA-GRAFICA.md`; revisión en `docs/REVISION-VISUAL.md`; licencias en `docs/LICENCIAS.md`.
 
 ## Fase 3 · Sonido (1 semana)
 - [ ] Grabar o licenciar sonidos: animales, agua, instrumentos y aplausos.

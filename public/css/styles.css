@@ -55,7 +55,7 @@ h1,h2,h3{margin:0;font-weight:800}
 .icon-btn{width:var(--tap-min);height:var(--tap-min);flex:none;border-radius:var(--r-sm);background:var(--card);border:var(--bw) solid var(--line-2);font-size:var(--fs-lg);display:grid;place-items:center;box-shadow:var(--sh-btn)}
 .card{background:var(--card);border-radius:var(--r-lg);padding:var(--s-5);border:var(--bw) solid var(--line);box-shadow:var(--sh-2)}
 .logo{font-size:var(--fs-3xl);font-weight:800;letter-spacing:-.5px}
-.logo span{color:var(--mintD)}
+.logo span{color:#4C8F6C} /* AA texto grande: 3.6:1 */
 /* perfiles */
 .profiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:var(--s-4);margin:var(--s-6) 0}
 .pcard{background:var(--card);border:var(--bw) solid var(--line);border-radius:var(--r-lg);padding:var(--s-5) var(--s-3);text-align:center;box-shadow:var(--sh-2)}
@@ -77,7 +77,7 @@ label.lb{display:block;font-weight:800;margin:var(--s-5) 0 var(--s-2)}
 .area{border-radius:var(--r-xl);padding:var(--s-5);text-align:left;min-height:150px;display:flex;flex-direction:column;gap:var(--s-2);border:var(--bw) solid rgba(74,70,88,.06);box-shadow:var(--sh-btn)}
 .area .ic{font-size:var(--fs-5xl)}
 .area b{font-size:var(--fs-md);line-height:1.15}
-.area small{color:var(--ink);opacity:.7;font-weight:600}
+.area small{color:#5A566B;font-weight:700} /* AA: ≥5.3:1 sobre todas las tarjetas pastel */
 .bar{height:8px;border-radius:var(--r-xs);background:rgba(255,255,255,.75);overflow:hidden;margin-top:auto}
 .bar i{display:block;height:100%;border-radius:var(--r-xs)}
 .bg-peach{background:var(--peach)}.bg-rose{background:var(--rose)}.bg-mint{background:var(--mint)}.bg-sky{background:var(--sky)}.bg-lav{background:var(--lav)}.bg-butter{background:var(--butter)}.bg-sage{background:var(--sage)}
@@ -151,7 +151,7 @@ table{width:100%;border-collapse:collapse;font-size:var(--fs-sm)}
 th,td{text-align:left;padding:var(--s-2) var(--s-2);border-bottom:1px solid var(--line)}
 th{color:var(--soft);font-weight:700;font-size:var(--fs-xs)}
 .toggle{display:flex;align-items:center;justify-content:space-between;padding:var(--s-3) 0;font-weight:700}
-.sw{width:52px;height:30px;border-radius:var(--r-xl);background:var(--line);position:relative}
+.sw{width:52px;height:30px;border-radius:var(--r-xl);background:var(--line);background-clip:padding-box;position:relative;box-sizing:content-box;border:7px solid transparent;margin:-7px} /* área táctil de 44 px sin cambiar el dibujo */
 .sw:after{content:"";position:absolute;width:24px;height:24px;border-radius:50%;background:var(--card);top:3px;left:3px;transition:left .2s}
 .sw.on{background:var(--mintD)}.sw.on:after{left:25px}
 .modal{position:fixed;inset:0;background:var(--scrim);display:grid;place-items:center;padding:var(--s-5);z-index:20}
@@ -422,3 +422,10 @@ input[type=range].sz{width:110px;accent-color:var(--lavD);flex:none}
 .lvup-pet{display:grid;place-items:center;margin:0 0 var(--s-2)}
 .lvup-items{display:flex;flex-wrap:wrap;gap:var(--s-2);justify-content:center}
 @keyframes medal{0%{transform:translateY(-60px) rotate(0);opacity:0}30%{transform:translateY(0) rotate(10deg);opacity:1}55%{transform:rotate(-7deg)}75%{transform:rotate(4deg)}100%{transform:rotate(0)}}
+
+/* =========================================================
+   REVISIÓN FINAL · fase 9 (docs/REVISION-VISUAL.md)
+   ========================================================= */
+.vt{min-width:var(--tap-min);min-height:var(--tap-min)}
+#cl2 button{position:relative}#cl2 button:after{content:"";position:absolute;inset:-6px}
+@media (max-width:400px){.toyhead{gap:6px}.toyhead h2{font-size:var(--fs-sm)}.toyhead .thi .ilu{width:30px!important;height:30px!important}.toyhead .chip:not(.vt){padding:0 var(--s-2)}.tbub{font-size:var(--fs-sm);max-width:80%}}

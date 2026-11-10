@@ -23,7 +23,7 @@ Rama: `mejora-grafica` · Un commit al cerrar cada fase · Estado: marcar `[x]` 
 - [x] Fase 6 · El animalito dentro de cada escena
 - [x] Fase 7 · Animaciones y transiciones
 - [x] Fase 8 · Recompensas vistosas
-- [ ] Fase 9 · Revisión final de calidad
+- [x] Fase 9 · Revisión final de calidad
 
 ---
 
@@ -232,9 +232,12 @@ Cada subfase rehace la **presentación** de sus juegos (escena, objetos, barra, 
   - El álbum de stickers conserva su diseño actual (los stickers son emojis guardados en el perfil).
 
 ## Fase 9 · Revisión final de calidad
-- [ ] Recorrer cada pantalla en 390 px y 768 px; lista de problemas en `docs/REVISION-VISUAL.md` y corregirlos (incluye los pendientes anotados en fases anteriores).
-- [ ] Contraste WCAG AA (4.5:1 texto normal, 3:1 texto grande e íconos).
-- [ ] Peso de la app y fluidez en gama baja.
-- [ ] Verificar que `docs/LICENCIAS.md` lista cada archivo de Kenney en uso.
-- [ ] Actualizar `CLAUDE.md` (tokens, `ilu()`/`emo()`/`kic()`, Kenney, `scene()`, animaciones) y `docs/HOJA-DE-RUTA.md`.
-- [ ] Build · commit final `Fase 9: revisión de calidad`.
+- [x] Recorrer cada pantalla en 390 px y 768 px; lista de problemas en `docs/REVISION-VISUAL.md` y corregirlos (incluye los pendientes anotados en fases anteriores).
+- [x] Contraste WCAG AA (4.5:1 texto normal, 3:1 texto grande e íconos).
+- [x] Peso de la app y fluidez en gama baja.
+- [x] Verificar que `docs/LICENCIAS.md` lista cada archivo de Kenney en uso.
+- [x] Actualizar `CLAUDE.md` (tokens, `ilu()`/`emo()`/`kic()`, Kenney, `scene()`, animaciones) y `docs/HOJA-DE-RUTA.md`.
+- [x] Build · commit final `Fase 9: revisión de calidad`.
+- Notas de la fase 9:
+  - Auditoría automática (desborde, textos cortados, botones < 40 px, contraste AA) en 34 pantallas a 390 y 768 px, validada con un caso trampa. Resultado en docs/REVISION-VISUAL.md: 13 problemas corregidos, 0 pendientes reales.
+  - CLAUDE.md actualizado a v0.6 con el sistema visual, Kenney, escenas, animalito, movimiento y recompensas.
