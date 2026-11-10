@@ -582,7 +582,7 @@ function sparks(el, n=9){
 }
 function confetti(){
   if (RM) return; const cols=['#FADFCC','#F6D8E1','#D2EDDF','#D6E9F6','#E2DCF5','#F8EFC9','#D9946C','#8F82C6','#6FAF8F'];
-  for (let i=0;i<45;i++){ const c=document.createElement('div'); c.className='conf'; c.style.left=Math.random()*100+'vw'; c.style.background=pick(cols);
+  for (let i=0;i<26;i++){ const c=document.createElement('div'); c.className='conf'; c.style.left=Math.random()*100+'vw'; c.style.background=pick(cols);
     c.style.animationDuration=(2+Math.random()*2)+'s'; c.style.animationDelay=(Math.random()*.6)+'s'; document.body.appendChild(c); setTimeout(()=>c.remove(),4800); }
 }
 function flyTo(el, targetId='msc'){
@@ -800,7 +800,7 @@ function vResult(){
   const msg = stars===3?'¡Fantástico!':stars===2?'¡Muy buen trabajo!':stars===1?'¡Vas muy bien!':'¡Practica otra vez, tú puedes!';
   app.innerHTML = `<div class="result">
     ${mascot(prof().avatar,110,'msc',stars?'dance':'')}<h2 style="margin-top:var(--s-2)">${msg}</h2>
-    <div class="big-stars">${'⭐'.repeat(stars)}${'<span style="opacity:.25">⭐</span>'.repeat(3-stars)}</div>
+    <div class="big-stars">${[0,1,2].map(i=>`<span class="rstar ${i<stars?'on':''}" style="animation-delay:${.3+i*.25}s" aria-hidden="true">${typeof ilu==='function'&&ilu('estrella_oro')?ilu(i<stars?'estrella_oro':'estrella_plata','1em'):'⭐'}</span>`).join('')}<span class="sr">${stars} de 3 estrellas</span></div>
     <p class="muted" style="font-size:var(--fs-md);font-weight:700">${isMem?`${correct} parejas en ${total} intentos`:`${correct} de ${total} correctas`}</p>
     <div class="btns">
       ${next && stars>0 ? `<button class="btn full" id="nx">Siguiente: ${GM[next.gid].name} · ${LEVELS[next.l-1]}</button>`:''}

@@ -22,7 +22,7 @@ Rama: `mejora-grafica` · Un commit al cerrar cada fase · Estado: marcar `[x]` 
 - [x] Fase 5 · Reconstrucción visual de los juegos (5A–5E)
 - [x] Fase 6 · El animalito dentro de cada escena
 - [x] Fase 7 · Animaciones y transiciones
-- [ ] Fase 8 · Recompensas vistosas
+- [x] Fase 8 · Recompensas vistosas
 - [ ] Fase 9 · Revisión final de calidad
 
 ---
@@ -220,11 +220,16 @@ Cada subfase rehace la **presentación** de sus juegos (escena, objetos, barra, 
 
 ## Fase 8 · Recompensas vistosas
 **Archivos:** `03-niveles-ingenio.js` (`win`), `04-personajes.js` (XP, stickers), `styles.css`.
-- [ ] Estrellas (Physics/Platformer) que vuelan hasta el contador.
-- [ ] Stickers con efecto de despegarse; álbum con animales de Animal Pack Redux y comida del Food Kit.
-- [ ] Pantalla de subir de nivel con medalla (Medals) y la ropa nueva del animalito.
-- [ ] Alegre sin ser ruidoso: pocas partículas, ≤ 2 s; versión estática con movimiento reducido.
-- [ ] Build · commit `Fase 8: recompensas`.
+- [x] Estrellas (Physics/Platformer) que vuelan hasta el contador.
+- [x] Stickers con efecto de despegarse; álbum con animales de Animal Pack Redux y comida del Food Kit.
+- [x] Pantalla de subir de nivel con medalla (Medals) y la ropa nueva del animalito.
+- [x] Alegre sin ser ruidoso: pocas partículas, ≤ 2 s; versión estática con movimiento reducido.
+- [x] Build · commit `Fase 8: recompensas`.
+- Notas de la fase 8:
+  - 11-recompensas.js: al ganar, 3 estrellas de Kenney vuelan hasta el animalito del encabezado; en el resultado de los retos las estrellas aparecen una a una (oro ganadas, plata grises).
+  - giveSticker() y addXP() conservan su lógica y los mismos datos guardados; solo cambia la celebración: sticker que se despega y pantalla de subir de nivel con medalla (Kenney Medals) y el animalito estrenando la ropa nueva.
+  - Confeti reducido de 45 a 26 piezas para que no sea sobreestimulante.
+  - El álbum de stickers conserva su diseño actual (los stickers son emojis guardados en el perfil).
 
 ## Fase 9 · Revisión final de calidad
 - [ ] Recorrer cada pantalla en 390 px y 768 px; lista de problemas en `docs/REVISION-VISUAL.md` y corregirlos (incluye los pendientes anotados en fases anteriores).

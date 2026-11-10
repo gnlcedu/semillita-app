@@ -396,3 +396,29 @@ input[type=range].sz{width:110px;accent-color:var(--lavD);flex:none}
 @keyframes breathe{0%,100%{transform:scale(1,1)}50%{transform:scale(1.03,.97)}}
 /* productos del colmado y fichas: pequeño salto al aparecer en la funda */
 #bg>span .ilu{animation:popin .3s both}
+/* =========================================================
+   RECOMPENSAS · fase 8
+   ========================================================= */
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.flystar{position:fixed;width:38px;height:38px;z-index:70;pointer-events:none;transform:translate(-50%,-50%)}
+/* estrellas del resultado */
+.big-stars{display:flex;justify-content:center;gap:var(--s-2);font-size:72px;letter-spacing:0}
+.rstar{display:inline-block;line-height:0;animation:starIn .55s var(--ease-pop) backwards}
+.rstar:not(.on){opacity:.35;filter:grayscale(1)}
+@keyframes starIn{from{transform:scale(0) rotate(-90deg);opacity:0}to{transform:none}}
+/* sticker que se despega */
+.stk-peel{position:fixed;left:50%;top:14px;transform:translateX(-50%);z-index:65;display:flex;align-items:center;gap:var(--s-3);background:var(--card);border:var(--bw) solid var(--line);border-radius:var(--r-lg);padding:var(--s-2) var(--s-4) var(--s-2) var(--s-2);box-shadow:var(--sh-3);font-weight:800;pointer-events:none;transition:opacity .35s,transform .35s;white-space:nowrap}
+.stk-peel.out{opacity:0;transform:translate(-50%,-20px)}
+.stk-card{position:relative;width:66px;height:66px;flex:none;border-radius:18px;background:#fff;box-shadow:0 0 0 3px #fff,0 0 0 5px var(--line-2),0 6px 10px rgba(74,70,88,.18);display:grid;place-items:center;font-size:44px;line-height:1;transform-origin:15% 90%;animation:peel .95s cubic-bezier(.3,1.35,.5,1) backwards}
+.stk-fold{position:absolute;right:-3px;top:-3px;width:24px;height:24px;border-radius:0 16px 0 8px;background:linear-gradient(225deg,var(--bg) 49%,#E4DED4 51%);box-shadow:-2px 2px 3px rgba(74,70,88,.12);animation:fold .7s ease-out .35s forwards}
+@keyframes peel{0%{transform:perspective(320px) rotateX(70deg) rotate(-16deg) scale(.5);opacity:0}45%{transform:perspective(320px) rotateX(-14deg) rotate(6deg) scale(1.12);opacity:1}75%{transform:perspective(320px) rotateX(5deg) rotate(-3deg) scale(.97)}100%{transform:none}}
+@keyframes fold{to{width:0;height:0;box-shadow:none}}
+/* pantalla de subir de nivel */
+.lvup{position:fixed;inset:0;z-index:80;background:var(--scrim);display:grid;place-items:center;padding:var(--s-5);transition:opacity .3s}
+.lvup.out{opacity:0}
+.lvup-card{position:relative;width:100%;max-width:360px;background:var(--card);border-radius:var(--r-xl);padding:76px var(--s-5) var(--s-5);text-align:center;box-shadow:var(--sh-3);animation:popin .45s var(--ease-pop) backwards}
+.lvup-card h2{font-size:var(--fs-2xl)}
+.lvup-medal{position:absolute;left:50%;top:-58px;width:66px;margin-left:-33px;line-height:0;transform-origin:50% 0;animation:medal 1.6s ease-in-out .2s both}
+.lvup-pet{display:grid;place-items:center;margin:0 0 var(--s-2)}
+.lvup-items{display:flex;flex-wrap:wrap;gap:var(--s-2);justify-content:center}
+@keyframes medal{0%{transform:translateY(-60px) rotate(0);opacity:0}30%{transform:translateY(0) rotate(10deg);opacity:1}55%{transform:rotate(-7deg)}75%{transform:rotate(4deg)}100%{transform:rotate(0)}}
