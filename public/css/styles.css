@@ -291,7 +291,13 @@ th{color:var(--soft);font-weight:700;font-size:var(--fs-xs)}
 input[type=range].sz{width:110px;accent-color:var(--lavD);flex:none}
 /* animalito SVG, teclado, lectura y cuentos (antes en 07-aprender-adultos.js) */
 .mascot .body .crt{width:calc(var(--ms) * 1.2);height:calc(var(--ms) * 1.2);display:block;overflow:visible}
-.crt .eh,.crt .es,.crt .ez,.crt .mh,.crt .ms{display:none}
+.crt .eh,.crt .es,.crt .ez,.crt .mh,.crt .ms,.crt .ew,.crt .et,.crt .mw,.crt .mt{display:none}
+.mascot.surprised .crt .eo,.mascot.surprised .crt .mo,.mascot.think .crt .eo,.mascot.think .crt .mo{display:none}
+.mascot.surprised .crt .ew,.mascot.surprised .crt .mw,.mascot.think .crt .et,.mascot.think .crt .mt{display:inline}
+.mascot.surprised .body{animation:jolt .5s ease}
+.mascot.think .body{animation:ponder 2.4s ease-in-out infinite}
+@keyframes jolt{0%,100%{transform:none}30%{transform:translateY(-10px) scale(1.06)}}
+@keyframes ponder{0%,100%{transform:rotate(0)}50%{transform:rotate(-6deg)}}
 .mascot.happy .crt .eo,.mascot.happy .crt .mo,.mascot.dance .crt .eo,.mascot.dance .crt .mo{display:none}
 .mascot.happy .crt .eh,.mascot.happy .crt .mh,.mascot.dance .crt .eh,.mascot.dance .crt .mh{display:inline}
 .mascot.sad .crt .eo,.mascot.sad .crt .mo{display:none}.mascot.sad .crt .es,.mascot.sad .crt .ms{display:inline}
@@ -352,3 +358,24 @@ input[type=range].sz{width:110px;accent-color:var(--lavD);flex:none}
 /* fase 5D: canastas tejidas (Ordenar) y caritas en las figuras (Encaje) */
 .basket{border-radius:18px 18px 34px 34px;background:repeating-linear-gradient(90deg,rgba(0,0,0,.05) 0 3px,transparent 3px 14px),repeating-linear-gradient(0deg,#E7CFA6 0 10px,#DCBF92 10px 20px);border:4px solid #C99B6E;box-shadow:inset 0 8px 0 rgba(255,255,255,.3),var(--sh-btn)}
 .shface{position:absolute;left:50%;top:52%;width:52%;transform:translate(-50%,-50%);pointer-events:none;-webkit-user-drag:none}
+/* =========================================================
+   ANIMALITO EN LA ESCENA (scenePet) · fase 6
+   La caja del animalito mide 1.2 × --ps (igual que creature() dentro de .mascot).
+   ========================================================= */
+.scene-pet{position:absolute;z-index:4;pointer-events:none;width:calc(var(--ps) * 1.2)}
+.scene-pet .mascot{display:flex}
+.scene-pet .pet-prop{position:absolute;pointer-events:none;line-height:0}
+.scene-pet .pet-prop .ilu{width:100%!important;height:100%!important}
+/* jardín: regadera en la mano */
+.pet-garden .pet-prop{right:-46%;top:30%;width:62%;height:62%;transform:rotate(-14deg);transform-origin:20% 80%;animation:water 3.2s ease-in-out infinite}
+@keyframes water{0%,70%,100%{transform:rotate(-14deg)}80%,90%{transform:rotate(-40deg)}}
+/* colmado: delantal */
+.pet-shop .pet-prop{left:24%;top:52%;width:52%;height:40%}
+/* música: el instrumento al lado */
+.pet-music .pet-prop{right:-62%;top:26%;width:66%;height:66%;animation:bob 1.6s ease-in-out infinite}
+/* acuario: careta de buceo sobre los ojos y nado suave */
+.pet-diver .pet-prop{left:14%;top:34%;width:72%;height:34%}
+.pet-diver{animation:swim 9s ease-in-out infinite alternate}
+@keyframes swim{from{transform:translate(0,0) rotate(-4deg)}50%{transform:translate(40px,-14px) rotate(3deg)}to{transform:translate(90px,8px) rotate(-2deg)}}
+/* laboratorio: bata */
+.pet-lab .pet-prop{left:20%;top:48%;width:60%;height:44%}

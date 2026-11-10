@@ -567,10 +567,11 @@ const mname = e => MASCOTS[e] || 'tu amigo';
 function mascot(e,size=64,id='msc',cls=''){ return `<div class="mascot ${cls}" id="${id}" style="--ms:${size}px"><span class="body">${e}</span><span class="shadow"></span></div>`; }
 function speaker(html, size=60){ return `<div class="speaker">${mascot(prof().avatar,size)}<div class="bubble">${html}</div></div>`; }
 function react(mood, id='msc'){
-  const m=document.getElementById(id); if(!m) return;
-  m.classList.remove('happy','sad','talk'); void m.offsetWidth; m.classList.add(mood);
-  if (mood==='happy') sparks(m);
-  setTimeout(()=>m.classList.remove(mood), 1500);
+  /* también reacciona el animalito que está dentro de la escena (#scp) */
+  const ms=[document.getElementById(id), id==='msc'?document.getElementById('scp'):null].filter(Boolean); if(!ms.length) return;
+  ms.forEach((m,k)=>{ m.classList.remove('happy','sad','talk','surprised','think'); void m.offsetWidth; m.classList.add(mood);
+    if (mood==='happy' && k===ms.length-1) sparks(m);
+    setTimeout(()=>m.classList.remove(mood), mood==='surprised'?1800:1500); });
 }
 function sparks(el, n=9){
   if (RM) return; const r=el.getBoundingClientRect();

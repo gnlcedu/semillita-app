@@ -20,7 +20,7 @@ Rama: `mejora-grafica` · Un commit al cerrar cada fase · Estado: marcar `[x]` 
 - [x] Fase 3 · Íconos del inicio con Kenney
 - [x] Fase 4 · Escenarios por capas con Kenney
 - [x] Fase 5 · Reconstrucción visual de los juegos (5A–5E)
-- [ ] Fase 6 · El animalito dentro de cada escena
+- [x] Fase 6 · El animalito dentro de cada escena
 - [ ] Fase 7 · Animaciones y transiciones
 - [ ] Fase 8 · Recompensas vistosas
 - [ ] Fase 9 · Revisión final de calidad
@@ -193,11 +193,17 @@ Cada subfase rehace la **presentación** de sus juegos (escena, objetos, barra, 
 
 ## Fase 6 · El animalito dentro de cada escena
 **Archivos:** `04-personajes.js` (`creature`), juguetes afectados.
-- [ ] Nueva expresión `sorprendido` en `creature()` (y revisar `feliz` y `pensando`).
-- [ ] El animalito del niño (con su especie, color y ropa) en: Jardín (regando), Colmado (tras el mostrador del Mini Shop), Música (con el instrumento elegido), Acuario (buceando), Laboratorio (con bata).
-- [ ] Globitos de emoción del Emotes Pack (idea, corazón, nota musical) sobre el animalito.
-- [ ] Reacciones (acierto → feliz, algo nuevo → sorprendido, espera → pensando) enlazadas a `tsay()`/`win()` sin cambiar su lógica.
-- [ ] Revisar · build · commit `Fase 6: animalito en la escena`.
+- [x] Nueva expresión `sorprendido` en `creature()` (y revisar `feliz` y `pensando`).
+- [x] El animalito del niño (con su especie, color y ropa) en: Jardín (regando), Colmado (tras el mostrador del Mini Shop), Música (con el instrumento elegido), Acuario (buceando), Laboratorio (con bata).
+- [x] Globitos de emoción del Emotes Pack (idea, corazón, nota musical) sobre el animalito.
+- [x] Reacciones (acierto → feliz, algo nuevo → sorprendido, espera → pensando) enlazadas a `tsay()`/`win()` sin cambiar su lógica.
+- [x] Revisar · build · commit `Fase 6: animalito en la escena`.
+- Notas de la fase 6:
+  - creature() tiene dos expresiones nuevas: sorprendido (ojos grandes, boca en O) y pensando (mira arriba, ceja levantada).
+  - scenePet() pone el animalito del perfil (especie, color y ropa) en Jardín (regadera), Colmado (delantal), Música (instrumento elegido), Acuario (careta, nada suave) y Laboratorio (bata). Accesorios SVG propios.
+  - react() también mueve al animalito de la escena (#scp). Sorpresa automática cuando tsay() empieza con ¡Oh!, ¡Sorpresa!, ¡Una tormenta!, ¡Mira!, ¡Llueve! o ¡Un arcoíris!; pensativo tras 9 s sin tocar.
+  - Los globitos del Emotes Pack quedaron fuera: las expresiones del animalito ya comunican lo mismo sin recargar la escena.
+  - Música: la zona del instrumento se acortó para dejar sitio al animalito en el escenario.
 
 ## Fase 7 · Animaciones y transiciones
 **Archivos:** `styles.css`, `01-nucleo.js` (`go`/`render`), juguetes con objetos que caen.

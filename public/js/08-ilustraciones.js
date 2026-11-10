@@ -132,6 +132,10 @@ const rayos=(cx,cy,r1,r2,n,c)=>Array.from({length:n},(_,i)=>{const a=i*2*Math.PI
 const nubeSvg=(x,y,s=1)=>`<g transform="translate(${x} ${y}) scale(${s})">${P('M-26 10 Q-34 10 -34 2 Q-34 -8 -22 -8 Q-20 -22 -6 -22 Q8 -24 12 -12 Q26 -14 28 0 Q36 2 34 10 Q32 14 26 14 H-22 Q-26 14 -26 10Z',K.blanco)}${luz(-10,-12,6,3)}</g>`;
 Object.assign(ILU,{
 sol:()=>svg(`${rayos(50,50,34,46,12,'#F7C948')}${C(50,50,28,K.amarillo)}${luz(40,38,8,5)}${cara(50,54,1.1,9)}`),
+/* accesorios del animalito en escena (fase 6): se dibujan sobre creature() */
+careta:()=>svg(`${L('M8 50 Q50 40 92 50',K.ink,5)}${R(16,34,32,26,12,'#BFE3F7','fill-opacity=".85"')}${R(52,34,32,26,12,'#BFE3F7','fill-opacity=".85"')}${L('M48 46 H52',o(K.cie),4)}${luz(26,42,5,3)}${luz(62,42,5,3)}${T('M88 56 Q96 50 94 30 V8',K.amarillo,5)}${R(88,2,12,8,3,K.rosa)}`),
+bata:()=>svg(`${P('M18 22 Q50 30 82 22 L90 96 Q50 100 10 96Z','#FFFFFF')}${P('M38 26 L50 52 L62 26',K.cie,'fill="none" stroke-width="4"')}${L('M50 52 V94',o('#FFFFFF'),2.5)}${D(56,62,2.6,'#8F82C6')}${D(56,76,2.6,'#8F82C6')}${R(22,64,16,12,3,'#F4F1EC','stroke-width="2"')}${L('M26 64 V58 M30 64 V56',K.cie,2.5)}`),
+delantal:()=>svg(`${L('M30 8 Q50 22 70 8',K.rosa,4)}${P('M28 20 H72 L78 94 Q50 98 22 94Z',K.rosa)}${R(36,56,28,20,5,shade(K.rosa,.35),'stroke-width="2.5"')}${L('M16 44 Q30 40 28 30 M84 44 Q70 40 72 30',o(K.rosa),3)}${D(50,36,3,K.blanco)}`),
 w_nubes:()=>svg(`${nubeSvg(38,40,.9)}${nubeSvg(56,62,1.2)}`),
 w_lluvia:()=>svg(`${nubeSvg(50,40,1.3)}${[30,48,66].map((x,i)=>drop(x,72+(i%2)*8,.38,K.cie)).join('')}`),
 w_tormenta:()=>svg(`${nubeSvg(50,38,1.3)}${P('M54 50 L38 72 H50 L44 94 L66 66 H54 L60 50Z',K.amarillo)}`),

@@ -43,6 +43,27 @@ const SC={
 
 window.scene=(nombre,css='')=> SC[nombre] ? `<div class="scene scene-${nombre}" aria-hidden="true" style="${css}">${SC[nombre]()}</div>` : '';
 
+/* ---------- el animalito del niño dentro de la escena (fase 6) ----------
+   scenePet(root, {at, size, prop, cls}) pone su creature() (especie, color y ropa del perfil) en la escena.
+   No recibe toques. Usa id "scp": react() lo hace reaccionar junto con el del encabezado.
+   Si nadie toca el juguete en 9 s se pone pensativo. */
+window.scenePet=(root,{at='',size=64,prop='',cls=''}={})=>{
+  const p=typeof prof==='function'&&prof(); if(!p||typeof creature!=='function') return null;
+  const o=petOf(p), el=document.createElement('div');
+  el.className='scene-pet '+cls; el.style.cssText=at+`;--ps:${size}px`; el.setAttribute('aria-hidden','true');
+  el.innerHTML=`<div class="mascot" id="scp" style="--ms:${size}px"><span class="body">${creature(o.sp,o)}</span><span class="shadow"></span></div><div class="pet-prop">${prop}</div>`;
+  root.appendChild(el);
+  const m=el.querySelector('.mascot'); let last=Date.now();
+  root.addEventListener('pointerdown',()=>{ last=Date.now(); m.classList.remove('think'); },{passive:true});
+  const iv=setInterval(()=>{ if(!root.isConnected) return clearInterval(iv); if(Date.now()-last>9000 && !m.classList.contains('think')) m.classList.add('think'); },1500);
+  return el;
+};
+window.setPetProp=(root,html)=>{ const e=root.querySelector('.scene-pet .pet-prop'); if(e) e.innerHTML=html; };
+
+/* sorpresa: cuando el animalito anuncia algo inesperado ("¡Oh!", "¡Sorpresa!", "¡Una tormenta!"…) */
+if (typeof tsay==='function'){ const _tsay=tsay;
+  tsay=function(text,lang){ if (/^¡(Oh|Sorpresa|Una tormenta|Mira|Llueve|Un arcoíris)/.test(String(text))) react('surprised'); return _tsay(text,lang); }; }
+
 /* parallax suave: hasta ~10 px; se apaga solo cuando el juguete se cierra */
 window.sceneParallax=(root)=>{
   if (typeof RM!=='undefined' && RM) return;

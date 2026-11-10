@@ -156,7 +156,7 @@ function toyGarden2(root){
   const mk=(parent,big)=>{ const p=document.createElement('button'); p.style.cssText=`position:relative;width:${big?30:28}%;max-width:120px;height:150px;display:flex;flex-direction:column;justify-content:flex-end;align-items:center`;
     p.innerHTML=`<span class="bug abs" style="top:24px;right:6px;font-size:var(--fs-2xl);display:none">🐛</span><span class="thirst abs" style="top:0;left:6px;font-size:var(--fs-md);display:none">💧❗</span><span class="pt" style="font-size:var(--fs-7xl);line-height:1;transform-origin:50% 100%;transition:filter .5s,transform .5s"></span><span class="meter" style="font-size:var(--fs-2xs);height:12px;letter-spacing:-1px"></span><span style="width:100%;height:26px;border-radius:50% 50% 14px 14px;background:radial-gradient(ellipse at 50% 20%,#A47A58,#7E5A3E 70%);box-shadow:inset 0 4px 0 rgba(0,0,0,.14),0 4px 0 #6A4C34"></span>`;
     parent.appendChild(p); const pl={el:p,t:null,st:0,prog:0,water:0,bug:false,fert:0}; plots.push(pl); p.addEventListener('click',()=>tap(pl)); };
-  sceneParallax(root);
+  sceneParallax(root); scenePet(root,{at:'right:3%;top:calc((100% - var(--tbar-h)) * .46 - 92px)',size:62,prop:ilu('regadera','100%'),cls:'pet-garden'});
   const A=root.querySelector('#plotsA'), B=root.querySelector('#plotsB'); for(let i=0;i<3;i++) mk(A,false); for(let i=0;i<3;i++) mk(B,true);
   const P=pl=>PL[pl.t];
   function show(pl,anim=true){ const s=pl.el.querySelector('.pt');
@@ -269,7 +269,7 @@ function toyAquarium2(root){
       ${[8,30,66,88].map(x=>`<span class="abs" style="left:${x}%;bottom:26px;font-size:var(--fs-6xl);transform-origin:50% 100%;animation:palm 4s ease-in-out ${-x/20}s infinite;pointer-events:none">${ilu('alga','1.1em')}</span>`).join('')}
       <div id="cnt" class="abs" style="left:12px;top:12px;background:rgba(255,255,255,.85);border-radius:var(--r-sm);padding:var(--s-1) var(--s-3);font-weight:800;font-size:var(--fs-xs)"></div></div>
     <div class="tbar"><button id="ad">➕${emo('🐠')}</button><button id="dc">${emo('🏰')}</button><button id="lt">💡</button><button id="cl" aria-label="Vaciar">${kic('borrar','1em')}</button></div>`);
-  const tk=root.querySelector('#tk'); const Wt=()=>tk.clientWidth, Ht=()=>tk.clientHeight; sceneParallax(root);
+  const tk=root.querySelector('#tk'); const Wt=()=>tk.clientWidth, Ht=()=>tk.clientHeight; sceneParallax(root); scenePet(root,{at:'left:6%;top:24%',size:58,prop:ilu('careta','100%'),cls:'pet-diver'});
   const count=()=>{ const g={}; fish.forEach(f=>g[f.n]=(g[f.n]||0)+1); root.querySelector('#cnt').innerHTML=Object.entries(g).map(([n,c])=>`${c} ${emo(FISH.find(x=>x[1]===n)[0],'1.5em')}`).join('  ')||'Acuario vacío'; };
   function add(i){ if (fish.length>=18){ tsay('¡El acuario está lleno!'); return; } const [e,n,fact]=FISH[i];
     const el=document.createElement('span'); el.className='abs'; el.innerHTML=emo(e); el.style.cssText=`left:0;top:0;font-size:${n==='ballena'?62:n==='medusa'?38:42}px;will-change:transform;cursor:pointer`;
@@ -385,16 +385,16 @@ function toyMusic3(root){
   const NOTES=[[261.63,'do'],[293.66,'re'],[329.63,'mi'],[349.23,'fa'],[392,'sol'],[440,'la'],[493.88,'si'],[523.25,'do']];
   const SHARP=[[277.18,0],[311.13,1],[369.99,3],[415.3,4],[466.16,5]];
   addHTML(root, `${scene('musica','inset:0 0 var(--tbar-h) 0')}<div class="abs" style="left:8px;right:8px;top:10px;display:flex;gap:var(--s-2);overflow-x:auto;z-index:4;scrollbar-width:none">${Object.entries(INFO).map(([k,v])=>`<button class="chip" data-in="${k}" style="flex:none;gap:var(--s-1);display:inline-flex;align-items:center">${ilu(MI[k],26)} ${v[1]}</button>`).join('')}</div>
-    <div id="st" class="abs" style="left:8px;right:8px;top:58px;bottom:80px"></div>
+    <div id="st" class="abs" style="left:8px;right:8px;top:58px;bottom:150px"></div>
     <div class="tbar"><button id="inf">${kic('info')} Aprende</button><button id="tw">${kic('estrella')} Canción</button><button id="bt">${kic('musica')} Ritmo</button><button id="rc" aria-label="Grabar"><span class="recdot"></span></button><button id="pl" aria-label="Escuchar">${kic('play')}</button></div>`);
-  const st=root.querySelector('#st'); sceneParallax(root);
+  const st=root.querySelector('#st'); sceneParallax(root); scenePet(root,{at:'left:16px;bottom:76px',size:56,prop:ilu(MI[inst],'100%'),cls:'pet-music'});
   const floatNote=(el)=>{ const r=root.getBoundingClientRect(), a=el.getBoundingClientRect(); const m=document.createElement('span'); m.className='abs'; m.textContent=pick(['🎵','🎶','♪']); m.style.cssText=`left:${a.left-r.left+a.width/2-10}px;top:${a.top-r.top-6}px;font-size:var(--fs-xl);animation:up 1.1s ease-out forwards;z-index:4;pointer-events:none`; root.appendChild(m); setTimeout(()=>m.remove(),1100); };
   const bump=el=>{ el.style.animation='none'; void el.offsetWidth; el.style.animation='hit .3s ease'; };
   const log=(k,a,b)=>{ if (rec) rec.push([k,a,b,performance.now()-recStart]); };
   /* reproductor genérico */
   function playEv(k,a,b){ if (k==='t') tone2(a,b); else if (k==='d') DRUM[a](); }
   function draw(){
-    root.querySelectorAll('[data-in]').forEach(x=>x.classList.toggle('on',x.dataset.in===inst)); bowStop();
+    root.querySelectorAll('[data-in]').forEach(x=>x.classList.toggle('on',x.dataset.in===inst)); bowStop(); setPetProp(root,ilu(MI[inst],'100%'));
     const I=INFO[inst]; let h=`<div style="text-align:center;font-weight:800;margin-bottom:var(--s-2)"><span style="font-size:var(--fs-xs)" class="muted">${I[2]}</span></div>`;
     if (inst==='piano'){ h+=`<div style="position:relative;height:calc(100% - 40px);max-height:340px;display:flex;gap:3px;margin-top:var(--s-3)">${NOTES.map((n,i)=>`<button data-k="${i}" style="flex:1;background:var(--card);border:var(--bw) solid #D9D2C7;border-radius:0 0 12px 12px;display:flex;align-items:flex-end;justify-content:center;padding-bottom:var(--s-3);font-weight:800;color:var(--soft);font-size:var(--fs-xs)">${n[1]}</button>`).join('')}
       ${SHARP.map(([f,i])=>`<button data-sh="${f}" style="position:absolute;top:0;left:calc(${(i+1)*12.5}% - 5.5%);width:9%;height:58%;background:#3C3848;border-radius:0 0 8px 8px;z-index:2"></button>`).join('')}</div>`; }

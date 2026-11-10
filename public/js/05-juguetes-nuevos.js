@@ -22,12 +22,12 @@ function toyShop(root){
   addHTML(root, `<div class="abs" style="inset:0 0 var(--tbar-h) 0;background:linear-gradient(#FFF4E4 0 38%,#F3E3C9 38%)"></div>
     ${scene('colmado','inset:0 0 var(--tbar-h) 0')}
     <div class="abs" style="left:0;right:0;top:0;height:30px;background:repeating-linear-gradient(90deg,var(--c-rosa) 0 30px,var(--white) 30px 60px);border-radius:0 0 50% 50%/0 0 14px 14px;z-index:1"></div>
-    <div id="cu" class="abs" style="left:14px;top:46px;display:flex;align-items:flex-end;gap:var(--s-2);max-width:92%"></div>
+    <div id="cu" class="abs" style="left:14px;top:46px;display:flex;align-items:flex-end;gap:var(--s-2);max-width:68%;z-index:5"></div>
     <div id="sh" class="abs" style="left:10px;right:10px;top:150px;display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s-2)"></div>
     <div class="abs" style="right:14px;bottom:162px;width:84px;z-index:0;pointer-events:none">${ilu('caja','100%')}</div>
     <div id="bg" class="abs" style="left:10px;right:10px;bottom:84px;min-height:64px;background:var(--card);border:2px dashed var(--line);border-radius:var(--r-md);padding:var(--s-2);display:flex;flex-wrap:wrap;gap:var(--s-2);align-items:center"></div>
     <div class="tbar" id="tb2"></div>`);
-  const cu=root.querySelector('#cu'), sh=root.querySelector('#sh'), bg=root.querySelector('#bg'), tb=root.querySelector('#tb2'); sceneParallax(root);
+  const cu=root.querySelector('#cu'), sh=root.querySelector('#sh'), bg=root.querySelector('#bg'), tb=root.querySelector('#tb2'); sceneParallax(root); scenePet(root,{at:'right:8px;top:40px',size:60,prop:ilu('delantal','100%'),cls:'pet-shop'});
   sh.innerHTML=PROD.map((p,i)=>`<button data-p="${i}" style="background:var(--card);border:var(--bw) solid var(--line);border-radius:var(--r-md);padding:var(--s-2) 2px;display:flex;flex-direction:column;align-items:center"><span style="font-size:var(--fs-4xl)">${emo(p[0])}</span>${lv>1?`<small style="font-weight:800;background:var(--butter);border-radius:var(--r-xs);padding:0 var(--s-2)">RD$${p[3]}</small>`:`<small style="font-weight:700">${p[1]}</small>`}</button>`).join('');
   function newCustomer(){
     bag=[]; cash=[]; const who=pick(CUST); const k = lv===1?1:lv===2?rnd(1,2):rnd(2,3);
@@ -191,7 +191,7 @@ function toyLab(root){
   const lv=LV(); let mode='flota', cleanup=[];
   addHTML(root, `${scene('laboratorio','inset:0 0 var(--tbar-h) 0')}<div id="lb" class="abs" style="inset:0 0 var(--tbar-h) 0;overflow:hidden"></div>
     <div class="tbar"><button data-m="flota" class="on">🛁 ¿Flota o se hunde?</button><button data-m="iman">🧲 Imanes</button><button data-m="volcan">🌋 Volcán</button></div>`);
-  const lb=root.querySelector('#lb'); sceneParallax(root);
+  const lb=root.querySelector('#lb'); sceneParallax(root); scenePet(root,{at:'right:4px;bottom:74px',size:54,prop:ilu('bata','100%'),cls:'pet-lab'});
   function flota(){
     const OB=[['🪵','madera',1],['🪨','piedra',0],['🍎','manzana',1],['🔑','llave',0],['🦆','pato de goma',1],['⚓','ancla',0],['🧽','esponja',1],['🔩','tornillo',0],['🏐','pelota',1],['🥄','cuchara',0]];
     const oe=e=>e==='🦆'?e:emo(e); /* el pato de goma sigue como emoji: el de Kenney es un pato de granja */
