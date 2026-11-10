@@ -272,3 +272,19 @@ Para estos casos se siguen usando las ilustraciones SVG propias del mismo estilo
 - **Fondo marino:** 16 formas vectoriales de «Fish Pack» de Kenney ([OpenGameArt](https://opengameart.org/content/fish-pack-0), CC0; el mismo `fish-pack-0.zip` de la tabla de abajo, carpeta `Vector/`, descomprimida en `vendor/kenney/fish/`): algas verdes y rosadas, corales, pasto marino, rocas y siluetas de fondo. Se usan en la escena del acuario, recoloreadas y con contorno plano igual que las de tierra.
 - **Juego de plataformas:** 20 formas vectoriales de «Platformer Pack Redux» de Kenney ([OpenGameArt](https://opengameart.org/content/platformer-pack-redux-360-assets), CC0; `platformer-pack-redux-360-assets.zip`, archivo `Vector/vector_tiles.svg`, descomprimido en `vendor/kenney/plat/`): suelo con pasto, plataforma, caja, resorte, hongo, arbusto, pasto, roca, cerca, letrero, nube, estrella y otras. Los degradados se pasan a color plano y todo se recolorea a pastel. Del mismo paquete, archivo `Vector/vector_enemies.svg`, salen los obstáculos: gusano, caracol y abeja; las espinas vienen de `vector_tiles.svg`. Se usan en «El camino de la semilla» (`public/js/18-plataformas.js`). Se prefirió este paquete al «Pixel Platformer» porque es vectorial y se puede recolorear al estilo plano; el otro es pixel art.
 - **También revisado y no usado:** «Background Elements Redux» de Kenney (CC0; sus árboles solo vienen en PNG), «Flat Game BG» de OpenGameArt (CC0; colores muy fuertes), itch.io con filtro CC0 (casi todo es pixel art o isométrico).
+
+## Sonidos de animales
+
+Grabaciones de [Freesound](https://freesound.org), todas con licencia **CC0 1.0** (se buscó con el filtro «Creative Commons 0»). Son las vistas previas en MP3 de alta calidad, descargadas el 2026-11-10 a `public/sonidos/`. No piden atribución; se anota el autor por cortesía y para poder reemplazarlas. Se usan en «Granja de sonidos».
+
+| Archivo | Sonido en Freesound | Autor | Duración |
+| --- | --- | --- | --- |
+| `vaca.mp3` | [Cow - Moo 3](https://freesound.org/s/233128/) | JarredGibb | 2,1 s |
+| `cerdo.mp3` | [Pig - Multiple Snorts 2](https://freesound.org/s/233183/) | JarredGibb | 1,7 s |
+| `gallina.mp3` | [Chicken clucking 3](https://freesound.org/s/668803/) | MBPL | 1,0 s |
+| `oveja.mp3` | [Ewe baa](https://freesound.org/s/677221/) | satoristudios3 | 1,3 s |
+| `caballo.mp3` | [Renill de cavall / Horse Neigh](https://freesound.org/s/826753/) | Salsero_classic | 2,1 s |
+| `pato.mp3` | [Duck quacking](https://freesound.org/s/558858/) | DigPro120 | 1,8 s |
+| `perro.mp3` | [single bark - small to medium dog](https://freesound.org/s/630648/) | haulaway | 1,4 s |
+| `gato.mp3` | [cat meow](https://freesound.org/s/110011/) | tuberatanka | 1,5 s |
+| `chivo.mp3` | [Nigerian Dwarf Buck Goat](https://freesound.org/s/677220/) | satoristudios3 | 1,4 s |

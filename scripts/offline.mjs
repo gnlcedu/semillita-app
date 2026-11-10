@@ -28,6 +28,10 @@ let n = 0;
 html = html.replace(/<script type="module"[^>]*><\/script>\n?/g, '');
 html = html.replace(/<script src="([^"]+)"><\/script>/g, (_, src) => { n++; const js = fs.readFileSync(pub(src), 'utf8').replace(/<\/script/gi, '<\\/script');
   return `<script>/* ${src} */\n${js}\n</script>`; });
+/* sonidos grabados dentro del archivo: window.SONIDOS = { nombre: data:audio/mpeg… } */
+const dirSon = pub('/sonidos'), son = {};
+for (const f of fs.readdirSync(dirSon).filter(f => f.endsWith('.mp3'))) son[f.replace(/\.mp3$/, '')] = 'data:audio/mpeg;base64,' + fs.readFileSync(path.join(dirSon, f)).toString('base64');
+html = html.replace('<div id="app"></div>', () => `<div id="app"></div>\n<script>window.SONIDOS=${JSON.stringify(son)};</script>`);
 /* ícono */
 const icono = 'data:image/png;base64,' + fs.readFileSync(pub('/icons/icon-192.png')).toString('base64');
 html = html.replace(/<link rel="icon" href="[^"]+">/, `<link rel="icon" href="${icono}">`).replace(/<link rel="apple-touch-icon" href="[^"]+">/, `<link rel="apple-touch-icon" href="${icono}">`);
@@ -36,4 +40,4 @@ const quedan = [...html.matchAll(/<(?:script|link)[^>]+(?:src|href)="(?!data:)([
 if (quedan.length) throw new Error('Quedaron referencias a archivos externos: ' + quedan.join(', '));
 fs.mkdirSync(path.dirname(SALIDA), { recursive: true });
 fs.writeFileSync(SALIDA, html);
-console.log(`Listo: ${n} scripts, ${(fs.statSync(SALIDA).size / 1024).toFixed(0)} KB → ${path.relative(RAIZ, SALIDA)}`);
+console.log(`Listo: ${n} scripts, ${Object.keys(son).length} sonidos, ${(fs.statSync(SALIDA).size / 1024).toFixed(0)} KB → ${path.relative(RAIZ, SALIDA)}`);

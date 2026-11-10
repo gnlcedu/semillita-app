@@ -7,6 +7,21 @@ function noiseS(dur=.3, vol=.12, freq=900){ try{ AC=AC||new (window.AudioContext
 const splashS=()=>{ noiseS(.35,.18,700); note(420,.25,'sine',.06); };
 const coinS=()=>{ note(1568,.12,'square',.04); setTimeout(()=>note(2093,.25,'square',.04),80); };
 
+/* Sonidos grabados de animales (public/sonidos/*.mp3, Freesound, CC0; ver docs/LICENCIAS.md).
+   Suena la grabación y al terminar llama a luego(). Respeta el botón de voz; si el audio falla, sigue sin él.
+   En el archivo único offline, las grabaciones vienen dentro de window.SONIDOS. */
+let sonAnimal=null;
+function sonidoAnimal(nombre, luego){
+  const sigue=()=>{ if(luego){ const f=luego; luego=null; f(); } };
+  try{ if (sonAnimal){ sonAnimal.pause(); sonAnimal=null; }
+    if (S.settings.voice===false) return sigue();
+    try{ if('speechSynthesis' in window) speechSynthesis.cancel(); }catch(_){}
+    const a=new Audio((window.SONIDOS||{})[nombre]||`sonidos/${nombre}.mp3`); sonAnimal=a; a.volume=.9;
+    a.addEventListener('ended',sigue); a.addEventListener('error',sigue); const p=a.play(); if(p&&p.catch) p.catch(sigue);
+    setTimeout(()=>{ if(sonAnimal===a) sigue(); },3800);
+  }catch(e){ sigue(); }
+}
+
 /* ---------- Mi colmado ---------- */
 function toyShop(root){
   const lv=LV();
@@ -87,10 +102,12 @@ function toyFarm(root){
   ft.innerHTML = lv===1 ? `<span class="muted" style="font-weight:800;padding:0 var(--s-2)">Toca un animal ${kic('sonido','1.1em')}</span>` : lv===2 ? A.map(a=>`<button data-f="${a[5]}">${a[5]==='🍃'?ilu('hojita','1.1em'):emo(a[5])}</button>`).join('') : `<button id="q">❓ Which animal says…?</button>`;
   fm.querySelectorAll('[data-a]').forEach(b=>b.addEventListener('click',()=>{ const a=A[+b.dataset.a]; const s=b.querySelector('span'); s.style.animation='none'; void s.offsetWidth; s.style.animation='hop .7s'; sonar(b);
     if (lv===2 && food){ if (food===a[5]){ const fb=ft.querySelector('.on'); if(fb) volar(fb,s,fb.innerHTML,{arco:-90}); win(`¡Ñam! A ${a[1]==='vaca'||a[1]==='gallina'||a[1]==='oveja'?'la':'el'} ${a[1]} le gusta ${food}`); sparks(b,6); } else tsay(`Hmm, ${a[1]==='vaca'||a[1]==='gallina'||a[1]==='oveja'?'la':'el'} ${a[1]} no come eso`); food=null; ft.querySelectorAll('[data-f]').forEach(x=>x.classList.remove('on')); return; }
-    if (lv===3 && quiz){ if (a===quiz){ win(`Yes! The ${a[4]} says ${a[3]}!`); quiz=null; } else { speak(`No, the ${a[4]} says ${a[3]}`,'en-US'); } return; }
-    speak(lv===3?`The ${a[4]} says ${a[3]}`:`${a[2]} Soy ${a[1]==='vaca'||a[1]==='gallina'||a[1]==='oveja'?'la':'el'} ${a[1]}`, lv===3?'en-US':'es-ES'); }));
+    if (lv===3 && quiz){ if (a===quiz){ sonidoAnimal(a[1]); win(`Yes! The ${a[4]} says ${a[3]}!`); quiz=null; } else { sonidoAnimal(a[1],()=>speak(`No, that is the ${a[4]}`,'en-US')); } return; }
+    /* primero se oye el animal de verdad y luego el animalito dice quién es */
+    sonidoAnimal(a[1],()=>speak(lv===3?`The ${a[4]} says ${a[3]}`:`Soy ${a[1]==='vaca'||a[1]==='gallina'||a[1]==='oveja'?'la':'el'} ${a[1]}`, lv===3?'en-US':'es-ES')); }));
   ft.querySelectorAll('[data-f]').forEach(b=>b.addEventListener('click',()=>{ food=b.dataset.f; ft.querySelectorAll('[data-f]').forEach(x=>x.classList.toggle('on',x===b)); tsay('¿Quién come esto? Toca el animal'); }));
-  const q=root.querySelector('#q'); if (q) q.addEventListener('click',()=>{ quiz=pick(A); tsay(`Which animal says ${quiz[3]}?`,'en-US'); });
+  const q=root.querySelector('#q'); if (q) q.addEventListener('click',()=>{ quiz=pick(A); const z=quiz; tsay(`Which animal says ${z[3]}?`,'en-US'); setTimeout(()=>{ if(quiz===z) sonidoAnimal(z[1]); },1900); });
+  return ()=>{ if (sonAnimal){ sonAnimal.pause(); sonAnimal=null; } };
 }
 
 /* ---------- Reloj ---------- */

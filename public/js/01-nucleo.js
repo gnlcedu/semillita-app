@@ -599,7 +599,7 @@ function flyTo(el, targetId='msc'){
    ========================================================= */
 /* Estilos de voz: cambian el tono (p) y la velocidad (r) de la voz del dispositivo. El estilo se guarda en
    S.settings.voiceStyle y la voz elegida en S.settings.voiceName; si faltan, se usa «Clara» y la primera voz en español. */
-const VOCES=[{id:'clara',n:'Clara',d:'Tono normal',p:1,r:.95},{id:'dulce',n:'Dulce',d:'Aguda y suave',p:1.35,r:.9},{id:'calma',n:'Tranquila',d:'Grave y pausada',p:.8,r:.82},{id:'alegre',n:'Alegre',d:'Aguda y ágil',p:1.5,r:1.08}];
+const VOCES=[{id:'clara',n:'Clara',d:'Tono normal',p:1,r:1.2},{id:'dulce',n:'Dulce',d:'Aguda y suave',p:1.35,r:1.15},{id:'calma',n:'Tranquila',d:'Grave y pausada',p:.8,r:1.07},{id:'alegre',n:'Alegre',d:'Aguda y ágil',p:1.5,r:1.33}];
 const vozEstilo=()=>VOCES.find(v=>v.id===S.settings.voiceStyle)||VOCES[0];
 function vocesES(){ try{ return speechSynthesis.getVoices().filter(v=>v.lang.toLowerCase().startsWith('es')); }catch(e){ return []; } }
 function speak(text, lang='es-ES'){
