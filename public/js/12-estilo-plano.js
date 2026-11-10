@@ -180,14 +180,17 @@ if (document.body) defs(); else document.addEventListener('DOMContentLoaded',def
 /* ---------- escena plana de Mi jardín ---------- */
 const capa=(d,html,css='')=>`<div class="sl" data-d="${d}" style="${css}">${html}</div>`;
 const lam=(vb,body,css)=>`<svg class="sp" viewBox="${vb}" preserveAspectRatio="xMidYMax slice" aria-hidden="true" style="${css}">${body}</svg>`;
-const arbolito=(x,y,s,c=K.verde)=>`<g transform="translate(${x} ${y}) scale(${s})">${P('M-3 0 L-2 -24 H2 L3 0Z',K.cafe)}${C(0,-34,15,c)}${L('M-7 -38 Q-4 -43 1 -42',shade(c,.35),1.6)}</g>`;
 const palma=(x,y,s)=>`<g transform="translate(${x} ${y}) scale(${s})">${P('M-3 0 Q-6 -24 2 -46 L6 -45 Q0 -24 3 0Z',K.cafe)}${hoja(4,-46,-172,26,K.verde)}${hoja(4,-46,-134,22)}${hoja(4,-46,-46,22)}${hoja(4,-46,-8,26,K.verde)}</g>`;
-const casita=(x,y)=>`<g transform="translate(${x} ${y})">${R(0,-30,44,30,2,K.menta)}${P('M-5 -29 L22 -46 L49 -29Z',K.gris)}${L('M6 -33 L22 -43 M14 -31 L26 -40 M30 -31 L38 -36',K.grisO,1.2)}${R(17,-18,10,18,2,K.coral)}${R(4,-22,9,9,2,K.cielo)}${R(31,-22,9,9,2,K.cielo)}</g>`;
 const arbusto=(x,y,s,c=K.hoja)=>`<g transform="translate(${x} ${y}) scale(${s})">${P('M-20 0 Q-26 -12 -14 -16 Q-12 -28 0 -26 Q12 -30 16 -18 Q28 -14 22 0Z',c)}</g>`;
 const cerca=()=>{ let s=''; for(let x=0;x<400;x+=16) s+=P(`M${x+2} 40 V10 L${x+7} 4 L${x+12} 10 V40Z`,K.crema);
   return s+R(-4,16,408,5,2,K.crema)+R(-4,28,408,5,2,K.crema); };
+/* pieza de paisaje de 17-entorno.js (formas de Kenney, CC0): base centrada en (x,y) y alto en unidades de la lámina.
+   Lleva el contorno del estilo plano (silueta más oscura detrás). c = color único, para siluetas lejanas. */
+const ent=(n,x,y,alto,c)=>{ const e=(window.ENTORNO||{})[n]; if(!e) return ''; const w=e.w*alto/100, bor=shade(c||e.p[0][0],c?-.12:-.3);
+  return `<svg x="${x-w/2}" y="${y-alto}" width="${w}" height="${alto}" viewBox="0 0 ${e.w} 100" overflow="visible"><g fill="${bor}" stroke="${bor}" stroke-width="3.2" stroke-linejoin="round">${e.p.map(q=>`<path d="${q[1]}" vector-effect="non-scaling-stroke"/>`).join('')}</g>${e.p.map(q=>`<path d="${q[1]}" fill="${c||q[0]}"/>`).join('')}</svg>`; };
+window.ent=ent;
 const JARDIN=()=>capa(.15,`<div class="sp drift" style="left:6%;top:5%;width:26%;max-width:140px">${ilu('nube1','100%')}</div><div class="sp drift slow" style="left:60%;top:calc(5% + 26px);width:20%;max-width:110px">${ilu('nube1','100%')}</div>`)
-  +capa(.3,lam('0 0 400 110',`${P('M-20 112 Q50 34 160 62 Q230 80 270 112Z','#CDE8BE')}${P('M140 112 Q250 40 420 70 V112Z','#BCDDA8')}${arbolito(34,90,1.1)}${arbolito(66,94,.8,'#93CC9A')}${casita(226,90)}${palma(330,98,1.05)}${arbolito(372,96,.9)}`,'left:0;width:100%;bottom:calc(54% - 8px);height:calc(24% + 8px)'))
+  +capa(.3,lam('0 0 400 110',`${ent('montes',200,88,62,'#CBDDEA')}${P('M-20 112 Q50 34 160 62 Q230 80 270 112Z','#CDE8BE')}${P('M140 112 Q250 40 420 70 V112Z','#BCDDA8')}${ent('arbol_copa',128,66,24)}${ent('pino',152,68,22)}${ent('arbol',32,92,58)}${ent('pino',70,96,44)}${ent('casa_lado',236,92,36)}${ent('abeto',284,84,34)}${palma(330,98,1.05)}${ent('abeto_ancho',376,98,50)}`,'left:0;width:100%;bottom:calc(54% - 8px);height:calc(24% + 8px)'))
   +capa(.5,lam('0 0 400 40',cerca(),'left:0;width:100%;bottom:calc(54% - 3px);height:7%')+lam('0 0 400 40',`${arbusto(70,40,.9)}${arbusto(300,40,.75,K.verde)}`,'left:0;width:100%;bottom:calc(54% - 3px);height:7%'));
 if (window.SCENES) window.SCENES.jardin=JARDIN;
 })();

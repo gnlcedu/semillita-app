@@ -481,17 +481,15 @@ const capa=(d,html,css='')=>`<div class="sl" data-d="${d}" style="${css}">${html
 const lam=(vb,body,css,par='xMidYMax slice')=>`<svg class="sp" viewBox="${vb}" preserveAspectRatio="${par}" aria-hidden="true" style="${css}">${body}</svg>`;
 const ilus=(n,css,cls='')=>`<div class="sp ${cls}" style="${css}">${ilu(n,'100%')}</div>`;
 const colinas=(c1,c2)=>P('M-20 112 Q50 34 160 62 Q230 80 270 112Z',c1)+P('M140 112 Q250 40 420 70 V112Z',c2);
-const pino=(x,y,s)=>`<g transform="translate(${x} ${y}) scale(${s})">${P('M-2 0 V-10 H2 V0Z',K.cafe)}${P('M0 -46 L13 -10 H-13Z',K.hoja2)}</g>`;
-const arbolito=(x,y,s,c=K.hoja2)=>`<g transform="translate(${x} ${y}) scale(${s})">${P('M-3 0 L-2 -24 H2 L3 0Z',K.cafe)}${C(0,-34,15,c)}</g>`;
 const cercaPlana=()=>{ let s=''; for(let x=0;x<400;x+=16) s+=P(`M${x+2} 40 V10 L${x+7} 4 L${x+12} 10 V40Z`,K.crema); return s+R(-4,16,408,5,2,K.crema)+R(-4,28,408,5,2,K.crema); };
-const S=window.SCENES;
+const S=window.SCENES, ent=window.ent, montes=(c='#CBDDEA')=>ent('montes',200,88,62,c);
 S.acuario=()=>capa(.2,ilus('alga','left:4%;bottom:30px;width:18%;max-width:110px','sway')+ilus('alga','left:42%;bottom:30px;width:13%;max-width:80px','sway slow')+ilus('alga','right:4%;bottom:30px;width:20%;max-width:120px','sway'),'opacity:.5')
   +capa(.45,lam('0 0 400 60',`${P('M-10 60 V30 Q60 14 140 26 Q220 40 300 22 Q360 14 410 24 V60Z','#F2DDB0')}${P('M96 32 Q104 18 120 22 Q132 26 128 34Z',K.gris)}${P('M270 30 Q276 20 290 22 Q300 26 296 32Z',shade(K.gris,-.05))}${D(60,44,3,shade('#F2DDB0',-.1))}${D(200,48,2.5,shade('#F2DDB0',-.1))}${D(340,42,3,shade('#F2DDB0',-.1))}`,'left:0;width:100%;bottom:0;height:64px')+ilus('coral','left:24%;bottom:24px;width:12%;max-width:64px')+ilus('alga','left:56%;bottom:26px;width:10%;max-width:56px','sway'));
 S.granja=()=>capa(.12,`<div class="sp spin" style="right:6%;top:3%;width:16%;max-width:70px">${ilu('sol','100%')}</div>`+ilus('nube1','left:8%;top:5%;width:24%;max-width:120px','drift')+ilus('nube1','left:56%;top:calc(5% + 18px);width:18%;max-width:96px','drift slow'))
-  +capa(.3,lam('0 0 400 110',`${colinas('#CDE8BE','#BCDDA8')}${arbolito(30,100,1.1)}${arbolito(62,104,.8,'#93CC9A')}${PL.granero().replace('<svg ','<svg x="300" y="38" width="76" height="76" ')}`,'left:0;width:100%;bottom:calc(70% - 8px);height:calc(20% + 8px)'))
+  +capa(.3,lam('0 0 400 110',`${montes()}${colinas('#CDE8BE','#BCDDA8')}${ent('pino',136,70,24)}${ent('arbol_copa',160,72,22)}${ent('arbol',30,102,56)}${ent('pino_oscuro',66,106,44)}${ent('arbol_alto',262,92,44)}${PL.granero().replace('<svg ','<svg x="300" y="38" width="76" height="76" ')}`,'left:0;width:100%;bottom:calc(70% - 8px);height:calc(20% + 8px)'))
   +capa(.45,lam('0 0 400 40',cercaPlana(),'left:0;width:100%;bottom:calc(70% - 3px);height:6%'));
-S.tiempo=()=>capa(.3,lam('0 0 400 110',`${colinas('#C3E2B0','#B2D89C')}${pino(250,104,1)}${pino(270,108,.8)}${arbolito(330,104,1)}${arbolito(110,106,.8,'#93CC9A')}`,'left:0;width:100%;bottom:21%;height:26%'));
+S.tiempo=()=>capa(.3,lam('0 0 400 110',`${montes('#CFDDE8')}${colinas('#C3E2B0','#B2D89C')}${ent('arbol_copa',108,104,44)}${ent('pino',248,102,52)}${ent('pino_oscuro',274,106,40)}${ent('arbol',332,104,54)}${ent('abeto',372,106,40)}`,'left:0;width:100%;bottom:21%;height:26%'));
 S.bloques=()=>capa(.15,ilus('nube1','left:8%;top:6%;width:24%;max-width:120px','drift')+ilus('nube1','left:52%;top:calc(6% + 22px);width:18%;max-width:96px','drift slow'))
-  +capa(.35,lam('0 0 400 110',colinas('#D6EBC6','#C8E3B2'),'left:0;width:100%;bottom:14px;height:24%'));
+  +capa(.35,lam('0 0 400 110',`${montes('#D5E3EE')}${colinas('#D6EBC6','#C8E3B2')}${ent('arbol',36,98,46)}${ent('pino',66,100,36)}${ent('arbol_copa',150,76,26)}${ent('casa',226,84,28)}${ent('abeto',252,84,32)}${ent('pino',346,90,38)}${ent('arbol_copa',376,94,32)}`,'left:0;width:100%;bottom:14px;height:24%'));
 
 })();

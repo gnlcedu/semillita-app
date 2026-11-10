@@ -12,6 +12,7 @@ App educativa para niños de 5 a 12 años (República Dominicana), estilo Pok Po
   5. `/kenney/kenney.js` — **generado** por `npm run kenney`: lista de imágenes de Kenney (`window.KENNEY`).
   6. `08-ilustraciones.js` — `ILU` (SVG propios), `ilu()`, `emo()`, `kic()`, `toyIcon()`, `emoDOM()`.
   7. `09-escenarios.js` — `scene()`, `sceneParallax()`, `scenePet()`, `setPetProp()`; envuelve `tsay` para la expresión de sorpresa.
+  - `17-entorno.js` (se carga justo antes de `12`) — **generado** por `npm run entorno`: piezas de paisaje 2D (`window.ENTORNO`: pinos, árboles, casas, cerca, montañas; formas de Kenney «Background Elements», CC0, recoloreadas a pastel). Se dibujan con `ent(nombre, x, y, alto, color)`, definido en `12`, que les pone el contorno plano.
   8. `12-estilo-plano.js` — **estilo plano** (`PLANO`, paleta `PAL`); envuelve `ilu`, `kic` e `iluFuente` para usar primero las piezas planas, y reemplaza la escena del jardín.
   9. `13-plano-lugares.js` — piezas planas de colmado, pizzería, laboratorio y mezcla; animaciones `volar`, `entrar`/`salir`, `temblar`, `ondas`, `gotitas`, `burbujitas`, `hornear`, `vapor`, `migas`, `remolino`; `sparks` plano; escena del colmado.
   10. `14-plano-mundo.js` — redibuja en plano las piezas SVG antiguas de 08 y agrega el resto (mar, granja, música, retos, stickers, personas, ropa…); íconos monocromos; escenas del acuario, granja, tiempo y bloques; `sonar()`, `relampago()`.
