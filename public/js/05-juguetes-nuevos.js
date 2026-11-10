@@ -128,14 +128,20 @@ function toyClock(root){
 
 /* ---------- Mapas ---------- */
 function toyMaps(root){
-  const lv=LV(); let mode='isla';
-  /* contornos simplificados a partir de coordenadas reales (lon/lat proyectadas a 400×224), suavizados con curvas */
+  const lv=LV(), M=window.MAPA_RD; let mode='isla', vivo=true, turno=0; const esperas=[];
+  const luego=(fn,ms)=>{ const t=turno; esperas.push(setTimeout(()=>{ if(vivo&&t===turno) fn(); },ms)); };
+  /* República Dominicana: contornos reales de las 32 provincias (15-mapa-rd.js, MapSVG CC0), coloreadas por región */
+  const REG={N:{n:'Norte (Cibao)',c:['#BFE3B4','#A9D69B','#D2EBC6','#9CCB8E']},S:{n:'Sur',c:['#F8E3A3','#F2D27F','#FBEDC2','#EBC66B']},E:{n:'Este',c:['#F7C9AE','#F1B291','#FADCCB','#EAA07C']}};
+  const colP=p=>REG[p.r].c[p.t%4];
+  const G=M.lugares, FN=G['Frontera norte'], FS=G['Frontera sur'], PD=G['Pico Duarte'], LE=G['Lago Enriquillo'];
+  const VB_RD=[-34,-10,M.w+44,M.h+20], VB_MUNDO=[0,0,400,224];
+  /* lugar, x, y, nivel, lado de la etiqueta respecto al pin (u arriba, d abajo, l izquierda, r derecha) */
+  const PL=[['Santo Domingo',...G['Santo Domingo'],1,'u'],['Santiago',...G['Santiago'],1,'l'],['Punta Cana',...G['Punta Cana'],1,'u'],['Pico Duarte',...PD,1,'r'],['Puerto Plata',...G['Puerto Plata'],2,'r'],['Samaná',...G['Samaná'],2,'u'],['Lago Enriquillo',...LE,2,'u'],['Barahona',...G['Barahona'],3,'d'],['La Romana',...G['La Romana'],3,'d'],['Haití',-14,118,3,'d']];
+  const FACIL=['25','11','18','20','04','13','22','02','15','16','32','12','21','06','05'];
+  /* El mundo: contornos simplificados a partir de coordenadas reales (lon/lat proyectadas a 400×224), suavizados con curvas */
   /* curva que pasa por cada punto de la costa (Catmull-Rom), así no se pierden las penínsulas */
   const suave=pts=>{ const n=pts.length, P=k=>pts[(k+n)%n], r=v=>Math.round(v*10)/10; let d='M'+pts[0].join(' ');
     for(let k=0;k<n;k++){ const p0=P(k-1),p1=P(k),p2=P(k+1),p3=P(k+2); d+=' C'+[r(p1[0]+(p2[0]-p0[0])/6),r(p1[1]+(p2[1]-p0[1])/6),r(p2[0]-(p3[0]-p1[0])/6),r(p2[1]-(p3[1]-p1[1])/6),p2[0],p2[1]].join(' '); } return d+'Z'; };
-  const ISLA=suave([[77,32],[115,20],[154,35],[189,28],[250,32],[301,44],[346,70],[349,74],[320,78],[333,90],[355,98],[401,128],[399,136],[384,148],[360,142],[339,140],[301,138],[262,160],[250,144],[224,160],[204,206],[182,174],[134,158],[54,160],[10,128],[32,124],[96,140],[144,132],[122,88],[122,60],[102,46]]);
-  const BORDE='M188 30 Q186 42 187 52 Q191 70 186 88 Q181 110 180 136 Q184 156 182 174';
-  const PL=[['Santo Domingo',301,136,1],['Santiago',250,62,1],['Punta Cana',388,134,1],['Pico Duarte',228,94,1],['Puerto Plata',248,40,2],['Samaná',336,80,2],['Lago Enriquillo',194,136,2],['Barahona',222,154,3],['La Romana',358,138,3],['Haití',112,96,3]];
   const CONT=[['América del Norte',suave([[13,21],[33,12],[67,12],[94,9],[111,15],[128,27],[139,42],[128,53],[117,63],[110,75],[111,83],[100,77],[92,81],[92,93],[102,98],[108,107],[113,108],[104,101],[94,96],[83,90],[76,78],[69,71],[62,60],[62,48],[50,35],[33,30],[17,30]])+suave([[139,4],[172,2],[178,12],[153,30],[139,18]]),82,52],
     ['América del Sur',suave([[113,108],[131,105],[144,120],[161,129],[158,141],[147,159],[136,177],[127,192],[122,203],[118,195],[120,165],[121,147],[111,128],[111,117]]),134,140],
     ['Europa',suave([[189,66],[190,54],[198,48],[194,39],[206,33],[206,27],[217,15],[231,14],[244,20],[250,33],[244,51],[231,59],[229,66],[217,63],[213,54],[203,56],[194,66]]),218,42],
@@ -144,35 +150,92 @@ function toyMaps(root){
     ['Oceanía',suave([[327,153],[336,146],[344,138],[352,138],[358,137],[362,149],[370,159],[367,176],[356,177],[344,168],[329,173],[327,162]]),348,158],
     ['Antártida','M14 220 Q60 210 110 214 Q160 206 200 212 Q250 206 300 213 Q350 208 386 220Z',200,214]];
   const CCOL={'América del Norte':'#F7C59F','América del Sur':'#B9E3C6','Europa':'#C9B8EE','África':'#F6E39A','Asia':'#F5B8D0','Oceanía':'#A3D69B','Antártida':'#FFFFFF'};
+  const MAR='#BFE1F5', BAJO='#D9EEF9', COSTA='#7FA066', TXT_MAR='#35628A';
   const trazo=c=>`fill="${c}" stroke="${shade(c==='#FFFFFF'?'#C3C8D6':c,c==='#FFFFFF'?0:-.32)}" stroke-width="1.6" vector-effect="non-scaling-stroke" stroke-linejoin="round"`;
-  const montes=[[214,92],[230,84],[246,96],[200,104],[262,104]].map(([x,y])=>`<path d="M${x-9} ${y+6} L${x} ${y-8} L${x+9} ${y+6}Z" fill="#B7D79F" stroke="#7FA066" stroke-width="1.6" vector-effect="non-scaling-stroke" stroke-linejoin="round"/><path d="M${x-3} ${y-3} L${x} ${y-8} L${x+3} ${y-3}Z" fill="#FFFFFF"/>`).join('');
-  const rosa=(x,y)=>`<g transform="translate(${x} ${y})"><circle r="13" fill="#FFFFFF" stroke="#9CC4E4" stroke-width="1.6" vector-effect="non-scaling-stroke"/><path d="M0 -11 L3 0 L0 11 L-3 0Z" fill="#8DBDE6"/><path d="M0 -11 L3 0 L-3 0Z" fill="#EE8A8A"/><text y="-15" font-size="8" text-anchor="middle" fill="#6FA3CB" font-weight="800" font-family="Nunito">N</text></g>`;
-  const olas=(n)=>Array.from({length:n},(_,i)=>{ const x=20+((i*97)%360), y=12+((i*53)%200); return `<path d="M${x} ${y} q5 -4 10 0 q5 4 10 0" fill="none" stroke="#FFFFFF" stroke-width="1.6" stroke-linecap="round" opacity=".8"/>`; }).join('');
-  addHTML(root, `<div class="abs" style="inset:0 0 var(--tbar-h) 0;background:#E3F0FA"></div><div id="mp" class="abs" style="inset:0 0 var(--tbar-h) 0"></div>
-    <div class="tbar"><button data-m="isla" class="on">🏝️ Mi isla</button><button data-m="mundo">🌎 El mundo</button><button id="rs">🔄</button></div>`);
+  const monte=(x,y,s=1)=>`<path d="M${x-7*s} ${y+5*s} L${x} ${y-7*s} L${x+7*s} ${y+5*s}Z" fill="#8FBF7E" stroke="#6C9A5C" stroke-width="1.6" vector-effect="non-scaling-stroke" stroke-linejoin="round"/><path d="M${x-2.6*s} ${y-2.6*s} L${x} ${y-7*s} L${x+2.6*s} ${y-2.6*s}Z" fill="#FFFFFF"/>`;
+  const rosa=(x,y)=>`<g transform="translate(${x} ${y})"><circle r="13" fill="#FFFFFF" stroke="#9CC4E4" stroke-width="1.6" vector-effect="non-scaling-stroke"/><path d="M0 -11 L3 0 L0 11 L-3 0Z" fill="#8DBDE6"/><path d="M0 -11 L3 0 L-3 0Z" fill="#EE8A8A"/><text y="-15" font-size="8" text-anchor="middle" fill="${TXT_MAR}" font-weight="800" font-family="Nunito">N</text></g>`;
+  const olas=(n,vb)=>Array.from({length:n},(_,i)=>{ const x=vb[0]+16+((i*97)%(vb[2]-40)), y=vb[1]+12+((i*53)%(vb[3]-24)); return `<path d="M${x} ${y} q5 -4 10 0 q5 4 10 0" fill="none" stroke="#FFFFFF" stroke-width="1.6" stroke-linecap="round" opacity=".8"/>`; }).join('');
+  const texto=(t,x,y,tam,col,extra='')=>`<text x="${x}" y="${y}" font-size="${tam}" fill="${col}" font-weight="800" font-family="Nunito" text-anchor="middle" ${extra}>${t}</text>`;
+  const HAITI=`M${VB_RD[0]-4} ${FN[1]-10} L${FN[0]} ${FN[1]} L${FN[0]+28} ${FN[1]+30} L${FS[0]+28} ${FS[1]-30} L${FS[0]} ${FS[1]} L${VB_RD[0]-4} ${FS[1]-13}Z`;
+  function svgRD(sc, conMontes){
+    const todas=M.prov.map(p=>`<path d="${p.d}"/>`).join('');
+    return `<rect x="${VB_RD[0]}" y="${VB_RD[1]}" width="${VB_RD[2]}" height="${VB_RD[3]}" fill="${MAR}"/>${olas(11,VB_RD)}
+      <g fill="${BAJO}" stroke="${BAJO}" stroke-width="9" stroke-linejoin="round"><path d="${HAITI}"/>${todas}</g>
+      <path d="${HAITI}" fill="#ECE8DA" stroke="#BDB7A2" stroke-width="${1.6/sc}" stroke-linejoin="round"/>
+      <g fill="${COSTA}" stroke="${COSTA}" stroke-width="${3.4/sc}" stroke-linejoin="round">${todas}</g>
+      <g id="pv" stroke="#FFFFFF" stroke-width="${1/sc}" stroke-linejoin="round">${M.prov.map(p=>`<path data-p="${p.id}" d="${p.d}" fill="${colP(p)}"/>`).join('')}</g>
+      <ellipse cx="${LE[0]}" cy="${LE[1]}" rx="13" ry="4" transform="rotate(-10 ${LE[0]} ${LE[1]})" fill="${MAR}" stroke="#8DBDE6" stroke-width="${1.6/sc}" pointer-events="none"/>
+      ${conMontes?`<g pointer-events="none">${monte(PD[0]-17,PD[1]-9,.8)}${monte(PD[0]+16,PD[1]+11,.8)}${monte(PD[0]+31,PD[1]+22,.7)}${monte(PD[0],PD[1],1.1)}</g>`:''}
+      <g pointer-events="none">${texto('HAITÍ',-15,72,9,'#6B6756','letter-spacing=".5"')}${texto('Océano Atlántico',262,8,10,TXT_MAR)}${texto('Mar Caribe',236,M.h-4,10,TXT_MAR)}${rosa(M.w-22,M.h-22)}</g>`;
+  }
+  addHTML(root, `<div class="abs" style="inset:0 0 var(--tbar-h) 0;background:#E3F0FA"></div><div id="mp" class="abs" style="inset:0 0 var(--tbar-h) 0;overflow:hidden"></div>
+    <div class="tbar" style="gap:var(--s-1);padding:0 var(--s-1)">${[['isla','🏝️','Mi país'],['prov','🗺️','Provincias'],['mundo','🌎','Mundo']].map(([m,e,t],i)=>`<button data-m="${m}"${i?'':' class="on"'} style="font-size:var(--fs-sm);padding:0 6px">${e} ${t}</button>`).join('')}<button id="rs" aria-label="Empezar de nuevo">🔄</button></div>`);
   const mp=root.querySelector('#mp');
+  const CHIP='background:var(--card);border:var(--bw) solid var(--line);border-radius:var(--r-sm);font-weight:800;white-space:nowrap';
+  const mecer=(el,dy,ms)=>{ if(!RM) el.animate([{transform:'translateY(0) rotate(-2deg)'},{transform:`translateY(${dy}px) rotate(2deg)`}],{duration:ms,direction:'alternate',iterations:Infinity,easing:'ease-in-out'}); };
   function round(){
-    const W=mp.clientWidth, H=mp.clientHeight; const sc=Math.min((W-16)/400,(H*.5)/224), ox=(W-400*sc)/2, oy=56;
+    turno++; const W=mp.clientWidth, H=mp.clientHeight, rd=mode!=='mundo', vb=rd?VB_RD:VB_MUNDO;
+    const sc=Math.min((W-20)/vb[2],(H*.5)/vb[3]), mw=vb[2]*sc, mh=vb[3]*sc, ox=(W-mw)/2, oy=18;
+    const px=(x,y)=>[ox+(x-vb[0])*sc, oy+(y-vb[1])*sc];
+    const cuerpo = rd ? svgRD(sc, mode==='isla') : `<rect width="400" height="224" fill="${MAR}"/>${olas(12,vb)}<g fill="${BAJO}" stroke="${BAJO}" stroke-width="7" stroke-linejoin="round">${CONT.map(c=>`<path d="${c[1]}"/>`).join('')}</g>${CONT.map(c=>`<path d="${c[1]}" ${trazo(CCOL[c[0]])}/>`).join('')}${rosa(28,196)}`;
+    mp.innerHTML=`<div class="abs" style="left:${ox-4}px;top:${oy-4}px;width:${mw+8}px;height:${mh+8}px;background:var(--card);border-radius:var(--r-md);box-shadow:var(--sh-2)"></div>
+      <svg id="mapa" class="abs" style="left:${ox}px;top:${oy}px;width:${mw}px;height:${mh}px;border-radius:var(--r-sm);overflow:hidden" viewBox="${vb.join(' ')}" role="img" aria-label="${rd?'Mapa de la República Dominicana':'Mapa del mundo'}">${cuerpo}</svg>
+      <div id="ley" class="abs" style="left:0;right:0;top:${oy+mh+12}px;display:flex;justify-content:center;gap:var(--s-3);font-size:var(--fs-2xs);font-weight:800;color:#5A566B">${rd?Object.values(REG).map(r=>`<span style="display:inline-flex;align-items:center;gap:4px"><i style="width:12px;height:12px;border-radius:4px;background:${r.c[1]};border:1.6px solid ${shade(r.c[1],-.32)};display:inline-block"></i>${r.n}</span>`).join(''):'Mapa simplificado del mundo'}</div>`;
+    const svg=mp.querySelector('#mapa'), top0=oy+mh+40;
+    if (rd){ /* ballenas jorobadas frente a Samaná y un velero en el Caribe */
+      [['ballena',352,36,34,5,2600],['velero',150,M.h-26,26,-4,2200]].forEach(([n,x,y,t,dy,ms])=>{ const d=document.createElement('div'); d.className='abs'; const s=Math.max(20,t*sc), [a,b]=px(x,y);
+        d.style.cssText=`left:${a-s/2}px;top:${b-s/2}px;width:${s}px;height:${s}px;pointer-events:none;z-index:1`; d.innerHTML=ilu(n,s); mp.appendChild(d); mecer(d,dy,ms); });
+    }
+    const pista=(gx,gy)=>{ const r=document.createElement('div'); r.className='abs'; r.style.cssText=`left:${gx-16}px;top:${gy-16}px;width:32px;height:32px;border-radius:50%;border:3px solid #E07A6A;pointer-events:none;z-index:2`; mp.appendChild(r);
+      if(!RM) r.animate([{transform:'scale(.5)',opacity:1},{transform:'scale(1.25)',opacity:.2}],{duration:650,iterations:2,easing:'ease-out'}); setTimeout(()=>r.remove(),1300); };
+    if (mode==='prov') return provincias(svg, sc, top0, W);
     const isla=mode==='isla'; const items = isla ? PL.filter(p=>p[3]<=lv) : CONT.slice(0, lv===1?4:7);
-    let svg=`<svg class="abs" style="left:${ox}px;top:${oy}px;width:${400*sc}px;height:${224*sc}px" viewBox="0 0 400 224">`;
-    svg+=`<rect x="0" y="0" width="400" height="224" rx="16" fill="#BFE1F5"/>${olas(isla?9:12)}`;
-    if (isla) svg+=`<ellipse cx="98" cy="104" rx="17" ry="5" ${trazo('#CFE6B8')}/><ellipse cx="378" cy="162" rx="10" ry="3.5" ${trazo('#CFE6B8')}/><path d="${ISLA}" ${trazo('#CFE6B8')}/>${montes}<path d="${BORDE}" stroke="#7FA066" stroke-width="1.6" stroke-dasharray="4 4" fill="none" vector-effect="non-scaling-stroke"/><text x="60" y="84" font-size="12" fill="#6F8A55" font-weight="800" font-family="Nunito">HAITÍ</text><text x="258" y="124" font-size="11" fill="#6F8A55" font-weight="800" font-family="Nunito" text-anchor="middle">REP. DOMINICANA</text><text x="250" y="16" font-size="10" fill="#5F93BB" font-weight="700" font-family="Nunito">Océano Atlántico</text><text x="70" y="206" font-size="10" fill="#5F93BB" font-weight="700" font-family="Nunito">Mar Caribe</text>${rosa(26,30)}`;
-    else svg+=CONT.map(c=>`<path d="${c[1]}" ${trazo(CCOL[c[0]])}/>`).join('')+rosa(28,196);
-    if (lv<3) svg+=items.map(it=>{ const [x,y]=isla?[it[1],it[2]]:[it[2],it[3]]; return `<circle cx="${x}" cy="${y}" r="6" fill="#FFFFFF" stroke="#E07A6A" stroke-width="2.4" vector-effect="non-scaling-stroke"/><circle cx="${x}" cy="${y}" r="2.2" fill="#E07A6A"/>`; }).join('');
-    svg+='</svg>'; mp.innerHTML=svg+`<div class="abs" style="left:0;right:0;top:${oy+224*sc+6}px;text-align:center;font-size:var(--fs-2xs)" class="muted">${isla?'Mapa simplificado de la isla La Española':'Mapa simplificado del mundo'}</div>`;
-    let left=items.length; const top0=oy+224*sc+30;
+    if (lv<3) svg.insertAdjacentHTML('beforeend', items.map(it=>{ const [x,y]=isla?[it[1],it[2]]:[it[2],it[3]]; return `<g pointer-events="none"><circle cx="${x}" cy="${y}" r="${6/Math.max(sc,.8)}" fill="#FFFFFF" stroke="#E07A6A" stroke-width="2.4" vector-effect="non-scaling-stroke"/><circle cx="${x}" cy="${y}" r="${2.2/Math.max(sc,.8)}" fill="#E07A6A"/></g>`; }).join(''));
+    let left=items.length;
     shuffle(items).forEach((it,j)=>{ const name=it[0]; const [tx,ty]=isla?[it[1],it[2]]:[it[2],it[3]];
       const el=document.createElement('div'); el.className='abs'; el.textContent=(isla?'📍 ':'')+name;
-      const x0=8+(j%2)*(W/2-4), y0=top0+Math.floor(j/2)*42; el.style.cssText=`left:${x0}px;top:${y0}px;background:var(--card);border:var(--bw) solid var(--line);border-radius:var(--r-sm);padding:var(--s-2) var(--s-3);font-weight:800;font-size:var(--fs-xs);z-index:3;transition:left .3s,top .3s;white-space:nowrap`;
+      const x0=10+(j%2)*(W/2-4), y0=top0+Math.floor(j/2)*46; el.style.cssText=`left:${x0}px;top:${y0}px;${CHIP};box-shadow:var(--sh-1);padding:var(--s-2) var(--s-3);font-size:var(--fs-xs);z-index:3;transition:left .3s,top .3s`;
       mp.appendChild(el); el.dataset.x=x0; el.dataset.y=y0;
-      dragify(el, mp, {start:()=>speak(name), drop:(el,px,py)=>{ const gx=ox+tx*sc, gy=oy+ty*sc;
-        if (Math.hypot(px-gx,py-gy) < (isla?30:46)*Math.max(1,sc)){ el.dataset.lock=1; el.style.left=(gx-12)+'px'; el.style.top=(gy-14)+'px'; el.style.fontSize='11px'; el.style.padding='2px 6px'; el.style.background='#F8EFC9'; note(784,.2,'sine',.12); left--;
-          if (left===0){ confetti(); win(isla?'¡Conoces muy bien nuestra isla!':'¡Ubicaste todos los continentes!'); setTimeout(round,3000); } }
-        else { el.style.left=el.dataset.x+'px'; el.style.top=el.dataset.y+'px'; } }}); });
+      dragify(el, mp, {start:()=>speak(name), drop:(el,dx,dy)=>{ const [gx,gy]=px(tx,ty);
+        if (Math.hypot(dx-gx,dy-gy) < (isla?30:46)*Math.max(1,sc)){ el.dataset.lock=1; left--; note(784,.2,'sine',.12);
+          el.textContent=name; el.style.fontSize='11px'; el.style.padding='1px 6px'; el.style.boxShadow='none'; el.style.background='#FFF8DC'; el.style.zIndex=2;
+          const w=el.offsetWidth, lado=isla?it[4]:'c';
+          el.style.left=Math.max(ox+2,Math.min(ox+mw-w-2, lado==='r'?gx+8:lado==='l'?gx-8-w:gx-w/2))+'px'; el.style.top=Math.max(oy+2, lado==='c'?gy-10:lado==='d'?gy+4:lado==='u'?gy-38:gy-22)+'px';
+          if (isla){ const pin=document.createElement('div'); pin.className='abs'; pin.style.cssText=`left:${gx-9}px;top:${gy-17}px;width:18px;height:18px;pointer-events:none;z-index:2`; pin.innerHTML=ilu('pin',18); mp.appendChild(pin);
+            if(!RM) pin.animate([{transform:'translateY(-18px)',opacity:0},{transform:'translateY(2px)',opacity:1,offset:.7},{transform:'translateY(0)',opacity:1}],{duration:380,easing:'ease-out'}); }
+          if (left===0){ confetti(); win(isla?'¡Conoces muy bien nuestro país!':'¡Ubicaste todos los continentes!'); luego(round,3000); } }
+        else { el.style.left=el.dataset.x+'px'; el.style.top=el.dataset.y+'px'; pista(gx,gy); note(220,.2,'sine',.1); } }}); });
   }
-  root.querySelectorAll('[data-m]').forEach(b=>b.addEventListener('click',()=>{ mode=b.dataset.m; root.querySelectorAll('[data-m]').forEach(x=>x.classList.toggle('on',x===b)); round(); tsay(mode==='isla'?'Arrastra cada lugar al mapa de nuestra isla':'Arrastra cada continente a su lugar'); }));
+  /* Provincias: tocar para conocerlas (nivel 1) o encontrarlas (niveles 2 y 3). El error siempre muestra la respuesta. */
+  function provincias(svg, sc, top0, W){
+    const pv=svg.querySelector('#pv'), porId=Object.fromEntries(M.prov.map(p=>[p.id,p]));
+    const dn=porId['01']; svg.insertAdjacentHTML('beforeend', `<circle data-p="01" cx="${dn.c[0]}" cy="${dn.c[1]}" r="7" fill="transparent"/>`);
+    const card=document.createElement('div'); card.className='abs';
+    card.style.cssText=`left:var(--s-3);right:var(--s-3);top:${top0}px;background:var(--card);border:var(--bw) solid var(--line);border-radius:var(--r-md);box-shadow:var(--sh-1);padding:var(--s-3) var(--s-4);text-align:center;z-index:3`;
+    mp.appendChild(card);
+    const pinta=(tit,sub,pie)=>{ card.innerHTML=`<div style="font-size:var(--fs-lg);font-weight:800;color:var(--ink);line-height:1.2">${tit}</div>${sub?`<div style="font-size:var(--fs-sm);color:#5A566B;font-weight:700;margin-top:2px">${sub}</div>`:''}${pie?`<div style="font-size:var(--fs-2xs);color:#5A566B;margin-top:var(--s-2)">${pie}</div>`:''}`; };
+    const ficha=p=>`<span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:${REG[p.r].c[1]};border:1.6px solid ${shade(REG[p.r].c[1],-.32)};margin-right:4px"></span>Región ${REG[p.r].n} · Capital: ${p.cap}`;
+    const el=id=>pv.querySelector(`[data-p="${id}"]`);
+    const marca=(p,col)=>{ pv.querySelectorAll('.sel').forEach(x=>{ x.classList.remove('sel'); x.setAttribute('stroke','#FFFFFF'); x.setAttribute('stroke-width',1/sc); });
+      const e=el(p.id); pv.appendChild(e); e.classList.add('sel'); e.setAttribute('stroke',col); e.setAttribute('stroke-width',2.4/sc);
+      if(!RM){ e.style.transformBox='fill-box'; e.style.transformOrigin='center'; e.animate([{transform:'scale(1)'},{transform:'scale(1.07)'},{transform:'scale(1)'}],{duration:420,easing:'ease-out'}); } };
+    const vistas=new Set(); let meta=null, aciertos=0, ocupado=false; const RONDA=5;
+    const cola=shuffle((lv===2?M.prov.filter(p=>FACIL.includes(p.id)):M.prov).slice());
+    function pregunta(){ meta=cola.pop(); if(!meta) return; ocupado=false; pinta(`¿Dónde está ${meta.n}?`, 'Toca la provincia en el mapa', `Aciertos: ${aciertos} de ${RONDA}`); speak(`¿Dónde está ${meta.n}?`); }
+    if (lv===1) pinta('Toca una provincia','Así conoces su nombre y su capital','Has visitado 0 de 32'); else pregunta();
+    svg.addEventListener('click',e=>{ const t=e.target.closest('[data-p]'); if(!t||ocupado) return; const p=porId[t.dataset.p];
+      if (lv===1){ marca(p,'#3A3550'); vistas.add(p.id); el(p.id).setAttribute('fill',shade(colP(p),-.12)); pinta(p.n, ficha(p), `Has visitado ${vistas.size} de 32`); speak(`${p.n}. Capital: ${p.cap}`); note(660,.15,'sine',.1);
+        if (vistas.size===32){ confetti(); win('¡Visitaste las 32 provincias!'); } return; }
+      ocupado=true;
+      if (p===meta){ aciertos++; marca(p,'#3E8E5A'); el(p.id).setAttribute('fill',shade(colP(p),-.14)); note(784,.2,'sine',.12); pinta(`¡Sí! ${p.n}`, ficha(p), `Aciertos: ${aciertos} de ${RONDA}`); speak(`¡Sí! ${p.n}`);
+        if (aciertos>=RONDA){ confetti(); win('¡Conoces las provincias de tu país!'); luego(round,3000); } else luego(pregunta,1700); }
+      else { marca(meta,'#3A3550'); note(220,.2,'sine',.1); pinta(`${meta.n} está aquí`, ficha(meta), `Tocaste ${p.n}`); speak(`Esa es ${p.n}. ${meta.n} está aquí.`); luego(pregunta,3200); } });
+  }
+  const SALUDO={isla:'Arrastra cada lugar al mapa de nuestro país', prov:lv===1?'Toca cada provincia para conocerla':'Busca cada provincia en el mapa', mundo:'Arrastra cada continente a su lugar'};
+  root.querySelectorAll('[data-m]').forEach(b=>b.addEventListener('click',()=>{ mode=b.dataset.m; root.querySelectorAll('[data-m]').forEach(x=>x.classList.toggle('on',x===b)); round(); if(mode!=='prov'||lv===1) tsay(SALUDO[mode]); }));
   root.querySelector('#rs').addEventListener('click',round);
-  setTimeout(round,40);
+  luego(round,40);
+  return ()=>{ vivo=false; esperas.forEach(clearTimeout); };
 }
 
 /* ---------- Cuerpo humano por capas ---------- */

@@ -11,6 +11,7 @@ Desde la versión de estilo plano, **la app ya no muestra imágenes de Kenney**.
 | Recurso | Autor | Licencia | Atribución obligatoria |
 | --- | --- | --- | --- |
 | Paquetes de Kenney (tabla de abajo) | Kenney Vleugels · [kenney.nl](https://kenney.nl) | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/) | No (se agradece) |
+| Mapa de la República Dominicana por provincias (`public/js/15-mapa-rd.js`, generado con `npm run mapa`) | MapSVG · [mapsvg.com/maps/dominican-republic](https://mapsvg.com/maps/dominican-republic/) | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/) | No |
 | Ilustraciones SVG propias en estilo plano (`public/js/12-estilo-plano.js`, `13-plano-lugares.js`, `14-plano-mundo.js`) | Hechas para Semillita | Del proyecto | — |
 | Ilustraciones SVG antiguas (`public/js/08-ilustraciones.js`, redibujadas en plano por `14-plano-mundo.js`) | Hechas para Semillita | Del proyecto | — |
 | Animalitos `creature()` (`public/js/04-personajes.js`) | Hechos para Semillita | Del proyecto | — |
@@ -249,3 +250,9 @@ Para estos casos se siguen usando las ilustraciones SVG propias del mismo estilo
 | `pelota` | Sports Pack | `PNG/Equipment/ball_soccer1.png` | PNG |
 | `balon` | Sports Pack | `PNG/Equipment/ball_basket1.png` | PNG |
 | `cara_a` | Shape Characters | `PNG/Default/face_a.png` | PNG |
+
+## Mapa de la República Dominicana
+
+- **Fuente:** [MapSVG · Dominican Republic](https://mapsvg.com/maps/dominican-republic/), archivo `dominican-republic.svg` (32 provincias, geo-calibrado). Licencia CC0 1.0: uso personal y comercial, sin atribución obligatoria. Descargado el 2026-11-10.
+- **Dónde vive:** el original va en `vendor/mapsvg/` (fuera de git). `npm run mapa` (`scripts/mapa-rd.mjs`) lo reduce a un lienzo de 400 de ancho, simplifica los contornos y genera `public/js/15-mapa-rd.js`.
+- **Cambios propios:** nombres oficiales actuales (Elías Piña, Bahoruco), región y capital de cada provincia, colores pastel por región y ubicación de los lugares del juego. La franja de Haití, el lago Enriquillo, las montañas y el mapa del mundo son dibujos propios simplificados.
