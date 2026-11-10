@@ -150,9 +150,9 @@ function toyGarden2(root){
     <div id="rain" class="abs" style="inset:0 0 var(--tbar-h) 0;pointer-events:none"></div>
     <div id="plotsA" class="abs" style="left:4%;right:4%;top:40%;display:flex;justify-content:space-evenly;align-items:flex-end;transform:scale(.86);transform-origin:50% 100%"></div>
     <div id="plotsB" class="abs" style="left:2%;right:2%;bottom:84px;display:flex;justify-content:space-evenly;align-items:flex-end"></div>
-    <button id="bk" class="abs" style="top:12px;right:12px;font-size:var(--fs-2xl);background:var(--card);border-radius:var(--r-md);padding:var(--s-1) var(--s-3);border:var(--bw) solid var(--line);font-weight:800;z-index:5">🧺 <span id="hv" style="font-size:var(--fs-md)">0</span></button>
+    <button id="bk" class="abs" style="top:12px;right:12px;font-size:var(--fs-2xl);background:var(--card);border-radius:var(--r-md);padding:var(--s-1) var(--s-3);border:var(--bw) solid var(--line);font-weight:800;z-index:5">${emo('🧺')} <span id="hv" style="font-size:var(--fs-md)">0</span></button>
     ${lv===3?'<div id="ord" class="abs" style="top:60px;right:12px;background:var(--card);border:var(--bw) solid var(--line);border-radius:var(--r-sm);padding:var(--s-2) var(--s-3);font-weight:800;font-size:var(--fs-xs);z-index:5;max-width:55%"></div>':''}
-    <div class="tbar"><button data-t="seed" class="on" id="sd">🌰</button><button data-t="water">💧</button>${lv>=2?'<button data-t="bug">🧤</button><button data-t="fert">🪱</button>':''}<button data-t="harvest">✂️</button><span class="sep"></span><button id="dn">🌙</button><button id="rn">🌧️</button></div>`);
+    <div class="tbar"><button data-t="seed" class="on" id="sd">${emo('🌰')}</button><button data-t="water">${ilu('regadera','1.1em')}</button>${lv>=2?'<button data-t="bug">🧤</button><button data-t="fert">🪱</button>':''}<button data-t="harvest">✂️</button><span class="sep"></span><button id="dn">🌙</button><button id="rn">🌧️</button></div>`);
   const mk=(parent,big)=>{ const p=document.createElement('button'); p.style.cssText=`position:relative;width:${big?30:28}%;max-width:120px;height:150px;display:flex;flex-direction:column;justify-content:flex-end;align-items:center`;
     p.innerHTML=`<span class="bug abs" style="top:24px;right:6px;font-size:var(--fs-2xl);display:none">🐛</span><span class="thirst abs" style="top:0;left:6px;font-size:var(--fs-md);display:none">💧❗</span><span class="pt" style="font-size:var(--fs-7xl);line-height:1;transform-origin:50% 100%;transition:filter .5s,transform .5s"></span><span class="meter" style="font-size:var(--fs-2xs);height:12px;letter-spacing:-1px"></span><span style="width:100%;height:24px;border-radius:50% 50% 14px 14px;background:#7E5A3E;box-shadow:inset 0 4px 0 rgba(0,0,0,.12)"></span>`;
     parent.appendChild(p); const pl={el:p,t:null,st:0,prog:0,water:0,bug:false,fert:0}; plots.push(pl); p.addEventListener('click',()=>tap(pl)); };
@@ -160,7 +160,7 @@ function toyGarden2(root){
   const P=pl=>PL[pl.t];
   function show(pl,anim=true){ const s=pl.el.querySelector('.pt');
     if (anim){ s.style.animation='none'; void s.offsetWidth; s.style.animation='popin .5s both'; }
-    if (pl.t===null){ s.textContent=''; } else if (pl.st===0){ s.textContent='🟤'; s.style.fontSize='18px'; } else { const stg=P(pl)[2]; s.textContent=stg[Math.min(pl.st-1,stg.length-1)]; s.style.fontSize = (34+pl.st*7)+'px'; }
+    if (pl.t===null){ s.textContent=''; } else if (pl.st===0){ s.innerHTML=emo('🟤'); s.style.fontSize='24px'; } else { const stg=P(pl)[2]; s.innerHTML=emo(stg[Math.min(pl.st-1,stg.length-1)]); s.style.fontSize = (34+pl.st*7)+'px'; }
     const done = pl.t!==null && pl.st>=P(pl)[2].length;
     pl.el.querySelector('.meter').textContent = pl.t===null||done?'':'💧'.repeat(pl.water)+'·'.repeat(3-pl.water);
     pl.el.querySelector('.bug').style.display=pl.bug?'block':'none';
@@ -174,7 +174,7 @@ function toyGarden2(root){
     if (pl.t===null){ tsay('Primero siembra una semilla 🌰'); return; }
     const max=P(pl)[2].length;
     if (tool==='water'){ if (pl.st>=max){ tsay('¡Ya está grande! Cosecha con ✂️'); return; }
-      for (let k=0;k<6;k++){ const d=document.createElement('span'); d.textContent='💧'; d.style.cssText=`position:absolute;left:${8+k*14}%;top:-60px;font-size:var(--fs-sm);animation:drop .9s ease-in ${k*.07}s forwards`; pl.el.appendChild(d); setTimeout(()=>d.remove(),900); }
+      for (let k=0;k<6;k++){ const d=document.createElement('span'); d.innerHTML=emo('💧'); d.style.cssText=`position:absolute;left:${8+k*14}%;top:-60px;font-size:var(--fs-sm);animation:drop .9s ease-in ${k*.07}s forwards`; pl.el.appendChild(d); setTimeout(()=>d.remove(),900); }
       splashS(); pl.water=3; if (pl.st===0) pl.st=0; setTimeout(()=>{ if (lv===1) grow(pl); else show(pl,false); },700); return; }
     if (tool==='bug'){ if (!pl.bug){ tsay('No hay bichitos aquí'); return; } pl.bug=false; show(pl,false); const l=document.createElement('span'); l.textContent='🐞'; l.className='abs'; l.style.cssText='top:20px;right:0;font-size:var(--fs-2xl);transition:transform 1.2s,opacity 1.2s'; pl.el.appendChild(l);
       requestAnimationFrame(()=>requestAnimationFrame(()=>{ l.style.transform='translate(60px,-120px)'; l.style.opacity=0; })); setTimeout(()=>l.remove(),1300); popS(); tsay('¡Gracias! La mariquita se llevó al gusanito'); return; }
@@ -190,17 +190,17 @@ function toyGarden2(root){
   function setDay(d){ day=d; root.querySelector('#sky').style.background = d?'linear-gradient(#CDE8FA 0%,#EEF7FD 46%,#C8A27E 46%,#B98F6A 100%)':'linear-gradient(#2B3566 0%,#5B6AA8 46%,#7C6450 46%,#6A5443 100%)';
     root.querySelector('#sun').style.opacity=d?1:0; root.querySelector('#moon').style.opacity=d?0:1; root.querySelector('#dn').textContent=d?'🌙':'☀️'; tsay(d?'¡Buenos días! Con el sol, las plantas crecen':'De noche las plantas descansan'); }
   function newOrder(){ if (lv<3) return; const opts=PL.filter(p=>p[2].length<=4); const k=sample(opts,2); order=Object.fromEntries(k.map(p=>[p[0],rnd(1,3)]));
-    root.querySelector('#ord').innerHTML='🧾 Pedido de la vecina:<br>'+Object.entries(order).map(([n,c])=>`${c} ${PL.find(p=>p[0]===n)[1]}`).join(' '); }
+    root.querySelector('#ord').innerHTML='🧾 Pedido de la vecina:<br>'+Object.entries(order).map(([n,c])=>`${c} ${emo(PL.find(p=>p[0]===n)[1])}`).join(' '); }
   function checkOrder(){ if (!order) return; if (Object.entries(order).every(([n,c])=>(inv[n]||0)>=c)){ Object.entries(order).forEach(([n,c])=>inv[n]-=c); root.querySelector('#hv').textContent=Object.values(inv).reduce((a,b)=>a+b,0); confetti(); win('¡Entregaste el pedido a la vecina!'); order=null; setTimeout(newOrder,2500); } }
   root.querySelector('#bk').addEventListener('click',()=>{ const o=document.createElement('div'); o.className='ov'; const items=Object.entries(inv).filter(([,c])=>c>0);
-    o.innerHTML=`<div class="sheet"><h3>🧺 Mi canasta</h3>${items.length?`<div style="display:flex;flex-wrap:wrap;gap:var(--s-3);margin:var(--s-3) 0;font-size:var(--fs-3xl)">${items.map(([n,c])=>`<span>${PL.find(p=>p[0]===n)[1]}<b style="font-size:var(--fs-sm)"> ×${c}</b></span>`).join('')}</div>`:'<p class="muted">Todavía no has cosechado nada.</p>'}
-      <h3 style="margin-top:var(--s-4)">👩‍🍳 Cocina con tu cosecha</h3><div style="display:flex;flex-direction:column;gap:var(--s-2);margin-top:var(--s-2)">${RECIPES.map((r,i)=>{ const can=Object.entries(r[2]).every(([n,c])=>(inv[n]||0)>=c); return `<button class="opt" data-r="${i}" style="text-align:left;font-size:var(--fs-sm);${can?'':'opacity:.5'}">${r[0]} <b>${r[1]}</b> · ${Object.entries(r[2]).map(([n,c])=>PL.find(p=>p[0]===n)[1]).join(' + ')}</button>`; }).join('')}</div></div>`;
+    o.innerHTML=`<div class="sheet"><h3>${emo('🧺')} Mi canasta</h3>${items.length?`<div style="display:flex;flex-wrap:wrap;gap:var(--s-3);margin:var(--s-3) 0;font-size:var(--fs-3xl)">${items.map(([n,c])=>`<span>${emo(PL.find(p=>p[0]===n)[1])}<b style="font-size:var(--fs-sm)"> ×${c}</b></span>`).join('')}</div>`:'<p class="muted">Todavía no has cosechado nada.</p>'}
+      <h3 style="margin-top:var(--s-4)">👩‍🍳 Cocina con tu cosecha</h3><div style="display:flex;flex-direction:column;gap:var(--s-2);margin-top:var(--s-2)">${RECIPES.map((r,i)=>{ const can=Object.entries(r[2]).every(([n,c])=>(inv[n]||0)>=c); return `<button class="opt" data-r="${i}" style="text-align:left;font-size:var(--fs-sm);${can?'':'opacity:.5'}">${r[0]} <b>${r[1]}</b> · ${Object.entries(r[2]).map(([n,c])=>emo(PL.find(p=>p[0]===n)[1])).join(' + ')}</button>`; }).join('')}</div></div>`;
     o.addEventListener('click',e=>{ if(e.target===o) o.remove(); }); root.appendChild(o);
     o.querySelectorAll('[data-r]').forEach(b=>b.addEventListener('click',()=>{ const r=RECIPES[+b.dataset.r]; const can=Object.entries(r[2]).every(([n,c])=>(inv[n]||0)>=c);
       if (!can){ tsay(`Para ${r[1]} necesitas: ${Object.keys(r[2]).join(', ')}`); return; } Object.entries(r[2]).forEach(([n,c])=>inv[n]-=c); root.querySelector('#hv').textContent=Object.values(inv).reduce((a,b)=>a+b,0); o.remove(); confetti(); win(`¡Preparaste ${r[1]} ${r[0]}! ¡Qué rico!`); })); });
   root.querySelectorAll('[data-t]').forEach(b=>b.addEventListener('click',()=>{ tool=b.dataset.t; root.querySelectorAll('[data-t]').forEach(x=>x.classList.toggle('on',x===b));
-    if (tool==='seed'){ const o=document.createElement('div'); o.className='ov'; o.innerHTML=`<div class="sheet"><h3>🌰 Elige una semilla</h3><div class="thumbs" style="grid-template-columns:repeat(4,1fr);margin-top:var(--s-3)">${PL.map((p,i)=>`<button data-s="${i}" style="font-size:var(--fs-2xs);aspect-ratio:auto;padding:var(--s-2) 2px"><span style="font-size:var(--fs-4xl)">${p[1]}</span>${p[0]}</button>`).join('')}</div></div>`;
-      o.addEventListener('click',e=>{ if(e.target===o) o.remove(); }); root.appendChild(o); o.querySelectorAll('[data-s]').forEach(x=>x.addEventListener('click',()=>{ seed=+x.dataset.s; root.querySelector('#sd').textContent=PL[seed][1]; o.remove(); tsay(`Semilla de ${PL[seed][0]}: toca la tierra`); })); return; }
+    if (tool==='seed'){ const o=document.createElement('div'); o.className='ov'; o.innerHTML=`<div class="sheet"><h3>${emo('🌰')} Elige una semilla</h3><div class="thumbs" style="grid-template-columns:repeat(4,1fr);margin-top:var(--s-3)">${PL.map((p,i)=>`<button data-s="${i}" style="font-size:var(--fs-2xs);aspect-ratio:auto;padding:var(--s-2) 2px"><span style="font-size:var(--fs-4xl)">${emo(p[1])}</span>${p[0]}</button>`).join('')}</div></div>`;
+      o.addEventListener('click',e=>{ if(e.target===o) o.remove(); }); root.appendChild(o); o.querySelectorAll('[data-s]').forEach(x=>x.addEventListener('click',()=>{ seed=+x.dataset.s; root.querySelector('#sd').innerHTML=emo(PL[seed][1]); o.remove(); tsay(`Semilla de ${PL[seed][0]}: toca la tierra`); })); return; }
     tsay({water:'Regadera: toca una planta',bug:'Guantes: quita los bichitos',fert:'Abono: ayuda a crecer más rápido',harvest:'Tijeras: cosecha lo que esté listo'}[tool]); }));
   root.querySelector('#dn').addEventListener('click',()=>setDay(!day));
   root.querySelector('#rn').addEventListener('click',rainNow);
@@ -265,13 +265,13 @@ function toyAquarium2(root){
   addHTML(root, `<div id="tk" class="abs" style="inset:0 0 var(--tbar-h) 0;background:linear-gradient(#CFE8F6,#8FC3E6);overflow:hidden;transition:background 1s">
       <div id="rays" class="abs" style="inset:0;background:repeating-linear-gradient(105deg,rgba(255,255,255,.18) 0 18px,transparent 18px 70px);pointer-events:none"></div>
       <div class="abs" style="left:0;right:0;bottom:0;height:46px;background:#EBD9B4;border-radius:50% 50% 0 0/20px 20px 0 0"></div>
-      ${[8,30,66,88].map(x=>`<span class="abs" style="left:${x}%;bottom:26px;font-size:var(--fs-6xl);transform-origin:50% 100%;animation:palm 4s ease-in-out ${-x/20}s infinite;pointer-events:none">🌿</span>`).join('')}
+      ${[8,30,66,88].map(x=>`<span class="abs" style="left:${x}%;bottom:26px;font-size:var(--fs-6xl);transform-origin:50% 100%;animation:palm 4s ease-in-out ${-x/20}s infinite;pointer-events:none">${ilu('alga','1.1em')}</span>`).join('')}
       <div id="cnt" class="abs" style="left:12px;top:12px;background:rgba(255,255,255,.85);border-radius:var(--r-sm);padding:var(--s-1) var(--s-3);font-weight:800;font-size:var(--fs-xs)"></div></div>
-    <div class="tbar"><button id="ad">➕🐠</button><button id="dc">🏰</button><button id="lt">💡</button><button id="cl">🔄</button></div>`);
+    <div class="tbar"><button id="ad">➕${emo('🐠')}</button><button id="dc">${emo('🏰')}</button><button id="lt">💡</button><button id="cl">🔄</button></div>`);
   const tk=root.querySelector('#tk'); const Wt=()=>tk.clientWidth, Ht=()=>tk.clientHeight;
-  const count=()=>{ const g={}; fish.forEach(f=>g[f.n]=(g[f.n]||0)+1); root.querySelector('#cnt').textContent=Object.entries(g).map(([n,c])=>`${c} ${FISH.find(x=>x[1]===n)[0]}`).join('  ')||'Acuario vacío'; };
+  const count=()=>{ const g={}; fish.forEach(f=>g[f.n]=(g[f.n]||0)+1); root.querySelector('#cnt').innerHTML=Object.entries(g).map(([n,c])=>`${c} ${emo(FISH.find(x=>x[1]===n)[0],'1.5em')}`).join('  ')||'Acuario vacío'; };
   function add(i){ if (fish.length>=18){ tsay('¡El acuario está lleno!'); return; } const [e,n,fact]=FISH[i];
-    const el=document.createElement('span'); el.className='abs'; el.textContent=e; el.style.cssText=`left:0;top:0;font-size:${n==='ballena'?62:n==='medusa'?38:42}px;will-change:transform;cursor:pointer`;
+    const el=document.createElement('span'); el.className='abs'; el.innerHTML=emo(e); el.style.cssText=`left:0;top:0;font-size:${n==='ballena'?62:n==='medusa'?38:42}px;will-change:transform;cursor:pointer`;
     tk.appendChild(el); const f={el,n,fact,x:rnd(20,Wt()-70),y:rnd(40,Ht()-120),tx:0,ty:0,sp:n==='tortuga marina'||n==='medusa'?.4:.6+Math.random()*.9,dir:1,crab:['cangrejo','langosta'].includes(n),jelly:n==='medusa',hop:0}; newT(f); fish.push(f);
     el.addEventListener('pointerdown',ev=>{ ev.stopPropagation(); f.hop=20; speak(`${n}. ${fact}`); sparks(el,4); });
     plopS(); count(); }
@@ -290,10 +290,10 @@ function toyAquarium2(root){
     raf=requestAnimationFrame(loop); }
   bub=setInterval(()=>{ const b=document.createElement('span'); b.className='abs'; b.style.cssText=`left:${rnd(5,95)}%;bottom:36px;width:${rnd(8,16)}px;aspect-ratio:1;border-radius:50%;border:var(--bw) solid rgba(255,255,255,.8);animation:rise2 ${rnd(5,8)}s linear forwards;pointer-events:none`; tk.appendChild(b); setTimeout(()=>b.remove(),8000); },700);
   const sheet=(html)=>{ const o=document.createElement('div'); o.className='ov'; o.innerHTML=`<div class="sheet">${html}</div>`; o.addEventListener('click',e=>{ if(e.target===o) o.remove(); }); root.appendChild(o); return o; };
-  root.querySelector('#ad').addEventListener('click',()=>{ const o=sheet(`<h3>➕ Agrega animales del mar</h3><div class="thumbs" style="grid-template-columns:repeat(4,1fr);margin-top:var(--s-3)">${FISH.map((f,i)=>`<button data-f="${i}" style="aspect-ratio:auto;padding:var(--s-2) 2px"><span style="font-size:var(--fs-4xl)">${f[0]}</span>${f[1]}</button>`).join('')}</div>`);
+  root.querySelector('#ad').addEventListener('click',()=>{ const o=sheet(`<h3>➕ Agrega animales del mar</h3><div class="thumbs" style="grid-template-columns:repeat(4,1fr);margin-top:var(--s-3)">${FISH.map((f,i)=>`<button data-f="${i}" style="aspect-ratio:auto;padding:var(--s-2) 2px"><span style="font-size:var(--fs-4xl)">${emo(f[0])}</span>${f[1]}</button>`).join('')}</div>`);
     o.querySelectorAll('[data-f]').forEach(b=>b.addEventListener('click',()=>{ add(+b.dataset.f); speak(FISH[+b.dataset.f][1]); })); });
-  root.querySelector('#dc').addEventListener('click',()=>{ const o=sheet(`<h3>🏰 Decora tu acuario</h3><p class="muted" style="margin:var(--s-1) 0 var(--s-3)">Luego arrástralo a donde quieras</p><div class="thumbs" style="grid-template-columns:repeat(4,1fr)">${DECO.map(d=>`<button data-d="${d}" style="font-size:var(--fs-4xl);aspect-ratio:auto;padding:var(--s-2)">${d}</button>`).join('')}</div>`);
-    o.querySelectorAll('[data-d]').forEach(b=>b.addEventListener('click',()=>{ o.remove(); const el=document.createElement('div'); el.className='abs'; el.textContent=b.dataset.d; el.style.cssText=`left:${rnd(10,Wt()-70)}px;top:${Ht()-100}px;font-size:${b.dataset.d==='🏰'?64:46}px;z-index:1`; tk.appendChild(el); dragify(el,tk,{}); plopS(); })); });
+  root.querySelector('#dc').addEventListener('click',()=>{ const o=sheet(`<h3>${emo('🏰')} Decora tu acuario</h3><p class="muted" style="margin:var(--s-1) 0 var(--s-3)">Luego arrástralo a donde quieras</p><div class="thumbs" style="grid-template-columns:repeat(4,1fr)">${DECO.map(d=>`<button data-d="${d}" style="font-size:var(--fs-4xl);aspect-ratio:auto;padding:var(--s-2)">${emo(d)}</button>`).join('')}</div>`);
+    o.querySelectorAll('[data-d]').forEach(b=>b.addEventListener('click',()=>{ o.remove(); const el=document.createElement('div'); el.className='abs'; el.innerHTML=emo(b.dataset.d); el.style.cssText=`left:${rnd(10,Wt()-70)}px;top:${Ht()-100}px;font-size:${b.dataset.d==='🏰'?64:46}px;z-index:1`; tk.appendChild(el); dragify(el,tk,{}); plopS(); })); });
   root.querySelector('#lt').addEventListener('click',()=>{ night=!night; tk.style.background=night?'linear-gradient(#1D2A4D,#2C4372)':'linear-gradient(#CFE8F6,#8FC3E6)'; root.querySelector('#rays').style.opacity=night?0:1; tsay(night?'Luces apagadas. ¡Shhh, los peces duermen!':'¡Buenos días, peces!'); });
   root.querySelector('#cl').addEventListener('click',()=>{ fish.splice(0).forEach(f=>f.el.remove()); count(); tsay('Acuario vacío'); });
   add(0); add(1); add(5); loop();
@@ -361,6 +361,7 @@ function toyMusic3(root){
     bateria:['🥁','Batería','Percusión','Es un grupo de tambores y platillos: bombo, caja, toms y platillos.','Se toca con baquetas y el bombo con un pedal. El bombo marca el pulso de la canción.'],
     merengue:['🇩🇴','Tambora y güira','Percusión dominicana','Son instrumentos del merengue típico dominicano, junto al acordeón. La tambora es un tambor de dos parches y la güira es un cilindro de metal con agujeritos.','La tambora se toca con una mano y un palito. La güira se raspa con un rascador de metal, siguiendo el ritmo.']
   };
+  const MI={piano:'piano',xilo:'xilofono',guitarra:'guitarra',flauta:'flauta',violin:'violin',bateria:'bateria',merengue:'tambora'}; /* ilustración de cada instrumento */
   let inst='piano', rec=null, recStart=0, timers=[], loop=null, held=null;
   const ctx=()=>{ AC=AC||new (window.AudioContext||window.webkitAudioContext)(); return AC; };
   function tone2(kind,f,dur){ try{ const A=ctx(), t=A.currentTime, out=A.createGain(); out.connect(A.destination);
@@ -382,7 +383,7 @@ function toyMusic3(root){
     tamboraP:()=>{ noiseS(.06,.3,2600); note(420,.06,'square',.05); }, guira:()=>noiseS(.11,.16,6500), guiraL:()=>noiseS(.32,.12,6000)};
   const NOTES=[[261.63,'do'],[293.66,'re'],[329.63,'mi'],[349.23,'fa'],[392,'sol'],[440,'la'],[493.88,'si'],[523.25,'do']];
   const SHARP=[[277.18,0],[311.13,1],[369.99,3],[415.3,4],[466.16,5]];
-  addHTML(root, `<div class="abs" style="left:8px;right:8px;top:10px;display:flex;gap:var(--s-2);overflow-x:auto;z-index:4;scrollbar-width:none">${Object.entries(INFO).map(([k,v])=>`<button class="chip" data-in="${k}" style="flex:none">${v[0]} ${v[1]}</button>`).join('')}</div>
+  addHTML(root, `<div class="abs" style="left:8px;right:8px;top:10px;display:flex;gap:var(--s-2);overflow-x:auto;z-index:4;scrollbar-width:none">${Object.entries(INFO).map(([k,v])=>`<button class="chip" data-in="${k}" style="flex:none;gap:var(--s-1);display:inline-flex;align-items:center">${ilu(MI[k],26)} ${v[1]}</button>`).join('')}</div>
     <div id="st" class="abs" style="left:8px;right:8px;top:58px;bottom:80px"></div>
     <div class="tbar"><button id="inf">ℹ️ Aprende</button><button id="tw">⭐ Canción</button><button id="bt">🔁 Ritmo</button><button id="rc">⏺️</button><button id="pl">▶️</button></div>`);
   const st=root.querySelector('#st');
@@ -432,7 +433,7 @@ function toyMusic3(root){
       gu.addEventListener('pointermove',e=>{ if (lx===null) return; if (Math.abs(e.clientX-lx)>40){ DRUM.guira(); log('d','guira'); lx=e.clientX; dance(); } }); gu.addEventListener('pointerup',()=>lx=null); }
   }
   function showInfo(){ const I=INFO[inst]; const o=document.createElement('div'); o.className='ov';
-    o.innerHTML=`<div class="sheet"><div style="font-size:var(--fs-7xl);text-align:center">${I[0]}</div><h2 style="text-align:center">${I[1]}</h2><p style="text-align:center"><span class="chip">${I[2]}</span></p><h3 style="margin-top:var(--s-3)">¿Qué es?</h3><p style="font-weight:600;line-height:1.5">${I[3]}</p><h3>¿Cómo se toca?</h3><p style="font-weight:600;line-height:1.5">${I[4]}</p><button class="btn full" id="okx">¡A tocar!</button></div>`;
+    o.innerHTML=`<div class="sheet"><div style="text-align:center">${ilu(MI[inst],96)}</div><h2 style="text-align:center">${I[1]}</h2><p style="text-align:center"><span class="chip">${I[2]}</span></p><h3 style="margin-top:var(--s-3)">¿Qué es?</h3><p style="font-weight:600;line-height:1.5">${I[3]}</p><h3>¿Cómo se toca?</h3><p style="font-weight:600;line-height:1.5">${I[4]}</p><button class="btn full" id="okx">¡A tocar!</button></div>`;
     root.appendChild(o); o.querySelector('#okx').addEventListener('click',()=>{ speechSynthesis&&speechSynthesis.cancel(); o.remove(); }); o.addEventListener('click',e=>{ if(e.target===o){ o.remove(); } });
     speak(`${I[1]}. ${I[3]} ¿Cómo se toca? ${I[4]}`); }
   root.querySelectorAll('[data-in]').forEach(b=>b.addEventListener('click',()=>{ inst=b.dataset.in; draw(); tsay(`${INFO[inst][1]}. Toca ℹ️ para aprender sobre él`); }));

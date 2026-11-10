@@ -7,14 +7,14 @@ Rama: `mejora-grafica` · Un commit al cerrar cada fase · Estado: marcar `[x]` 
 - Debe verse bien en **390 px** (celular) y **768 px** (tablet).
 - Respetar `prefers-reduced-motion` y `S.settings.voice` (🔊/🔇).
 - Paleta pastel + letra Nunito. Botones de 44 px o más.
-- Antes de cada fase: resumen de 3-5 líneas y esperar el "sí".
+- Antes de cada fase: resumen de 3-5 líneas. (Desde la fase 2 el usuario pidió seguir sin esperar el "sí".)
 - Al cerrar cada fase: `npm run build` sin errores + resumen corto + commit.
 - Antes de editar una función, buscar si se redefine en un archivo posterior (`vHome`, `mascot`, `win`, `finish`, `vAdults`…).
 
 ## Estado general
 - [x] Fase 0 · Preparar git
 - [x] Fase 1 · Sistema visual unificado
-- [ ] Fase 2 · Biblioteca de ilustraciones SVG
+- [x] Fase 2 · Biblioteca de ilustraciones SVG
 - [ ] Fase 3 · Íconos ilustrados del inicio
 - [ ] Fase 4 · Escenarios por capas
 - [ ] Fase 5 · El animalito dentro de cada escena
@@ -55,13 +55,19 @@ La carpeta aún no es un repositorio.
 
 ## Fase 2 · Biblioteca de ilustraciones SVG
 **Archivos:** `public/js/08-ilustraciones.js` (nuevo), `index.html`, `02/05/06-*.js`, `docs/catalogo.html` (nuevo).
-- [ ] Objeto `ILU` + `ilu(nombre, tam)` según `GUIA-ILUSTRACIONES.md` (viewBox 100, contorno `shade(c,-.28)`, luz blanca 35 %, mismo estilo que `creature()`).
-- [ ] Jardín (16) · Colmado (14) · Mar (14) · Granja (9) · Música (7) = 60 piezas.
-- [ ] Cargar en `index.html` **antes** de `05-juguetes-nuevos.js`.
-- [ ] Clase `.ilu` en CSS.
-- [ ] Reemplazar emojis en Mi jardín, Mi colmado, Acuario, Granja y Música por `ilu()`.
-- [ ] `docs/catalogo.html` con todas las piezas, su nombre y tamaños 32/48/96.
-- [ ] Revisar · build · commit `Fase 2: biblioteca de ilustraciones`.
+- [x] Objeto `ILU` + `ilu(nombre, tam)` según `GUIA-ILUSTRACIONES.md` (viewBox 100, contorno `shade(c,-.28)`, luz blanca 35 %, mismo estilo que `creature()`).
+- [x] Jardín (16) · Colmado (14) · Mar (14) · Granja (9) · Música (7) = 60 piezas.
+- [x] Cargar en `index.html` **antes** de `05-juguetes-nuevos.js`.
+- [x] Clase `.ilu` en CSS.
+- [x] Reemplazar emojis en Mi jardín, Mi colmado, Acuario, Granja y Música por `ilu()`.
+- [x] `docs/catalogo.html` con todas las piezas, su nombre y tamaños 32/48/96.
+- [x] Revisar · build · commit `Fase 2: biblioteca de ilustraciones`.
+- Notas de la fase 2:
+  - 69 piezas: las 60 pedidas + extras (capullo, arbusto, árbol, palmera, gota, canasta, concha, alga, granero) para las etapas del jardín y los decorados.
+  - `emo(emoji)` traduce un emoji a su ilustración solo al mostrar; los datos y las comparaciones siguen usando el emoji.
+  - Las ilustraciones miden 1.1em por defecto: heredan los tamaños que ya calculaba cada juguete.
+  - Colmado: los clientes ahora son animales dibujados (ilu o creature); conejo, oso y mono se cambiaron por búho, león y rana.
+  - `o()` acepta colores de 3 dígitos (`shade()` no los entendía).
 
 ## Fase 3 · Íconos ilustrados del inicio
 **Archivos:** `08-ilustraciones.js`, `04-personajes.js` (`vHome`), `styles.css`.

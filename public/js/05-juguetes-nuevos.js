@@ -12,7 +12,9 @@ function toyShop(root){
   const lv=LV();
   const PROD=[['🍞','pan','panes',10],['🥚','huevo','huevos',8],['🍌','guineo','guineos',5],['🥛','leche','leches',45],['🧃','jugo','jugos',25],['🧀','queso','quesos',60],['🍫','chocolate','chocolates',30],['🥑','aguacate','aguacates',20],['🍬','dulce','dulces',2],['🍚','arroz','arroces',35],['🍋','limón','limones',3],['🥤','refresco','refrescos',40]];
   const MONEY=[1,5,10,25,50,100,200,500];
-  const CUST=['🐶','🐱','🐰','🐻','🐼','🐨','🦊','🐷','🐵','🐮'];
+  const CUST=['🐶','🐱','🦉','🦁','🐼','🐨','🦊','🐷','🐸','🐄'];
+  /* cliente dibujado: ilustración de la granja o animalito de creature() */
+  const custArt=e=> ILU_EMO[e] ? emo(e) : SPECIES[e] ? `<span class="ilu" style="width:1.15em;height:1.15em">${creature(SPECIES[e],{})}</span>` : e;
   let order=null, bag=[], cash=[], paid=0;
   const money=(v,s=1)=> v<50 ? `<span style="display:inline-grid;place-items:center;width:${(30+v*.6)*s}px;height:${(30+v*.6)*s}px;border-radius:50%;background:${v===25||v===1?'#E9C46A':'#C9CCD3'};border:3px solid rgba(0,0,0,.12);font-size:${11*s}px;font-weight:800">${v}</span>`
     : `<span style="display:inline-grid;place-items:center;width:${64*s}px;height:${34*s}px;border-radius:6px;background:${{50:'#C9B8EE',100:'#F7C59F',200:'#F5B8D0',500:'#A9D3F0'}[v]};border:var(--bw) solid rgba(0,0,0,.12);font-size:${13*s}px;font-weight:800">RD$${v}</span>`;
@@ -23,7 +25,7 @@ function toyShop(root){
     <div id="bg" class="abs" style="left:10px;right:10px;bottom:84px;min-height:64px;background:var(--card);border:2px dashed var(--line);border-radius:var(--r-md);padding:var(--s-2);display:flex;flex-wrap:wrap;gap:var(--s-2);align-items:center"></div>
     <div class="tbar" id="tb2"></div>`);
   const cu=root.querySelector('#cu'), sh=root.querySelector('#sh'), bg=root.querySelector('#bg'), tb=root.querySelector('#tb2');
-  sh.innerHTML=PROD.map((p,i)=>`<button data-p="${i}" style="background:var(--card);border:var(--bw) solid var(--line);border-radius:var(--r-md);padding:var(--s-2) 2px;display:flex;flex-direction:column;align-items:center"><span style="font-size:var(--fs-4xl)">${p[0]}</span>${lv>1?`<small style="font-weight:800;background:var(--butter);border-radius:var(--r-xs);padding:0 var(--s-2)">RD$${p[3]}</small>`:`<small style="font-weight:700">${p[1]}</small>`}</button>`).join('');
+  sh.innerHTML=PROD.map((p,i)=>`<button data-p="${i}" style="background:var(--card);border:var(--bw) solid var(--line);border-radius:var(--r-md);padding:var(--s-2) 2px;display:flex;flex-direction:column;align-items:center"><span style="font-size:var(--fs-4xl)">${emo(p[0])}</span>${lv>1?`<small style="font-weight:800;background:var(--butter);border-radius:var(--r-xs);padding:0 var(--s-2)">RD$${p[3]}</small>`:`<small style="font-weight:700">${p[1]}</small>`}</button>`).join('');
   function newCustomer(){
     bag=[]; cash=[]; const who=pick(CUST); const k = lv===1?1:lv===2?rnd(1,2):rnd(2,3);
     const items=sample(PROD.map((_,i)=>i).filter(i=>lv===1||PROD[i][3]<=(lv===2?45:60)),k).map(i=>[i, lv===1?rnd(1,4):rnd(1,3)]);
@@ -31,13 +33,13 @@ function toyShop(root){
     paid = lv===3 ? [50,100,200,500].find(b=>b>total) : 0;
     order={items,total,who};
     const txt='Quiero '+items.map(([i,n])=>`${n} ${n===1?PROD[i][1]:PROD[i][2]}`).join(' y ');
-    cu.innerHTML=`<span style="font-size:var(--fs-7xl);animation:popin .4s both">${who}</span><div class="bubble" style="font-size:var(--fs-sm);padding:var(--s-2) var(--s-3)">${txt}${lv===3?`<br><span class="muted">Te pago con ${money(paid,.7)}</span>`:''}</div>`;
+    cu.innerHTML=`<span style="font-size:var(--fs-7xl);display:inline-block;animation:popin .4s both">${custArt(who)}</span><div class="bubble" style="font-size:var(--fs-sm);padding:var(--s-2) var(--s-3)">${txt}${lv===3?`<br><span class="muted">Te pago con ${money(paid,.7)}</span>`:''}</div>`;
     tsay(txt+(lv===3?`. Te pago con ${paid} pesos`:''));
     drawBag();
   }
   function drawBag(){
     const hint = lv===1?'Toca los productos que pide':'1) Toca los productos que pide';
-    bg.innerHTML = bag.length ? bag.map(i=>`<span style="font-size:var(--fs-3xl);animation:popin .3s both">${PROD[i][0]}</span>`).join('') : `<span class="muted" style="font-weight:700">🛍️ ${hint}</span>`;
+    bg.innerHTML = bag.length ? bag.map(i=>`<span style="font-size:var(--fs-3xl);animation:popin .3s both">${emo(PROD[i][0])}</span>`).join('') : `<span class="muted" style="font-weight:700">${emo('🛍️','1.6em')} ${hint}</span>`;
     if (lv>1 && bag.length){ const step = lv===2?'2) Cobra: toca el dinero que te da':`2) Da el cambio de RD$${paid}`;
       bg.insertAdjacentHTML('beforeend',`<div style="width:100%;border-top:2px dashed var(--line);margin-top:var(--s-2);padding-top:var(--s-2);font-weight:800">${step}: ${cash.map(v=>money(v,.6)).join(' ')} <span class="muted">= RD$${cash.reduce((a,b)=>a+b,0)}</span></div>`); }
     tb.innerHTML=(lv>1?MONEY.filter(v=>lv===3||v<=100).map(v=>`<button data-m="${v}" style="padding:0 var(--s-2)">${money(v,.8)}</button>`).join('')+'<span class="sep"></span>':'')+`<button id="un">⌫</button><button id="ok" style="background:var(--c-menta)">✅ Entregar</button>`;
@@ -64,12 +66,12 @@ function toyFarm(root){
   const A=[['🐄','vaca','¡Muuu!','moo','cow','🌾'],['🐷','cerdo','¡Oinc, oinc!','oink','pig','🍎'],['🐔','gallina','¡Coc, coc, coc!','cluck','hen','🌽'],['🐑','oveja','¡Beee!','baa','sheep','🌿'],['🐴','caballo','¡Iiiiih!','neigh','horse','🥕'],['🦆','pato','¡Cuac, cuac!','quack','duck','🐛'],['🐶','perro','¡Guau, guau!','woof','dog','🦴'],['🐱','gato','¡Miau!','meow','cat','🐟'],['🐐','chivo','¡Meee!','maa','goat','🍃']];
   let food=null, quiz=null;
   addHTML(root, `<div class="abs" style="inset:0 0 var(--tbar-h) 0;background:linear-gradient(#D6ECFA 0 30%,#CFE6B8 30%)"></div>
-    <div class="abs" style="right:14px;top:40px;font-size:var(--fs-8xl)">🏚️</div><div class="abs" style="left:16px;top:44px;font-size:var(--fs-6xl)">🌳</div>
+    <div class="abs" style="right:14px;top:34px;font-size:var(--fs-8xl)">${emo('🏚️')}</div><div class="abs" style="left:16px;top:34px;font-size:var(--fs-8xl)">${emo('🌳')}</div>
     <div id="fm" class="abs" style="left:8px;right:8px;top:30%;display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s-2)"></div>
     <div class="tbar" id="ft"></div>`);
   const fm=root.querySelector('#fm'), ft=root.querySelector('#ft');
-  fm.innerHTML=A.map((a,i)=>`<button data-a="${i}" style="font-size:var(--fs-7xl);padding:var(--s-2);border-radius:var(--r-md);display:flex;flex-direction:column;align-items:center"><span>${a[0]}</span><small style="font-size:var(--fs-xs);font-weight:800">${lv===3?a[4]:a[1]}</small></button>`).join('');
-  ft.innerHTML = lv===1 ? `<span class="muted" style="font-weight:800;padding:0 var(--s-2)">Toca un animal 🔊</span>` : lv===2 ? A.map(a=>`<button data-f="${a[5]}">${a[5]}</button>`).join('') : `<button id="q">❓ Which animal says…?</button>`;
+  fm.innerHTML=A.map((a,i)=>`<button data-a="${i}" style="font-size:var(--fs-7xl);padding:var(--s-2);border-radius:var(--r-md);display:flex;flex-direction:column;align-items:center"><span style="display:inline-block">${emo(a[0])}</span><small style="font-size:var(--fs-xs);font-weight:800">${lv===3?a[4]:a[1]}</small></button>`).join('');
+  ft.innerHTML = lv===1 ? `<span class="muted" style="font-weight:800;padding:0 var(--s-2)">Toca un animal 🔊</span>` : lv===2 ? A.map(a=>`<button data-f="${a[5]}">${['🌽','🥕','🐟'].includes(a[5])?emo(a[5]):a[5]}</button>`).join('') : `<button id="q">❓ Which animal says…?</button>`;
   fm.querySelectorAll('[data-a]').forEach(b=>b.addEventListener('click',()=>{ const a=A[+b.dataset.a]; const s=b.querySelector('span'); s.style.animation='none'; void s.offsetWidth; s.style.animation='hop .7s';
     if (lv===2 && food){ if (food===a[5]){ win(`¡Ñam! A ${a[1]==='vaca'||a[1]==='gallina'||a[1]==='oveja'?'la':'el'} ${a[1]} le gusta ${food}`); sparks(b,6); } else tsay(`Hmm, ${a[1]==='vaca'||a[1]==='gallina'||a[1]==='oveja'?'la':'el'} ${a[1]} no come eso`); food=null; ft.querySelectorAll('[data-f]').forEach(x=>x.classList.remove('on')); return; }
     if (lv===3 && quiz){ if (a===quiz){ win(`Yes! The ${a[4]} says ${a[3]}!`); quiz=null; } else { speak(`No, the ${a[4]} says ${a[3]}`,'en-US'); } return; }
