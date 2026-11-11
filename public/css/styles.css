@@ -252,8 +252,10 @@ th{color:var(--soft);font-weight:700;font-size:var(--fs-xs)}
 .tbar button.on,.prow button.on,.fl button.on{border-color:var(--ink);background:var(--butter)}
 .tbar .sw-c{width:44px;min-width:44px;height:44px;border-radius:50%}
 .tbar .sep{flex:none;width:2px;height:30px;background:var(--line)}
-.tbub{position:absolute;bottom:calc(var(--tbar-h) + 14px);left:50%;transform:translateX(-50%);background:var(--card);border:var(--bw) solid var(--line);border-radius:var(--r-lg);padding:var(--s-2) var(--s-4);font-weight:800;font-size:var(--fs-md);line-height:1.3;z-index:9;max-width:90%;text-align:center;pointer-events:none;opacity:0;transition:opacity .25s;box-shadow:var(--sh-2)}
-.tbub:after{content:"";position:absolute;left:50%;bottom:-9px;width:14px;height:14px;background:var(--card);border-right:var(--bw) solid var(--line);border-bottom:var(--bw) solid var(--line);transform:translateX(-50%) rotate(45deg);border-radius:0 0 4px 0}
+.toyhead{position:relative}
+/* globo de diálogo: vive en la cabecera, a la izquierda del animalito, y nunca tapa el juego */
+.tbub{position:absolute;top:0;left:calc(var(--tap) + var(--s-2));right:58px;min-height:100%;display:flex;align-items:center;justify-content:center;background:var(--card);border:var(--bw) solid var(--line);border-radius:var(--r-lg);padding:var(--s-2) var(--s-4);font-weight:800;font-size:var(--fs-md);line-height:1.3;z-index:9;text-align:center;pointer-events:none;opacity:0;transition:opacity .25s;box-shadow:var(--sh-2)}
+.tbub:after{content:"";position:absolute;right:-9px;top:22px;width:14px;height:14px;background:var(--card);border-right:var(--bw) solid var(--line);border-top:var(--bw) solid var(--line);transform:translateY(-50%) rotate(45deg);border-radius:0 4px 0 0}
 .tbub.show{opacity:1}
 .toys{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:var(--s-4)}
 .toytile{border-radius:var(--r-xl);padding:var(--s-4) var(--s-3);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--s-2);aspect-ratio:1/1;border:var(--bw) solid rgba(74,70,88,.06);box-shadow:var(--sh-btn);animation:popin .45s backwards}
@@ -425,7 +427,7 @@ input[type=range].sz{width:110px;accent-color:var(--lavD);flex:none}
    ========================================================= */
 .vt{min-width:var(--tap-min);min-height:var(--tap-min)}
 #cl2 button{position:relative}#cl2 button:after{content:"";position:absolute;inset:-6px}
-@media (max-width:400px){.toyhead{gap:6px}.toyhead h2{font-size:var(--fs-sm)}.toyhead .thi .ilu{width:30px!important;height:30px!important}.toyhead .chip:not(.vt){padding:0 var(--s-2)}.tbub{font-size:var(--fs-sm);max-width:80%}}
+@media (max-width:400px){.toyhead{gap:6px}.toyhead h2{font-size:var(--fs-sm)}.toyhead .thi .ilu{width:30px!important;height:30px!important}.toyhead .chip:not(.vt){padding:0 var(--s-2)}.tbub{font-size:var(--fs-sm);padding:var(--s-1) var(--s-3)}}
 
 /* =========================================================
    ESTILO PLANO (12-estilo-plano.js · docs/GUIA-ILUSTRACIONES.md)
@@ -499,3 +501,9 @@ input[type=range].sz{width:110px;accent-color:var(--lavD);flex:none}
 #app:has(.tbar),#app:has(.pbar){background-image:none}
 .hero.land{background:#E3F1FA var(--paisaje,none) bottom center/auto 64% repeat-x;border-radius:var(--r-lg);padding:var(--s-4) var(--s-4) var(--s-5);box-shadow:var(--sh-1);overflow:hidden}
 .hero.land .nivel{margin-top:var(--s-2);background:var(--card);border-radius:var(--r-sm);padding:var(--s-2) var(--s-3)}
+
+/* barra inferior en dos filas (ajustarBarra en 02-juguetes.js) o deslizable con aviso */
+.tbar.dos{flex-wrap:wrap;justify-content:center;align-content:flex-start;row-gap:6px;padding:6px var(--s-2);overflow:hidden}
+.tbar.dos button{font-size:var(--fs-sm);padding:0 var(--s-2);max-width:calc(50% - 6px);white-space:normal;line-height:1.1;text-align:center}
+.tbar.dos .sep{display:none}
+.tbar.desliza{-webkit-mask-image:linear-gradient(90deg,#000 80%,transparent);mask-image:linear-gradient(90deg,#000 80%,transparent)}

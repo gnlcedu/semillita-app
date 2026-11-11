@@ -301,43 +301,79 @@ function toyDress(root){
 
 /* ---------- 9. Pizzería ---------- */
 function toyPizza(root){
+  /* Pizzería-restaurante: llega un cliente y pide una pizza con ingredientes específicos.
+     Se arma (salsa + ingredientes, tocar uno puesto lo quita), se hornea y se sirve; el cliente revisa el pedido.
+     Nivel 1: un ingrediente · nivel 2: dos · nivel 3: tres y además una fracción de la pizza (porciones de 8).
+     Si no coincide, el cliente dice qué cambió y se repite el mismo pedido con masa nueva. */
+  const lv=LV();
   const ING=[['🧀','queso','quesos'],['🍄','champiñón','champiñones'],['🫑','ají','ajíes'],['🍍','piña','piñas'],['🌽','maíz','maíces'],['🫒','aceituna','aceitunas'],['🍅','tomate','tomates']];
-  let cnt={}, baked=false, eaten=0, sauce=false;
+  const CUST=['🐶','🐱','🐰','🐥','🐮','🐷','🦁','🐵','🐯','🦒','🐘','🦜'];
+  const PARTES=[[4,'la mitad'],[2,'un cuarto'],[6,'tres cuartos']];
   /* ingredientes en estilo plano (13-plano-lugares.js), solo para mostrar */
   const PZ={'🧀':'queso_lonja','🍄':'hongo','🫑':'aji_aro','🍍':'pina_trozo','🌽':'granos','🫒':'aceituna','🍅':'tomate_rodaja'};
   const pzi=(e,t='1.1em')=>PZ[e]&&iluFuente(PZ[e])?ilu(PZ[e],t):e;
+  const custArt=e=>{ const [sp,outfit]=(window.CLIENTES||{})[e]||['leon',{}]; return `<span class="cli">${creature(sp,{outfit})}</span>`; };
+  let cnt={}, baked=false, sauce=false, order=null, servidas=new Set(), felices=0, vivo=true, ocupado=false;
+  const luego=(fn,ms)=>setTimeout(()=>{ if(vivo) fn(); },ms);
   addHTML(root, `<div class="abs" style="inset:0 0 var(--tbar-h) 0;background:repeating-linear-gradient(45deg,var(--paper-2) 0 22px,#FBEFE3 22px 44px)"></div>
-  <div class="abs" style="left:50%;top:46%;width:306px;height:306px;transform:translate(-50%,-50%);border-radius:50%;background:#E6C39C;border:1.6px solid #B48C66;box-shadow:0 7px 0 #D2AA80"></div>
-  <div id="pz" class="abs" style="left:50%;top:46%;width:270px;height:270px;transform:translate(-50%,-50%);border-radius:50%;background:#F4D9A4;border:1.6px solid #C9A06A;box-shadow:inset 0 0 0 15px #E9C084;transition:filter 1s">
+  <div id="sala" class="abs" style="left:0;right:0;top:0;height:128px;background:#FFF4E4;border-bottom:6px solid #D9B48A;z-index:1">
+    <div class="abs" style="left:0;right:0;top:0;height:22px;background:repeating-linear-gradient(90deg,var(--c-rosa) 0 30px,var(--white) 30px 60px);border-radius:0 0 50% 50%/0 0 12px 12px"></div>
+    <div id="cl" class="abs" style="left:8px;bottom:0;display:flex;align-items:flex-end;gap:var(--s-1);right:8px"></div>
+    <div id="fe" class="abs" aria-label="Clientes felices" style="left:8px;top:138px;z-index:6;background:var(--card);border:var(--bw) solid var(--line);border-radius:var(--r-pill);padding:var(--s-1) var(--s-3);font-weight:800;font-size:var(--fs-sm);box-shadow:var(--sh-1)">${emo('⭐')} <b>0</b></div>
+  </div>
+  <div id="base" class="abs" style="left:50%;top:calc(128px + (100% - 128px - var(--tbar-h) - 50px) / 2);width:calc(var(--pz) + 36px);height:calc(var(--pz) + 36px);transform:translate(-50%,-50%);border-radius:50%;background:#E6C39C;border:1.6px solid #B48C66;box-shadow:0 7px 0 #D2AA80"></div>
+  <div id="pz" class="abs" style="left:50%;top:calc(128px + (100% - 128px - var(--tbar-h) - 50px) / 2);width:var(--pz);height:var(--pz);transform:translate(-50%,-50%);border-radius:50%;background:#F4D9A4;border:1.6px solid #C9A06A;box-shadow:inset 0 0 0 15px #E9C084;transition:filter 1s">
     <div id="sc" class="abs" style="inset:18px;border-radius:50%;background:#EE8A74;opacity:0;transform:scale(.25) rotate(-40deg);transition:opacity .4s,transform .7s var(--ease-pop)"></div>
     <svg id="sl" class="abs" viewBox="0 0 270 270" style="inset:0;width:100%;height:100%;z-index:3;pointer-events:none"></svg></div>
-  <div id="ct" class="abs" style="left:0;right:0;top:14px;text-align:center;font-weight:800;font-size:var(--fs-md);opacity:0"></div>
-  <div class="tbar"><button id="sa" aria-label="Salsa">${ilu('salsa','1.1em')}</button>${ING.map((x,i)=>`<button data-i="${i}" aria-label="${x[1]}">${pzi(x[0])}</button>`).join('')}<span class="sep"></span><button id="hn">${ilu('llama','1.2em')} Hornear</button><button id="eat" aria-label="Comer">${ilu('porcion','1.1em')}</button><button id="nw" aria-label="Pizza nueva">${kic('reiniciar','1.1em')}</button></div>`);
-  const pz=root.querySelector('#pz'), sl=root.querySelector('#sl');
-  let order=null, eatGoal=0;
-  addHTML(root, `<div id="od" class="abs" style="left:12px;top:12px;background:var(--card);border:var(--bw) solid var(--line);border-radius:var(--r-md);padding:var(--s-2) var(--s-3);font-weight:800;z-index:5;display:none"></div>`);
-  const od=root.querySelector('#od');
-  const newOrder=()=>{ if (LV()<2) return; const ks=sample(ING.map((_,i)=>i), LV()===2?2:3); order=Object.fromEntries(ks.map(i=>[i, LV()===2?rnd(1,3):rnd(2,5)]));
-    od.style.display='block'; od.innerHTML=emo('🧾')+' Pedido:<br>'+Object.entries(order).map(([i,n])=>`${n} ${pzi(ING[i][0],'1.5em')}`).join('&nbsp; ');
-    tsay('Pedido: '+Object.entries(order).map(([i,n])=>`${n} ${n===1?ING[i][1]:ING[i][2]}`).join(', ')); };
-  setTimeout(newOrder,2700);
-  root.querySelector('#sa').addEventListener('click',()=>{ if(baked) return; sauce=true; Object.assign(root.querySelector('#sc').style,{opacity:'1',transform:'none'}); plopS(); tsay('Salsa de tomate'); });
-  root.querySelectorAll('[data-i]').forEach(b=>b.addEventListener('click',()=>{ if (baked){ tsay('Ya está horneada. ¡Hagamos otra! 🔄'); return; }
-    const i=+b.dataset.i, [e,s,p]=ING[i]; const a=Math.random()*Math.PI*2, r=Math.sqrt(Math.random())*96;
-    const el=document.createElement('span'); el.className='abs top'; el.innerHTML=pzi(e,'1.3em'); el.style.cssText=`left:${135+Math.cos(a)*r-19}px;top:${135+Math.sin(a)*r-19}px;font-size:var(--fs-3xl);line-height:1;--r:${rnd(-30,30)}deg;animation:caer .5s cubic-bezier(.3,1.3,.5,1) both;z-index:2;transform:rotate(var(--r))`;
-    pz.appendChild(el); cnt[i]=(cnt[i]||0)+1; popS(); tsay(`${cnt[i]} ${cnt[i]===1?s:p}`); }));
-  root.querySelector('#hn').addEventListener('click',()=>{ if (baked) return; baked=true; tsay('Al horno... ¡3, 2, 1!'); pz.style.filter='brightness(.75) saturate(.6)'; hornear(root,pz,1600);
-    setTimeout(()=>{ pz.style.filter='saturate(1.12) brightness(.97)'; let h=''; for(let k=0;k<8;k++){ const a0=k/8*Math.PI*2-Math.PI/2, a1=(k+1)/8*Math.PI*2-Math.PI/2;
-      h+=`<path data-k="${k}" d="M135 135L${135+135*Math.cos(a0)} ${135+135*Math.sin(a0)}A135 135 0 0 1 ${135+135*Math.cos(a1)} ${135+135*Math.sin(a1)}Z" fill="transparent" stroke="#C99A55" stroke-width="2" style="transition:fill .3s"/>`; }
-      sl.innerHTML=h; eaten=0; react('happy');
-      if (order){ const ok=Object.keys(ING).every(i=>(order[i]||0)===(cnt[i]||0)); if (ok){ win('¡Pedido perfecto!'); } else tsay('Hmm, el pedido no estaba igual. ¡Pero se ve rica!'); order=null; }
-      if (LV()===3){ const opts=[[4,'la mitad'],[2,'un cuarto'],[6,'tres cuartos'],[3,'tres octavos'],[5,'cinco octavos']]; const [k,t]=pick(opts); eatGoal=k; setTimeout(()=>{ od.style.display='block'; od.innerHTML=`${ilu('diana','1.2em')} Cómete ${t} de la pizza`; tsay(`Ahora cómete ${t} de la pizza`); },2200); }
-      else setTimeout(()=>tsay('¡Pizza lista! Está cortada en 8 porciones. Toca 😋 para comer'),1800); }, 1600); });
-  root.querySelector('#eat').addEventListener('click',()=>{ if (!baked||!sl.innerHTML){ tsay('Primero hornea la pizza 🔥'); return; } if (eaten>=8){ tsay('¡Se acabó la pizza!'); return; }
-    const p=sl.querySelector(`[data-k="${eaten}"]`); p.setAttribute('fill','#FBF3EA'); p.setAttribute('stroke','transparent'); migas(pz,eaten); eaten++; react('happy'); note(300,.12,'square',.05);
-    tsay(eaten<8?`¡Ñam! Comiste ${eaten} de 8. Quedan ${8-eaten}`:'¡Ñam! Nos comimos las 8 porciones');
-    if (eatGoal && eaten===eatGoal){ eatGoal=0; setTimeout(()=>win('¡Exacto! Esa era la parte correcta'),900); } });
-  root.querySelector('#nw').addEventListener('click',()=>{ pz.querySelectorAll('.top').forEach(x=>x.remove()); sl.innerHTML=''; baked=false; sauce=false; cnt={}; eaten=0; pz.style.filter=''; Object.assign(root.querySelector('#sc').style,{opacity:'0',transform:'scale(.25) rotate(-40deg)'}); eatGoal=0; od.style.display='none'; tsay('Masa nueva. ¡Pon salsa 🥫!'); setTimeout(newOrder,1800); });
+  <div class="tbar"><button id="sa" aria-label="Salsa">${ilu('salsa','1.1em')}</button>${ING.map((x,i)=>`<button data-i="${i}" aria-label="${x[1]}">${pzi(x[0])}</button>`).join('')}</div>
+  <button id="hn" class="chip abs" style="left:10px;bottom:calc(var(--tbar-h) + 10px);min-height:var(--tap);padding:0 var(--s-3);z-index:6">${ilu('llama','1.2em')} Hornear</button>
+  <button id="sv" class="chip abs" style="right:10px;bottom:calc(var(--tbar-h) + 10px);min-height:var(--tap);padding:0 var(--s-3);z-index:6">${ilu('porcion','1.1em')} Servir</button>
+  <button id="nw" class="icon-btn abs" aria-label="Masa nueva" style="right:8px;top:136px;z-index:6">${kic('reiniciar','1.1em')}</button>`);
+  const pz=root.querySelector('#pz'), sl=root.querySelector('#sl'), cl=root.querySelector('#cl'), fe=root.querySelector('#fe b');
+  /* la pizza se ajusta al espacio libre entre el salón y la barra */
+  let lado=270; const medir=()=>{ const tb=root.querySelector(':scope > .tbar'), al=root.clientHeight-128-(tb?tb.offsetHeight:70), an=root.clientWidth; lado=Math.max(140,Math.min(270,al-50-50,an-56)); root.style.setProperty('--pz',lado+'px'); };
+  medir(); window.addEventListener('resize',medir);
+  const nombres=(i,n)=>`${n} ${n===1?ING[i][1]:ING[i][2]}`;
+  function masa(){ pz.querySelectorAll('.top').forEach(x=>x.remove()); sl.innerHTML=''; sl.style.pointerEvents='none'; baked=false; sauce=false; cnt={}; servidas=new Set(); pz.style.filter=''; root.querySelector('#sv').classList.remove('on'); Object.assign(root.querySelector('#sc').style,{opacity:'0',transform:'scale(.25) rotate(-40deg)'}); }
+  function pintaPedido(extra=''){
+    const o=order, lista=Object.entries(o.ing).map(([i,n])=>`<span style="display:inline-flex;align-items:center;gap:2px;white-space:nowrap"><b>${n}</b>${pzi(ING[i][0],'1.5em')}</span>`).join(' ');
+    cl.innerHTML=`<span style="font-size:var(--fs-7xl);display:inline-block;line-height:1;flex:none">${custArt(o.quien)}</span><div class="bubble" style="font-size:var(--fs-sm);line-height:1.2;padding:var(--s-1) var(--s-3);margin-bottom:var(--s-2);min-width:0"><div style="font-weight:800;line-height:1.15">Quiero pizza con:</div><div style="display:flex;flex-wrap:wrap;align-items:center;gap:0 var(--s-2);margin-top:2px"><span title="salsa" style="display:inline-flex">${ilu('salsa','1.5em')}</span>${lista}</div>${o.parte?`<div style="font-weight:800;margin-top:2px;color:#5A566B">Sirve ${o.parte[1]}: ${o.parte[0]} de 8</div>`:''}${extra}</div>`;
+  }
+  function cliente(){
+    const ks=sample(ING.map((_,i)=>i), lv); const ing=Object.fromEntries(ks.map(i=>[i, lv===3?rnd(1,4):rnd(1,3)]));
+    order={ing, quien:pick(CUST), parte: lv===3?pick(PARTES):null}; masa(); pintaPedido(); if (typeof entrar==='function') entrar(cl.firstElementChild); ocupado=false;
+    tsay('Quiero una pizza con salsa y '+Object.entries(ing).map(([i,n])=>nombres(i,n)).join(', ').replace(/, ([^,]*)$/,' y $1')+(order.parte?`. Sírveme ${order.parte[1]}`:''));
+  }
+  root.querySelector('#sa').addEventListener('click',()=>{ if(baked||ocupado) return; sauce=true; Object.assign(root.querySelector('#sc').style,{opacity:'1',transform:'none'}); plopS(); tsay('Salsa de tomate'); });
+  root.querySelectorAll('[data-i]').forEach(b=>b.addEventListener('click',()=>{ if (ocupado) return; if (baked){ tsay('Ya está horneada. Sírvela o empieza una masa nueva.'); return; }
+    const i=+b.dataset.i, [e,s,p]=ING[i]; const a=Math.random()*Math.PI*2, r=Math.sqrt(Math.random())*lado*.355;
+    const el=document.createElement('button'); el.className='abs top'; el.setAttribute('aria-label','Quitar '+s); el.innerHTML=pzi(e,'1.3em');
+    el.style.cssText=`left:${lado/2+Math.cos(a)*r-19}px;top:${lado/2+Math.sin(a)*r-19}px;width:38px;height:38px;padding:0;background:none;border:0;display:grid;place-items:center;font-size:var(--fs-3xl);line-height:1;--r:${rnd(-30,30)}deg;animation:caer .5s cubic-bezier(.3,1.3,.5,1) both;z-index:2;transform:rotate(var(--r))`;
+    el.addEventListener('click',()=>{ if (baked||ocupado) return; el.remove(); cnt[i]--; popS(); tsay(`Quitaste 1 ${s}. Quedan ${cnt[i]}`); });
+    pz.appendChild(el); cnt[i]=(cnt[i]||0)+1; popS(); tsay(nombres(i,cnt[i])); }));
+  root.querySelector('#hn').addEventListener('click',()=>{ if (baked||ocupado) return; baked=true; tsay('Al horno... ¡3, 2, 1!'); pz.style.filter='brightness(.75) saturate(.6)'; hornear(root,pz,1600);
+    luego(()=>{ pz.style.filter='saturate(1.12) brightness(.97)'; let h=''; for(let k=0;k<8;k++){ const a0=k/8*Math.PI*2-Math.PI/2, a1=(k+1)/8*Math.PI*2-Math.PI/2;
+        h+=`<path data-k="${k}" d="M135 135L${135+135*Math.cos(a0)} ${135+135*Math.sin(a0)}A135 135 0 0 1 ${135+135*Math.cos(a1)} ${135+135*Math.sin(a1)}Z" fill="transparent" stroke="#C99A55" stroke-width="2" style="transition:fill .3s;pointer-events:auto;cursor:pointer"/>`; }
+      sl.innerHTML=h; react('happy'); root.querySelector('#sv').classList.add('on');
+      if (order.parte){ sl.style.pointerEvents='auto'; tsay(`¡Lista! Toca las porciones para servir ${order.parte[1]} y luego Servir`); }
+      else tsay('¡Pizza lista! Toca Servir para llevarla a la mesa'); }, 1600); });
+  /* nivel 3: tocar una porción la pone (o la quita) del plato del cliente */
+  sl.addEventListener('click',e=>{ const p=e.target.closest('[data-k]'); if(!p||!baked||ocupado||!order.parte) return; const k=+p.dataset.k;
+    if (servidas.has(k)){ servidas.delete(k); p.setAttribute('fill','transparent'); } else { servidas.add(k); p.setAttribute('fill','rgba(255,255,255,.62)'); if (typeof migas==='function') migas(pz,k); }
+    note(300,.12,'square',.05); tsay(`${servidas.size} de 8 porciones`); });
+  root.querySelector('#sv').addEventListener('click',()=>{ if (ocupado) return; if (!baked){ tsay('Primero hornea la pizza'); return; }
+    const o=order, mal=[];
+    if (!sauce) mal.push('faltó la salsa');
+    ING.forEach((x,i)=>{ const pide=o.ing[i]||0, hay=cnt[i]||0; if (pide===hay) return;
+      mal.push(pide===0 ? `no pedí ${x[2]}` : hay===0 ? (pide===1?`faltó 1 ${x[1]}`:`faltaron ${pide} ${x[2]}`) : `pedí ${nombres(i,pide)} y hay ${hay}`); });
+    if (o.parte && servidas.size!==o.parte[0]) mal.push(`pedí ${o.parte[1]}, que son ${o.parte[0]} porciones, y serviste ${servidas.size}`);
+    ocupado=true;
+    if (!mal.length){ felices++; fe.textContent=felices; confetti(); win('¡Pedido perfecto! El cliente quedó feliz'); const c=cl.firstElementChild; luego(()=>{ if (typeof salir==='function') salir(c); },1500); luego(cliente,2700); }
+    else { react('think'); const txt='Casi: '+mal.slice(0,2).join(' y ')+'.'; pintaPedido(`<div style="margin-top:var(--s-1);font-weight:700;color:#8A4B3C">${txt}</div>`); tsay(txt+' ¡Probemos otra vez!'); note(220,.2,'sine',.1);
+      luego(()=>{ masa(); pintaPedido(); ocupado=false; tsay('Masa nueva. Mira bien el pedido.'); },3400); } });
+  root.querySelector('#nw').addEventListener('click',()=>{ if (ocupado) return; masa(); tsay('Masa nueva. ¡Pon la salsa!'); });
+  luego(cliente,900);
+  return ()=>{ vivo=false; window.removeEventListener('resize',medir); };
 }
 
 /* ---------- 10. Clasificar ---------- */
@@ -497,11 +533,11 @@ function toyBeads(root){
     timers.forEach(clearTimeout);
     const tens=Math.floor(n/10), ones=n%10;
     ar.innerHTML=`<div style="padding:60px var(--s-4) var(--s-4);text-align:center"><div style="font-size:84px;font-weight:800;line-height:1;animation:popin .3s both">${n}</div>
-      <div class="muted" style="font-weight:800;margin:var(--s-2) 0 var(--s-5)">${tens?`${tens} ${tens===1?'decena':'decenas'}`:''}${tens&&ones?' y ':''}${ones||!tens?`${ones} ${ones===1?'unidad':'unidades'}`:''}</div>
+      <div class="muted" style="font-weight:800;margin:var(--s-2) 0 var(--s-3)">${tens?`${tens} ${tens===1?'decena':'decenas'}`:''}${tens&&ones?' y ':''}${ones||!tens?`${ones} ${ones===1?'unidad':'unidades'}`:''}</div>
+      <div style="display:flex;justify-content:center;gap:var(--s-4);margin-bottom:var(--s-4)"><button id="mn" class="btn soft" style="font-size:var(--fs-3xl);width:80px">−</button><button id="pl" class="btn" style="font-size:var(--fs-3xl);width:80px">+</button></div>
       <div style="display:flex;justify-content:center;align-items:flex-end;gap:var(--s-3);min-height:280px;flex-wrap:wrap">
         ${times(tens,()=>`<div style="display:flex;flex-direction:column;gap:1px;padding:var(--s-1);background:#F3E3B8;border-radius:var(--r-sm);animation:popin .4s both">${times(10,()=>bead('#E2B13C',22)).join('')}</div>`).join('')}
-        <div style="display:flex;flex-direction:column-reverse;gap:1px">${times(ones,()=>bead('#E2B13C',22,'animation:popin .3s both')).join('')}</div></div>
-      <div style="display:flex;justify-content:center;gap:var(--s-4);margin-top:var(--s-5)"><button id="mn" class="btn soft" style="font-size:var(--fs-3xl);width:80px">−</button><button id="pl" class="btn" style="font-size:var(--fs-3xl);width:80px">+</button></div></div>`;
+        <div style="display:flex;flex-direction:column-reverse;gap:1px">${times(ones,()=>bead('#E2B13C',22,'animation:popin .3s both')).join('')}</div></div></div>`;
     ar.querySelector('#pl').addEventListener('click',()=>{ if(n>=40){ tsay('¡Muchas cuentas! Hasta 40'); return; } n++; note(520,.15,'sine',.1);
       if (n%10===0){ mine(); react('happy'); tsay(`¡10 cuentas forman una decena! Tienes ${n}`); } else { mine(); speak(String(n)); } });
     ar.querySelector('#mn').addEventListener('click',()=>{ if(n>0){ n--; mine(); speak(String(n)); } });
@@ -521,7 +557,7 @@ const TOYS=[
  {id:'aqua',   name:'Acuario',           icon:'🐠', c:'sky',    open:toyAquarium, hi:'Agrega animalitos al acuario.'},
  {id:'bubble', name:'Burbujas',          icon:'🫧', c:'sky',    open:toyBubbles,  hi:'¡Explota las burbujas!'},
  {id:'dress',  name:'Viste a tu amigo',  icon:'🎩', c:'rose',   open:toyDress,    hi:'¡Vísteme! Elige un sombrero.', hi2:'¡Vísteme igual que el modelo!'},
- {id:'pizza',  name:'Pizzería',          icon:'🍕', c:'peach',  open:toyPizza,    hi:'Pon salsa, ingredientes y hornea tu pizza.', hi2:'¡Llegó un pedido! Prepáralo igualito.'},
+ {id:'pizza',  name:'Pizzería',          icon:'🍕', c:'peach',  open:toyPizza,    hi:'Llegó un cliente. Prepara la pizza que pide, hornéala y sírvela.'},
  {id:'sort',   name:'Ordenar',           icon:'🧺', c:'sage',   open:toySort,     hi:'Arrastra cada cosa a su canasta.'},
  {id:'shapes', name:'Encaje de figuras', icon:'🔷', c:'lav',    open:toyShapes,   hi:'Lleva cada figura a su lugar.'},
  {id:'weather',name:'El tiempo',         icon:'🌦️', c:'mint',   open:toyWeather,  hi:'¿Qué tiempo hace? Toca los botones.'},
@@ -529,18 +565,42 @@ const TOYS=[
  {id:'beads',  name:'Cuentas',           icon:'📿', c:'sage',   open:toyBeads,    hi:'Toca una fila de cuentas para contar.'}
 ];
 
+/* Barra inferior de los juguetes: si sus botones no caben a lo ancho, pasa a dos filas y avisa a todo el juguete
+   con --tbar-h (las capas del juego usan esa medida, así se acomodan solas). Si ni en dos filas caben, queda
+   deslizable con un borde que se desvanece para que se note que hay más. Se recalcula si cambia el contenido o el tamaño. */
+function ajustarBarra(root){
+  let b=null, cuadro=0;
+  const medir=()=>{ cuadro=0; b=root.querySelector(':scope > .tbar'); if(!b) return;
+    const antes=root.style.getPropertyValue('--tbar-h');
+    b.classList.remove('dos','desliza'); root.style.removeProperty('--tbar-h');
+    if (b.scrollWidth<=b.clientWidth+2){ if(antes) window.dispatchEvent(new Event('resize')); return; }
+    /* alto real con las filas que hagan falta; se permiten 3 filas en pantallas altas y 2 en las bajas */
+    b.classList.add('dos'); b.style.height='auto'; const h=b.offsetHeight; b.style.height='';
+    const max = innerHeight>=640 ? 3*54+16 : 2*54+14;
+    if (h<=max){ root.style.setProperty('--tbar-h',Math.max(70,h)+'px'); }
+    else { b.classList.remove('dos'); b.classList.add('desliza'); }
+    /* si la barra cambió de alto, los juguetes que miden su espacio se vuelven a acomodar */
+    if (root.style.getPropertyValue('--tbar-h')!==antes) window.dispatchEvent(new Event('resize')); };
+  const pedir=()=>{ if(!cuadro) cuadro=requestAnimationFrame(medir); };
+  medir();
+  /* se observa todo el juguete: algunos rehacen la barra o le cambian los botones a mitad del juego */
+  const mo=new MutationObserver(pedir); mo.observe(root,{childList:true,subtree:true});
+  const rz=e=>{ if(e.isTrusted) pedir(); }; window.addEventListener('resize',rz);
+  return ()=>{ mo.disconnect(); window.removeEventListener('resize',rz); if(cuadro) cancelAnimationFrame(cuadro); };
+}
 function vToy(){
   if (toyCleanup){ toyCleanup(); toyCleanup=null; }
   const T=TOYS.find(t=>t.id===view.toy), p=prof();
   streak=0;
-  app.innerHTML=`<div class="toyhead"><button class="icon-btn" id="back" aria-label="Volver">←</button><span class="thi">${toyIcon(T,'38px')}</span><h2>${T.name}</h2><button class="chip vt"></button><button class="chip" id="lv"></button>${mascot(p.avatar,44)}</div><div class="toy" id="toy"><div class="tbub" id="tb"></div></div>`;
+  app.innerHTML=`<div class="toyhead"><button class="icon-btn" id="back" aria-label="Volver">←</button><span class="thi">${toyIcon(T,'38px')}</span><h2>${T.name}</h2><button class="chip vt"></button>${T.libre?'':'<button class="chip" id="lv"></button>'}${mascot(p.avatar,44)}<div class="tbub" id="tb" role="status"></div></div><div class="toy" id="toy"></div>`;
   bind('#back',()=>go({name:'home'}));
   updLvChip();
   bind('#lv',()=>{ setLV(LV()%3+1); go({name:'toy',toy:T.id}); setTimeout(()=>tsay(`Nivel ${LV()}: ${['fácil','medio','difícil'][LV()-1]}`),350); });
   const root=document.getElementById('toy');
   const _st=window.setTimeout, ids=[]; window.setTimeout=(f,t,...a)=>{ const id=_st(f,t,...a); ids.push(id); return id; };
   let c0; try{ c0=T.open(root); } finally { window.setTimeout=_st; }
-  toyCleanup=()=>{ ids.forEach(clearTimeout); c0&&c0(); };
+  const cb=ajustarBarra(root);
+  toyCleanup=()=>{ ids.forEach(clearTimeout); cb(); c0&&c0(); };
   setTimeout(()=>tsay(LV()>1&&T.hi2?T.hi2:T.hi),300);
 }
 let greeted=false;

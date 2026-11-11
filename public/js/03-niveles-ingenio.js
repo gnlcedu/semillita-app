@@ -8,11 +8,16 @@ function LV(){ const p=prof(); return (S.toyLv&&S.toyLv[p.id]&&S.toyLv[p.id][vie
 function setLV(n){ const p=prof(); S.toyLv=S.toyLv||{}; (S.toyLv[p.id]=S.toyLv[p.id]||{})[view.toy]=n; save(); }
 function updLvChip(){ const c=document.getElementById('lv'); if(c){ const l=LV(); c.innerHTML=`${'★'.repeat(l)}${'☆'.repeat(3-l)}<span class="lvt"> Nivel ${l}</span>`; c.setAttribute('aria-label',`Nivel ${l}`); } }
 let streak=0;
+const RETOS_POR_NIVEL=1;
 function win(msg){
   streak++; react('happy'); note(880,.2,'sine',.12); setTimeout(()=>note(1175,.3,'sine',.12),150);
   const p=prof(); S.toyWins=S.toyWins||{}; const k=p.id+'|'+view.toy; S.toyWins[k]=(S.toyWins[k]||0)+1; save();
   if (msg) tsay(msg);
-  if (streak>=3 && LV()<3){ streak=0; setLV(LV()+1); updLvChip(); setTimeout(()=>{ confetti(); tsay(`¡Subiste al nivel ${LV()}! Ahora será más difícil.`); },2000); return true; }
+  /* al completar RETOS_POR_NIVEL retos, el juguete pasa solo al nivel siguiente (hasta el 3) y se vuelve a abrir
+     con ese nivel, para que el cambio se note. El botón de estrellas sigue sirviendo para elegir el nivel a mano. */
+  if (streak>=RETOS_POR_NIVEL && LV()<3){ streak=0; const toy=view.toy, nuevo=LV()+1; setLV(nuevo); updLvChip();
+    setTimeout(()=>{ if (view.name!=='toy' || view.toy!==toy) return; confetti(); go({name:'toy',toy}); setTimeout(()=>{ if (view.name==='toy' && view.toy===toy) tsay(`¡Subiste al nivel ${nuevo}! Ahora es un poco más difícil.`); },900); },2600);
+    return true; }
   return false;
 }
 const banner = (root,id='tg') => { addHTML(root, `<div id="${id}" class="abs" style="left:12px;top:12px;background:var(--card);border:var(--bw) solid var(--line);border-radius:var(--r-md);padding:var(--s-2) var(--s-3);font-weight:800;z-index:5;max-width:70%"></div>`); return root.querySelector('#'+id); };
@@ -120,12 +125,12 @@ function toyBeads2(root){
   function builder(goal){
     timers.forEach(clearTimeout);
     const tens=Math.floor(n/10), ones=n%10;
-    ar.innerHTML=`<div style="padding:${goal?100:60}px 14px 14px;text-align:center"><div style="font-size:84px;font-weight:800;line-height:1">${n}</div>
+    ar.innerHTML=`<div style="padding:${goal?84:52}px 14px 14px;text-align:center"><div style="font-size:72px;font-weight:800;line-height:1">${n}</div>
       <div class="muted" style="font-weight:800;margin:var(--s-2) 0 var(--s-4)">${tens?`${tens} ${tens===1?'decena':'decenas'}`:''}${tens&&ones?' y ':''}${ones||!tens?`${ones} ${ones===1?'unidad':'unidades'}`:''}</div>
-      <div style="display:flex;justify-content:center;align-items:flex-end;gap:var(--s-2);min-height:250px;flex-wrap:wrap">
-        ${times(tens,()=>`<div style="display:flex;flex-direction:column;gap:1px;padding:3px;background:#F3E3B8;border-radius:var(--r-sm)">${times(10,()=>bead('#E2B13C',20)).join('')}</div>`).join('')}
-        <div style="display:flex;flex-direction:column-reverse;gap:1px">${times(ones,()=>bead('#E2B13C',20,'animation:popin .3s both')).join('')}</div></div>
-      <div style="display:flex;justify-content:center;gap:var(--s-3);margin-top:var(--s-4);flex-wrap:wrap"><button id="mn" class="btn soft" style="font-size:var(--fs-2xl);min-width:64px">−1</button><button id="pl" class="btn" style="font-size:var(--fs-2xl);min-width:64px">+1</button>${lv>1?`<button id="p10" class="btn" style="font-size:var(--fs-2xl);min-width:72px;background:#7D6620">+10</button><button id="m10" class="btn soft" style="font-size:var(--fs-2xl);min-width:72px">−10</button>`:''}</div></div>`;
+      <div style="display:flex;justify-content:center;gap:var(--s-2);margin-bottom:var(--s-3);flex-wrap:wrap"><button id="mn" class="btn soft" style="font-size:var(--fs-xl);min-width:56px;padding-left:var(--s-3);padding-right:var(--s-3)">−1</button><button id="pl" class="btn" style="font-size:var(--fs-xl);min-width:56px;padding-left:var(--s-3);padding-right:var(--s-3)">+1</button>${lv>1?`<button id="p10" class="btn" style="font-size:var(--fs-xl);min-width:60px;padding-left:var(--s-3);padding-right:var(--s-3);background:#7D6620">+10</button><button id="m10" class="btn soft" style="font-size:var(--fs-xl);min-width:60px;padding-left:var(--s-3);padding-right:var(--s-3)">−10</button>`:''}</div>
+      <div style="display:flex;justify-content:center;align-items:flex-end;gap:var(--s-2);min-height:196px;flex-wrap:wrap">
+        ${times(tens,()=>`<div style="display:flex;flex-direction:column;gap:1px;padding:3px;background:#F3E3B8;border-radius:var(--r-sm)">${times(10,()=>bead('#E2B13C',18)).join('')}</div>`).join('')}
+        <div style="display:flex;flex-direction:column-reverse;gap:1px">${times(ones,()=>bead('#E2B13C',18,'animation:popin .3s both')).join('')}</div></div></div>`;
     const chg=d=>{ const nn=n+d; if(nn<0||nn>99) return; n=nn; note(520,.15,'sine',.1); builder(goal);
       if (goal && n===target){ win(`¡Formaste el ${n}!`); setTimeout(newGoal,2400); } else if (d===1 && n%10===0 && n) tsay(`¡10 cuentas forman una decena! Tienes ${n}`); else speak(String(n)); };
     ar.querySelector('#pl').addEventListener('click',()=>chg(1)); ar.querySelector('#mn').addEventListener('click',()=>chg(-1));

@@ -37,14 +37,19 @@ function toyShop(root){
     ${scene('colmado','inset:0 0 var(--tbar-h) 0')}
     <div class="abs" style="left:0;right:0;top:0;height:30px;background:repeating-linear-gradient(90deg,var(--c-rosa) 0 30px,var(--white) 30px 60px);border-radius:0 0 50% 50%/0 0 14px 14px;z-index:1"></div>
     <div id="cu" class="abs" style="left:14px;top:46px;display:flex;align-items:flex-end;gap:var(--s-2);max-width:68%;z-index:5"></div>
-    <div id="sh" class="abs" style="left:10px;right:10px;top:150px;display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s-2)"></div>
-    <div class="abs caja-r" style="right:14px;bottom:162px;width:84px;height:84px;z-index:0;pointer-events:none"><span class="cajon">${ilu('cajon','100%')}</span>${ilu('caja','100%')}</div>
-    <div id="bg" class="abs" style="left:10px;right:10px;bottom:84px;min-height:64px;background:var(--card);border:2px dashed var(--line);border-radius:var(--r-md);padding:var(--s-2);display:flex;flex-wrap:wrap;gap:var(--s-2);align-items:center"></div>
+    <div id="sh" class="abs" style="left:10px;right:10px;top:150px;bottom:calc(var(--tbar-h) + 86px);display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(3,minmax(0,max-content));align-content:start;gap:var(--s-2)"></div>
+    <div class="abs caja-r" style="right:14px;bottom:calc(var(--tbar-h) + 92px);width:84px;height:84px;z-index:0;pointer-events:none"><span class="cajon">${ilu('cajon','100%')}</span>${ilu('caja','100%')}</div>
+    <div id="bg" class="abs" style="left:10px;right:10px;bottom:calc(var(--tbar-h) + 14px);min-height:64px;max-height:64px;overflow-y:auto;background:var(--card);border:2px dashed var(--line);border-radius:var(--r-md);padding:var(--s-2);display:flex;flex-wrap:wrap;gap:var(--s-2);align-items:center"></div>
     <div class="tbar" id="tb2"></div>`);
   const cu=root.querySelector('#cu'), sh=root.querySelector('#sh'), bg=root.querySelector('#bg'), tb=root.querySelector('#tb2'); sceneParallax(root); scenePet(root,{at:'right:8px;top:40px',size:60,prop:ilu('delantal','100%'),cls:'pet-shop'});
-  sh.innerHTML=PROD.map((p,i)=>`<button data-p="${i}" style="background:var(--card);border:var(--bw) solid var(--line);border-radius:var(--r-md);padding:var(--s-2) 2px;display:flex;flex-direction:column;align-items:center"><span style="font-size:var(--fs-4xl)">${emo(p[0])}</span>${lv>1?`<small style="font-weight:800;background:var(--butter);border-radius:var(--r-xs);padding:0 var(--s-2)">RD$${p[3]}</small>`:`<small style="font-weight:700">${p[1]}</small>`}</button>`).join('');
+  sh.innerHTML=PROD.map((p,i)=>`<button data-p="${i}" style="background:var(--card);border:var(--bw) solid var(--line);border-radius:var(--r-md);padding:var(--pp,var(--s-2)) 2px;min-height:0;line-height:1.1;display:flex;flex-direction:column;align-items:center;justify-content:center"><span style="font-size:var(--fp,var(--fs-4xl))">${emo(p[0])}</span>${lv>1?`<small style="font-weight:800;background:var(--butter);border-radius:var(--r-xs);padding:0 var(--s-2)">RD$${p[3]}</small>`:`<small style="font-weight:700">${p[1]}</small>`}</button>`).join('');
+  /* en pantallas bajas los productos se achican para no encimarse con la bolsa */
+  const medirSh=()=>{ const al=(sh.clientHeight-16)/3; sh.style.setProperty('--fp', Math.max(20,Math.min(34,al-34))+'px'); sh.style.setProperty('--pp', al<70?'2px':'var(--s-2)'); const lb=root.querySelector('#lyb .lyt'); if(lb) lb.style.display=root.clientWidth<340?'none':'';
+    /* la caja registradora es adorno: se oculta si quedaría encima de los productos */
+    const cj=root.querySelector('.caja-r'), ult=sh.lastElementChild; if(cj&&ult){ cj.style.visibility=''; cj.style.visibility = ult.getBoundingClientRect().bottom > cj.getBoundingClientRect().top+6 ? 'hidden' : ''; } };
+  window.addEventListener('resize',medirSh); setTimeout(medirSh,0); setTimeout(medirSh,400);
   /* Leyenda plegable: nombre (y precio en niveles 2 y 3) de cada producto; tocar una fila lo dice en voz alta */
-  addHTML(root, `<button id="lyb" class="chip abs" aria-expanded="false" aria-controls="ly" style="right:10px;top:102px;min-height:var(--tap);padding:0 var(--s-3);font-size:var(--fs-xs);z-index:6">📖 Nombres</button>
+  addHTML(root, `<button id="lyb" class="chip abs" aria-expanded="false" aria-controls="ly" style="right:10px;top:102px;min-height:var(--tap);padding:0 var(--s-3);font-size:var(--fs-xs);z-index:6">📖<span class="lyt"> Nombres</span></button>
     <div id="ly" class="abs" hidden style="left:10px;right:10px;top:150px;z-index:8;background:var(--card);border:var(--bw) solid var(--line);border-radius:var(--r-md);box-shadow:var(--sh-2);padding:var(--s-3)">
       <div class="row" style="margin-bottom:var(--s-2)"><b style="font-size:var(--fs-md)">Productos del colmado</b><div class="sp"></div><button id="lyx" class="chip" style="min-height:var(--tap);padding:0 var(--s-3);font-size:var(--fs-xs)">Ocultar</button></div>
       <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:var(--s-1) var(--s-2)">${PROD.map((p,i)=>`<button data-ly="${i}" style="display:flex;align-items:center;gap:var(--s-2);min-height:var(--tap);background:none;border:0;padding:0 var(--s-1);text-align:left;font-weight:800;font-size:var(--fs-sm);color:var(--ink)"><span style="font-size:var(--fs-2xl);flex:none">${emo(p[0])}</span><span>${p[1]}${lv>1?`<small style="display:block;font-weight:700;color:#5A566B">RD$${p[3]}</small>`:''}</span></button>`).join('')}</div></div>`);
@@ -86,6 +91,7 @@ function toyShop(root){
   /* la caja registradora abre el cajón al cobrar */
   function abrirCaja(){ const c=root.querySelector('.cajon'); temblar(root.querySelector('.caja-r'),{px:2}); if(!c||!c.animate||(typeof RM!=='undefined'&&RM)) return; c.animate([{transform:'translateY(0)'},{transform:'translateY(12%)',offset:.2},{transform:'translateY(12%)',offset:.8},{transform:'translateY(0)'}],{duration:1100,easing:'ease-out'}); }
   setTimeout(newCustomer,300);
+  return ()=>window.removeEventListener('resize',medirSh);
 }
 
 /* ---------- Granja de sonidos ---------- */
@@ -95,19 +101,23 @@ function toyFarm(root){
   let food=null, quiz=null;
   addHTML(root, `<div class="abs" style="inset:0 0 var(--tbar-h) 0;background:linear-gradient(#D6ECFA 0 30%,#CFE6B8 30%)"></div>
     ${scene('granja','inset:0 0 var(--tbar-h) 0')}
-    <div id="fm" class="abs" style="left:8px;right:8px;top:30%;display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s-2)"></div>
+    <div id="fm" class="abs" style="left:8px;right:8px;top:30%;bottom:calc(var(--tbar-h) + var(--s-2));display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,minmax(0,1fr));gap:var(--s-1) var(--s-2)"></div>
     <div class="tbar" id="ft"></div>`);
   const fm=root.querySelector('#fm'), ft=root.querySelector('#ft'); sceneParallax(root);
-  fm.innerHTML=A.map((a,i)=>`<button data-a="${i}" style="font-size:var(--fs-7xl);padding:var(--s-2);border-radius:var(--r-md);display:flex;flex-direction:column;align-items:center"><span style="display:inline-block">${emo(a[0])}</span><small style="font-size:var(--fs-xs);font-weight:800">${lv===3?a[4]:a[1]}</small></button>`).join('');
+  fm.innerHTML=A.map((a,i)=>`<button data-a="${i}" style="font-size:var(--fa,var(--fs-7xl));line-height:1.05;padding:2px;min-height:0;border-radius:var(--r-md);display:flex;flex-direction:column;align-items:center;justify-content:center"><span style="display:inline-block">${emo(a[0])}</span><small style="font-size:var(--fs-xs);font-weight:800">${lv===3?a[4]:a[1]}</small></button>`).join('');
+  /* tamaño del dibujo según el alto y el ancho de cada casilla, para que las tres filas se vean completas */
+  const medir=()=>{ const al=fm.clientHeight/3, an=fm.clientWidth/3; fm.style.setProperty('--fa', Math.max(30,Math.min(72,al-30,an-20))+'px'); };
+  medir(); window.addEventListener('resize',medir);
   ft.innerHTML = lv===1 ? `<span class="muted" style="font-weight:800;padding:0 var(--s-2)">Toca un animal ${kic('sonido','1.1em')}</span>` : lv===2 ? A.map(a=>`<button data-f="${a[5]}">${a[5]==='🍃'?ilu('hojita','1.1em'):emo(a[5])}</button>`).join('') : `<button id="q">❓ Which animal says…?</button>`;
-  fm.querySelectorAll('[data-a]').forEach(b=>b.addEventListener('click',()=>{ const a=A[+b.dataset.a]; const s=b.querySelector('span'); s.style.animation='none'; void s.offsetWidth; s.style.animation='hop .7s'; sonar(b);
+  const oidos=new Set();
+  fm.querySelectorAll('[data-a]').forEach(b=>b.addEventListener('click',()=>{ const a=A[+b.dataset.a]; if (lv===1){ oidos.add(a[1]); if (oidos.size===A.length){ oidos.clear(); setTimeout(()=>win('¡Conociste a todos los animales de la granja!'),2600); } } const s=b.querySelector('span'); s.style.animation='none'; void s.offsetWidth; s.style.animation='hop .7s'; sonar(b);
     if (lv===2 && food){ if (food===a[5]){ const fb=ft.querySelector('.on'); if(fb) volar(fb,s,fb.innerHTML,{arco:-90}); win(`¡Ñam! A ${a[1]==='vaca'||a[1]==='gallina'||a[1]==='oveja'?'la':'el'} ${a[1]} le gusta ${food}`); sparks(b,6); } else tsay(`Hmm, ${a[1]==='vaca'||a[1]==='gallina'||a[1]==='oveja'?'la':'el'} ${a[1]} no come eso`); food=null; ft.querySelectorAll('[data-f]').forEach(x=>x.classList.remove('on')); return; }
     if (lv===3 && quiz){ if (a===quiz){ sonidoAnimal(a[1]); win(`Yes! The ${a[4]} says ${a[3]}!`); quiz=null; } else { sonidoAnimal(a[1],()=>speak(`No, that is the ${a[4]}`,'en-US')); } return; }
     /* primero se oye el animal de verdad y luego el animalito dice quién es */
     sonidoAnimal(a[1],()=>speak(lv===3?`The ${a[4]} says ${a[3]}`:`Soy ${a[1]==='vaca'||a[1]==='gallina'||a[1]==='oveja'?'la':'el'} ${a[1]}`, lv===3?'en-US':'es-ES')); }));
   ft.querySelectorAll('[data-f]').forEach(b=>b.addEventListener('click',()=>{ food=b.dataset.f; ft.querySelectorAll('[data-f]').forEach(x=>x.classList.toggle('on',x===b)); tsay('¿Quién come esto? Toca el animal'); }));
   const q=root.querySelector('#q'); if (q) q.addEventListener('click',()=>{ quiz=pick(A); const z=quiz; tsay(`Which animal says ${z[3]}?`,'en-US'); setTimeout(()=>{ if(quiz===z) sonidoAnimal(z[1]); },1900); });
-  return ()=>{ if (sonAnimal){ sonAnimal.pause(); sonAnimal=null; } };
+  return ()=>{ window.removeEventListener('resize',medir); if (sonAnimal){ sonAnimal.pause(); sonAnimal=null; } };
 }
 
 /* ---------- Reloj ---------- */
@@ -265,7 +275,7 @@ function toyBody(root){
   };
   const COLOR={piel:'#F7D1B5',musculos:'#E88A8A',huesos:'#F3EEE2',organos:'#F2A2B4'};
   addHTML(root, `<div class="abs" style="inset:0 0 var(--tbar-h) 0;background:var(--paper-lav)"></div><svg id="bd" class="abs" viewBox="0 0 200 350" style="left:50%;top:44px;transform:translateX(-50%);height:calc(100% - 200px);max-width:92%"></svg>
-    <div id="inf" class="abs" style="left:12px;right:12px;bottom:84px;min-height:48px;background:var(--card);border:var(--bw) solid var(--line);border-radius:var(--r-md);padding:var(--s-2) var(--s-3);font-weight:700;text-align:center"></div>
+    <div id="inf" class="abs" style="left:12px;right:12px;bottom:calc(var(--tbar-h) + 14px);min-height:48px;background:var(--card);border:var(--bw) solid var(--line);border-radius:var(--r-md);padding:var(--s-2) var(--s-3);font-weight:700;text-align:center"></div>
     <div class="tbar"><button data-l="piel" class="on">🧍 Piel</button><button data-l="musculos">💪 Músculos</button><button data-l="huesos">🦴 Huesos</button><button data-l="organos">🫀 Órganos</button>${lv===3?'<button id="qz">❓ Reto</button>':''}</div>`);
   const bd=root.querySelector('#bd'), inf=root.querySelector('#inf');
   const silo=`<g fill="${'#FBE6D6'}" stroke="#E2C2A8" stroke-width="2">${PARTS.piel.map(p=>p[2]).join('')}</g>`;
@@ -288,7 +298,7 @@ function toyLab(root){
   const lv=LV(); let mode='flota', cleanup=[];
   addHTML(root, `${scene('laboratorio','inset:0 0 var(--tbar-h) 0')}<div id="lb" class="abs" style="inset:0 0 var(--tbar-h) 0;overflow:hidden"></div>
     <div class="tbar"><button data-m="flota" class="on">${ilu('tina','1.3em')} ¿Flota o se hunde?</button><button data-m="iman">${ilu('iman','1.2em')} Imanes</button><button data-m="volcan">${ilu('volcan','1.3em')} Volcán</button></div>`);
-  const lb=root.querySelector('#lb'); sceneParallax(root); scenePet(root,{at:'right:4px;bottom:74px',size:54,prop:ilu('bata','100%'),cls:'pet-lab'});
+  const lb=root.querySelector('#lb'); sceneParallax(root); scenePet(root,{at:'right:4px;bottom:calc(var(--tbar-h) + 4px)',size:54,prop:ilu('bata','100%'),cls:'pet-lab'});
   function flota(){
     const OB=[['🪵','madera',1],['🪨','piedra',0],['🍎','manzana',1],['🔑','llave',0],['🦆','pato de goma',1],['⚓','ancla',0],['🧽','esponja',1],['🔩','tornillo',0],['🏐','pelota',1],['🥄','cuchara',0]];
     const oe=e=>e==='🦆'?ilu('patito','1em'):emo(e); /* pato de goma propio (el 🦆 general es el pato de granja) */
@@ -353,18 +363,33 @@ function toyLab(root){
 
 /* ---------- Tangram ---------- */
 function toyTangram(root){
+  /* Las 7 piezas en su posición dentro del cuadrado de 4×4. Las dos primeras (triángulos grandes) forman una mitad
+     del cuadrado y las otras cinco la otra mitad; moviendo una mitad respecto a la otra salen otras figuras, y
+     girando o volteando todo cambia el lugar de cada pieza. Así el reto no es siempre el mismo. */
   const P=[['#F4A6A6',[[0,0],[4,0],[2,2]]],['#A9D3F0',[[0,0],[2,2],[0,4]]],['#F6E39A',[[2,4],[4,4],[4,2]]],['#B9E3C6',[[4,0],[4,2],[3,1]]],['#C9B8EE',[[2,2],[3,1],[4,2],[3,3]]],['#F7C59F',[[2,2],[3,3],[1,3]]],['#F5B8D0',[[0,4],[1,3],[3,3],[2,4]]]];
-  addHTML(root, `<div id="tg2" class="abs" style="inset:0 0 var(--tbar-h) 0;background:var(--paper)"></div><div class="tbar"><button id="rs">🔄 Mezclar</button><span class="muted" style="font-weight:800;padding:0 var(--s-2);white-space:nowrap" id="hint"></span></div>`);
-  const ar=root.querySelector('#tg2');
+  const FIG=[['el cuadrado',([x,y])=>[x,y]],['el triángulo',([x,y])=>[x-4,4-y]],['el romboide',([x,y])=>[x,y-4]]];   /* cómo se mueve la segunda mitad */
+  const SIM=[([x,y])=>[x,y],([x,y])=>[-x,y],([x,y])=>[x,-y],([x,y])=>[-x,-y],([x,y])=>[y,x],([x,y])=>[-y,x],([x,y])=>[y,-x],([x,y])=>[-y,-x]];
+  addHTML(root, `<div id="tg2" class="abs" style="inset:0 0 var(--tbar-h) 0;background:var(--paper)"></div><div class="tbar"><button id="rs">🔄 Otra figura</button><span class="muted" style="font-weight:800;padding:0 var(--s-2);white-space:nowrap" id="hint"></span></div>`);
+  const ar=root.querySelector('#tg2'); let ultima='', vivo=true;
   function round(){
-    const lv=LV(); ar.innerHTML=''; const W=ar.clientWidth, H=ar.clientHeight; const U=Math.min((W-40)/4, (H*.42)/4, 60); const ox=(W-U*4)/2, oy=24;
-    root.querySelector('#hint').textContent = lv===3?'Toca una pieza para girarla':'Arrastra las piezas al cuadrado';
-    ar.insertAdjacentHTML('beforeend',`<svg class="abs" style="left:${ox}px;top:${oy}px;width:${U*4}px;height:${U*4}px;overflow:visible" viewBox="0 0 4 4"><rect width="4" height="4" fill="#EDE5D8" stroke="#C9B79D" stroke-width=".05"/>${lv===1?P.map(p=>`<polygon points="${p[1].map(q=>q.join(',')).join(' ')}" fill="none" stroke="#C9B79D" stroke-width=".04" stroke-dasharray=".12 .1"/>`).join(''):''}</svg>`);
-    let left=P.length;
-    P.forEach((p,i)=>{ const xs=p[1].map(q=>q[0]), ys=p[1].map(q=>q[1]); const minx=Math.min(...xs), miny=Math.min(...ys), w=Math.max(...xs)-minx, h=Math.max(...ys)-miny;
+    if (!vivo) return;
+    const lv=LV(); ar.innerHTML=''; const W=ar.clientWidth, H=ar.clientHeight;
+    /* figura y orientación al azar, distintas de la anterior */
+    let fi, si, clave; do { fi=rnd(0,FIG.length-1); si=rnd(0,SIM.length-1); clave=fi+'-'+si; } while (clave===ultima); ultima=clave;
+    const [nombre,mitad]=FIG[fi], giro=SIM[si];
+    let piezas=P.map((p,i)=>[p[0], p[1].map(q=>giro(i<2?q:mitad(q)))]);
+    const todos=piezas.flatMap(p=>p[1]), x0=Math.min(...todos.map(q=>q[0])), y0=Math.min(...todos.map(q=>q[1]));
+    piezas=piezas.map(p=>[p[0],p[1].map(q=>[q[0]-x0,q[1]-y0])]);
+    const FW=Math.max(...piezas.flatMap(p=>p[1].map(q=>q[0]))), FH=Math.max(...piezas.flatMap(p=>p[1].map(q=>q[1])));
+    const U=Math.min((W-40)/FW, (H*.44)/FH, 60), ox=(W-U*FW)/2, oy=20;
+    root.querySelector('#hint').textContent = (lv===3?'Toca una pieza para girarla. ':'')+'Arma '+nombre;
+    const pts=p=>p[1].map(q=>q.join(',')).join(' ');
+    ar.insertAdjacentHTML('beforeend',`<svg class="abs" role="img" aria-label="Figura para armar: ${nombre}" style="left:${ox}px;top:${oy}px;width:${U*FW}px;height:${U*FH}px;overflow:visible" viewBox="0 0 ${FW} ${FH}"><g fill="#C9B79D" stroke="#C9B79D" stroke-width=".14" stroke-linejoin="round">${piezas.map(p=>`<polygon points="${pts(p)}"/>`).join('')}</g><g fill="#EDE5D8" stroke="#EDE5D8" stroke-width=".03" stroke-linejoin="round">${piezas.map(p=>`<polygon points="${pts(p)}"/>`).join('')}</g>${lv===1?piezas.map(p=>`<polygon points="${pts(p)}" fill="none" stroke="#C9B79D" stroke-width=".04" stroke-dasharray=".12 .1"/>`).join(''):''}</svg>`);
+    let left=piezas.length; const bajo=oy+U*FH+26;
+    piezas.forEach((p,i)=>{ const xs=p[1].map(q=>q[0]), ys=p[1].map(q=>q[1]); const minx=Math.min(...xs), miny=Math.min(...ys), w=Math.max(...xs)-minx, h=Math.max(...ys)-miny;
       const el=document.createElement('div'); el.className='abs'; let rot = lv===3 ? pick([90,180,270]) : 0;
-      el.innerHTML=`<svg width="${w*U}" height="${h*U}" viewBox="${minx} ${miny} ${w} ${h}" style="display:block;overflow:visible"><polygon points="${p[1].map(q=>q.join(',')).join(' ')}" fill="${p[0]}" stroke="#fff" stroke-width=".05" stroke-linejoin="round"/></svg>`;
-      const tx=ox+minx*U, ty=oy+miny*U; const sx=rnd(8,Math.max(10,W-w*U-8)), sy=rnd(oy+U*4+30, Math.max(oy+U*4+40,H-h*U-10));
+      el.innerHTML=`<svg width="${w*U}" height="${h*U}" viewBox="${minx} ${miny} ${w} ${h}" style="display:block;overflow:visible"><polygon points="${pts(p)}" fill="${p[0]}" stroke="#fff" stroke-width=".05" stroke-linejoin="round"/></svg>`;
+      const tx=ox+minx*U, ty=oy+miny*U; const sx=rnd(8,Math.max(10,W-w*U-8)), sy=rnd(Math.min(bajo,H-h*U-10), Math.max(bajo+10,H-h*U-10));
       el.style.cssText=`left:${sx}px;top:${sy}px;width:${w*U}px;height:${h*U}px;z-index:3;transition:transform .25s,left .3s,top .3s;transform:rotate(${rot}deg);animation:popin .4s ${i*.05}s both`;
       ar.appendChild(el); let downAt=null;
       el.addEventListener('pointerdown',e=>{ downAt=[e.clientX,e.clientY]; },true);
@@ -372,12 +397,13 @@ function toyTangram(root){
         if (moved && lv===3){ rot=(rot+90)%360; el.style.transform=`rotate(${rot}deg)`; popS(); return; }
         const cx=parseFloat(el.style.left), cy=parseFloat(el.style.top);
         if (rot===0 && Math.hypot(cx-tx,cy-ty)<U*.5){ el.style.left=tx+'px'; el.style.top=ty+'px'; el.dataset.lock=1; el.style.zIndex=2; note(784,.2,'sine',.12); left--;
-          if (left===0){ confetti(); win('¡Armaste el tangram!'); setTimeout(round,3000); } }
+          if (left===0){ confetti(); win(`¡Armaste ${nombre}!`); setTimeout(round,3000); } }
         else if (rot!==0 && Math.hypot(cx-tx,cy-ty)<U*.5){ tsay('Casi. Gira la pieza tocándola'); } }});
     });
   }
   root.querySelector('#rs').addEventListener('click',round);
   setTimeout(round,40);
+  return ()=>{ vivo=false; };
 }
 
 TOYS.find(t=>t.id==='dress').hidden=true;

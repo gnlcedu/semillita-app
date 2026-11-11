@@ -35,7 +35,7 @@ hongo:()=>svg(`${P('M36 54 H64 L60 88 Q50 92 40 88Z',K.crema)}${P('M12 58 Q14 20
 aji:()=>svg(`${L('M50 28 Q50 16 57 12',K.verde,4)}${P('M30 34 Q50 24 70 34 Q82 44 78 66 Q74 88 60 90 Q54 92 50 86 Q46 92 40 90 Q26 88 22 66 Q18 44 30 34Z',K.hoja)}${L('M50 34 Q48 60 50 84',shade(K.hoja,-.12),1.6)}`),
 aji_aro:()=>svg(`${anillo(50,52,32,22,K.hoja)}${D(42,46,3,K.crema)}${D(56,58,3,K.crema)}`),
 pina:()=>svg(`${hoja(50,32,-120,22,K.verde)}${hoja(50,32,-90,26)}${hoja(50,32,-60,22,K.verde)}${E(50,62,24,30,K.amarillo)}${[[40,48],[60,48],[50,40],[50,58],[38,68],[62,68],[50,78]].map(([x,y])=>`<path d="M${x} ${y-4} L${x+4} ${y} L${x} ${y+4} L${x-4} ${y}Z" fill="${shade(K.amarillo,-.14)}"/>`).join('')}`),
-pina_trozo:()=>svg(`${P('M20 30 L80 22 L72 80 L28 76Z',K.amarillo)}${L('M30 40 L68 34 M32 54 L70 50 M34 66 L66 64',shade(K.amarillo,-.12),1.8)}`),
+pina_trozo:()=>svg(`${anillo(50,50,39,10,'#E3B04A')}${anillo(50,50,33.5,10,K.amarillo)}<circle cx="50" cy="50" r="15" fill="none" stroke="${shade(K.amarillo,.38)}" stroke-width="4"/>${[0,1,2,3,4,5,6,7,8,9].map(i=>`<g transform="rotate(${i*36} 50 50)">${L('M50 20.5 L50 31',shade(K.amarillo,-.2),2)}</g><g transform="rotate(${i*36+18} 50 50)">${D(50,14.2,1.5,shade('#E3B04A',-.22))}</g>`).join('')}`),
 granos:()=>svg([[34,52],[58,40],[60,66]].map(([x,y])=>`<g transform="translate(${x} ${y})">${P('M0 -14 Q12 -12 12 0 Q10 12 0 14 Q-10 12 -12 0 Q-12 -12 0 -14Z',K.amarillo)}</g>`).join('')),
 aceituna:()=>svg(anillo(50,50,28,11,'#8E8AA6')),
 tomate_rodaja:()=>svg(`${C(50,50,34,K.coral)}${D(50,50,27,'#F7B3A8')}${[0,72,144,216,288].map(a=>`<g transform="rotate(${a} 50 50)"><ellipse cx="50" cy="35" rx="3" ry="5" fill="${K.crema}"/></g>`).join('')}${D(50,50,6,K.coral)}`),

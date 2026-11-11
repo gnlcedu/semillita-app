@@ -19,8 +19,6 @@ function toyCamino(root){
       <button id="bl" aria-label="Caminar a la izquierda" style="min-width:54px;touch-action:none">◀</button><button id="br" aria-label="Caminar a la derecha" style="min-width:54px;touch-action:none">▶</button>
       <span style="flex:1"></span><button id="bj" style="min-width:76px;touch-action:none">Saltar</button><button id="rs" aria-label="Empezar de nuevo">🔄</button></div>`);
   const cam=root.querySelector('#cam');
-  /* el globo del animalito va arriba, para no tapar el camino */
-  { const tb=document.getElementById('tb'); if(tb){ tb.style.bottom='auto'; tb.style.top='96px'; } }
   let raf=0, vivo=true, st=null; const tec={};
   const ctl={l:false,r:false,salto:-1};
   const VISTA={semilla:'🌰',agua:'💧',sol:'☀️'};
@@ -97,7 +95,7 @@ function toyCamino(root){
       <div id="hud" class="abs" style="left:8px;top:8px;right:8px;z-index:7;display:flex;flex-wrap:wrap;gap:var(--s-1) var(--s-2);align-items:center;pointer-events:none">
         <div style="display:flex;gap:var(--s-3);background:var(--card);border:var(--bw) solid var(--line);border-radius:var(--r-pill);padding:var(--s-1) var(--s-3);font-weight:800;font-size:var(--fs-sm);box-shadow:var(--sh-1)">${['semilla','agua','sol'].map(n=>`<span style="display:inline-flex;align-items:center;gap:3px">${emo(VISTA[n])}<b data-n="${n}">0</b></span>`).join('')}<span style="display:inline-flex;align-items:center;gap:3px">${emo('⭐')}<b data-n="estrella">0</b></span></div>
         <div id="vid" aria-label="Corazones" style="display:flex;gap:2px;background:var(--card);border:var(--bw) solid var(--line);border-radius:var(--r-pill);padding:var(--s-1) var(--s-2);font-size:var(--fs-md);line-height:1;box-shadow:var(--sh-1)">${[0,1,2].map(i=>`<span data-v="${i}">${emo('❤️')}</span>`).join('')}</div>
-        <div style="background:var(--butter);border-radius:var(--r-pill);padding:var(--s-1) var(--s-3);font-weight:800;font-size:var(--fs-xs);color:var(--ink)">Etapa ${etapa}</div>
+        <div style="background:var(--butter);border-radius:var(--r-pill);padding:var(--s-1) var(--s-3);font-weight:800;font-size:var(--fs-xs);color:var(--ink)">Camino ${dif+1}</div>
         ${palabra?`<div id="pal" aria-label="Palabra para formar" style="display:flex;gap:3px;background:var(--card);border:var(--bw) solid var(--line);border-radius:var(--r-sm);padding:var(--s-1) var(--s-2);box-shadow:var(--sh-1)">${[...palabra].map((c,i)=>`<span data-l="${i}" style="width:20px;height:26px;display:grid;place-items:center;border-bottom:3px solid var(--line-2);font-weight:800;font-size:var(--fs-sm);color:#5A566B">${c}</span>`).join('')}</div>`:''}</div>`;
     const q=s=>cam.querySelector(s);
     items.forEach((it,i)=>{ it.el=q(`[data-it="${i}"]`); });
@@ -145,10 +143,10 @@ function toyCamino(root){
     s.fin=true; s.vx=0; s.pj.style.opacity='1'; const etapas=['🌱','🌿','🌻'];
     etapas.forEach((e,i)=>setTimeout(()=>{ if(!vivo||st!==s) return; s.mac.innerHTML=emo(e); note(523+i*131,.25,'sine',.1); if(!RM) s.mac.animate([{transform:'scale(.6)'},{transform:'scale(1.12)'},{transform:'scale(1)'}],{duration:380,easing:'ease-out'}); },500+i*750));
     setTimeout(()=>{ if(!vivo||st!==s) return; const completa=!s.palabra||s.letra===[...s.palabra].length;
-      toyCamino.etapas[pid]=s.etapa+1;
+      if (lv===3) toyCamino.etapas[pid]=s.etapa+1;
       if (completa){ confetti(); win(s.palabra?`¡Tu semillita floreció y formaste la palabra ${s.palabra}!`:`¡Tu semillita floreció! Recogiste ${s.n.semilla} semillas, ${s.n.agua} gotas y ${s.n.sol} soles.`); }
       else { react('happy'); tsay(`¡Tu semillita floreció! La próxima vez completa la palabra ${s.palabra.toLowerCase()}.`); }
-      addHTML(cam, `<button id="otra" class="btn abs" style="left:50%;top:36%;transform:translateX(-50%);z-index:8;white-space:nowrap">Siguiente camino · Etapa ${s.etapa+1}</button>`); cam.querySelector('#otra').addEventListener('click',armar);
+      addHTML(cam, `<button id="otra" class="btn abs" style="left:50%;top:36%;transform:translateX(-50%);z-index:8;white-space:nowrap">Siguiente camino</button>`); cam.querySelector('#otra').addEventListener('click',armar);
     },500+etapas.length*750+300);
   }
   function paso(dt){
