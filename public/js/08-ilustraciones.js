@@ -185,7 +185,7 @@ window.ILU=ILU; window.ILU_EMO=EMO;
 /* origen de una pieza: 'kenney', 'svg' o '' si no existe */
 window.iluFuente=n=>KN()[n]&&!KN()[n][2]?'kenney':ILU[n]?'svg':'';
 window.ilu=(nombre,tam=48,c)=>{ const t=tamCss(tam), k=KN()[nombre];
-  if (k && !k[2]) return `<span class="ilu" data-ilu="${nombre}" style="width:${t};height:${t}"><img src="/kenney/${nombre}.webp" alt="" draggable="false" decoding="async"></span>`;
+  if (k && !k[2]) return `<span class="ilu" data-ilu="${nombre}" style="width:${t};height:${t}"><img src="kenney/${nombre}.webp" alt="" draggable="false" decoding="async"></span>`;
   const f=ILU[nombre]; if(!f) return '';
   return `<span class="ilu" data-ilu="${nombre}" style="width:${t};height:${t}">${c?f(c):f()}</span>`; };
 window.emo=(e,tam='1.1em')=> EMO[e]&&iluFuente(EMO[e]) ? ilu(EMO[e],tam) : e;
@@ -210,5 +210,5 @@ if (typeof MutationObserver!=='undefined') new MutationObserver(ms=>{ const todo
 window.toyIcon=(t,tam='1.2em')=>{ const id=typeof t==='string'?t:t.id, n=TOY_ILU[id];
   return n&&iluFuente(n) ? ilu(n,tam) : (typeof t==='string'?'':t.icon); };
 /* ícono monocromo de Kenney (Game Icons), toma el color del texto: kic('play') */
-window.kic=(nombre,tam='1em')=> KN()['kic_'+nombre] ? `<span class="kic" aria-hidden="true" style="width:${tamCss(tam)};height:${tamCss(tam)};--k:url(/kenney/kic_${nombre}.webp)"></span>` : '';
+window.kic=(nombre,tam='1em')=> KN()['kic_'+nombre] ? `<span class="kic" aria-hidden="true" style="width:${tamCss(tam)};height:${tamCss(tam)};--k:url(kenney/kic_${nombre}.webp)"></span>` : '';
 })();

@@ -9,7 +9,7 @@
    ========================================================= */
 (function(){
 /* sprite de Kenney posicionado; css = posición y tamaño */
-const sp=(n,css,extra='')=>`<img class="sp${extra?' '+extra:''}" src="/kenney/${n}.webp" alt="" draggable="false" decoding="async" style="${css}">`;
+const sp=(n,css,extra='')=>`<img class="sp${extra?' '+extra:''}" src="kenney/${n}.webp" alt="" draggable="false" decoding="async" style="${css}">`;
 /* capa con profundidad d (0 = fija, 1 = se mueve más) */
 const capa=(d,html,css='')=>`<div class="sl" data-d="${d}" style="${css}">${html}</div>`;
 const colinas=(c1,c2,top,h='60%')=>`<div class="hill" style="top:${top};height:${h};background:${c1};left:-20%;width:80%"></div><div class="hill" style="top:calc(${top} + 14px);height:calc(${h} - 14px);background:${c2};left:30%;width:95%"></div>`;

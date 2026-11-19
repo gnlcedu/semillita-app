@@ -93,6 +93,16 @@ TOYS.push({id:'nuevo', name:'Nombre', icon:'🎈', c:'mint', open:toyNuevo, hi:'
 - Verifica en 390 px (celular) y 768 px (tablet) antes de dar algo por terminado. Ver `docs/REVISION-VISUAL.md`.
 - Cada gráfico externo nuevo se anota en `docs/LICENCIAS.md`.
 
+## Publicación e instalación (PWA en GitHub Pages)
+- Se publica en **https://gnlcedu.github.io/semillita-app/** con `.github/workflows/pages.yml`, al subir a `main` o a mano desde Actions.
+- En Android: abrir en Chrome → «Instalar app». Funciona sin internet después de la primera visita (service worker de `vite-plugin-pwa`).
+- `vite.config.js` usa `base: '/semillita-app/'` en `build` y `preview`; en `dev` sigue en `/`.
+  - Vite agrega el prefijo a las rutas de `index.html`.
+  - **Dentro del JS, las rutas a archivos de `public/` van sin `/` inicial** (`sonidos/x.mp3`, no `/sonidos/x.mp3`).
+- Para probar como en Pages: `npm run build` y luego `npx vite preview` → `http://localhost:4173/semillita-app/` (en `.claude/launch.json`: `semillita-pages`).
+- La tarjeta «Instalar en este dispositivo» (zona de adultos, `07`) lee `window.SEMI_PWA`, que llena `src/main.js`.
+- `npm run offline` sigue generando el archivo único `entrega/semillita.html`, para compartir sin internet.
+
 ## Siguiente trabajo (ver docs/HOJA-DE-RUTA.md)
 1. Sonidos grabados o licenciados en `public/sonidos/` (Kenney tiene paquetes CC0 de sonidos de interfaz).
 2. Más contenido: cuentos, lecturas por grado, Mezcla colores, Pizzería y El tiempo.

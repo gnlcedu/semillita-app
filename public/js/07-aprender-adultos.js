@@ -209,7 +209,15 @@ vAdults=function(){
   const fmtM=s=>`${Math.round((s||0)/60)} min`;
   const week=p=>{ let s=0; for(let i=0;i<7;i++){ s+=(p.time||{})[new Date(Date.now()-i*864e5).toISOString().slice(0,10)]||0; } return s; };
   const ves=vocesES(), est=vozEstilo();
-  let html=`<div class="card" style="margin-bottom:var(--s-4)"><h3 style="font-size:var(--fs-md);margin-bottom:var(--s-2)">🗣️ Estilo de voz</h3>
+  /* Instalar en el dispositivo: el estado lo llena src/main.js en window.SEMI_PWA. No se muestra en el archivo
+     único de entrega (file://), que ya funciona sin internet y no se puede instalar. */
+  const pwa=window.SEMI_PWA||{}, instalada=pwa.installed||matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+  const tInst=location.protocol==='file:'?'':`<div class="card" style="margin-bottom:var(--s-4)"><h3 style="font-size:var(--fs-md);margin-bottom:var(--s-2)">📱 Instalar en este dispositivo</h3>
+    ${instalada?'<p class="muted" style="font-size:var(--fs-sm);margin:0">Semillita está instalada. Ábrela desde su ícono en la pantalla de inicio.</p>'
+      :pwa.prompt?'<button class="btn full" id="instalar">Instalar Semillita</button><p class="muted" style="font-size:var(--fs-xs);margin:var(--s-2) 0 0">Queda con su propio ícono, como cualquier app.</p>'
+      :'<p class="muted" style="font-size:var(--fs-sm);margin:0">En Chrome, abre el menú ⋮ y toca «Instalar app» o «Agregar a la pantalla principal». En iPhone o iPad, usa Safari: Compartir y luego «Agregar a inicio».</p>'}
+    <p class="muted" role="status" style="font-size:var(--fs-xs);margin:var(--s-2) 0 0">${pwa.offline?'✅ Lista para usar sin internet en este dispositivo.':'Para usarla sin internet, ábrela una vez con conexión y espera unos segundos.'}</p></div>`;
+  let html=tInst+`<div class="card" style="margin-bottom:var(--s-4)"><h3 style="font-size:var(--fs-md);margin-bottom:var(--s-2)">🗣️ Estilo de voz</h3>
     <div class="grades">${VOCES.map(v=>`<button class="chip ${est.id===v.id?'on':''}" data-voz="${v.id}" aria-pressed="${est.id===v.id}">${v.n}</button>`).join('')}</div>
     <p class="muted" style="font-size:var(--fs-xs);margin:var(--s-2) 0 0">${est.n}: ${est.d.toLowerCase()}. Toca un estilo para escucharlo.${S.settings.voice?'':' La voz está apagada: actívala arriba para oír la prueba.'}</p>
     ${ves.length>1?`<label style="display:flex;align-items:center;gap:var(--s-2);flex-wrap:wrap;margin-top:var(--s-3);font-weight:700;font-size:var(--fs-sm)">Voz del dispositivo <select class="chip" id="vozsel" style="max-width:100%"><option value="">Automática</option>${ves.map(v=>`<option value="${esc(v.name)}" ${S.settings.voiceName===v.name?'selected':''}>${esc(v.name.replace(/^(Microsoft|Google)\s+/,''))} (${esc(v.lang)})</option>`).join('')}</select></label>`:''}
@@ -246,6 +254,7 @@ vAdults=function(){
   bind('[data-lim]',el=>{ S.settings.limit=+el.dataset.lim; save(); render(); });
   bind('[data-unl]',el=>{ S.settings.unlocked=today()+el.dataset.unl; save(); el.textContent='✅ Listo: tiempo libre hoy'; });
   bind('#cls',()=>go({name:'class'}));
+  bind('#instalar',async()=>{ const ev=pwa.prompt; if(!ev) return; pwa.prompt=null; try{ ev.prompt(); const r=await ev.userChoice; if(r&&r.outcome==='accepted') pwa.installed=true; }catch(e){} render(); });
 };
 
 /* ---------- inicio ---------- */
