@@ -27,17 +27,20 @@ const D=(x,y,r,c)=>`<circle cx="${x}" cy="${y}" r="${r}" fill="${c}"/>`;
 const Eo=(x,y,rx,ry,c,rot)=>`<ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${ry}"${rot?` transform="rotate(${rot} ${x} ${y})"`:''} fill="${c}"/>`;
 const L=(d,c,w=3)=>`<path d="${d}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"/>`;
 const espejo=b=>`<g transform="translate(200 0) scale(-1 1)">${b}</g>`;
+/* recorta dibujos interiores (placas, manchas…) a la forma que los contiene */
+let NREC=0;
+const recorte=(d,inner)=>{ if(!inner) return ''; const id='rec'+(++NREC); return `<clipPath id="${id}"><path d="${d}"/></clipPath><g clip-path="url(#${id})">${inner}</g>`; };
 
 /* ---------- cara: ojos y boca con todas las expresiones ---------- */
-function cara({xl,xr,ey,r=6.5,mx,my,mw=7,tipo='w',mejillas=null,ojo=I,boca:conBoca=true}){
+function cara({xl,xr,ey,r=6.5,mx,my,mw=7,tipo="w",mejillas=null,ojo=I,boca:conBoca=true,cejas=true}){
   const G=(c,b)=>`<g class="${c}">${b}</g>`, w=r*1.25;
   const arc=(x,up)=>`M${x-w} ${ey+(up?2:-2)} Q${x} ${ey+(up?-r*1.3:r*1.2)} ${x+w} ${ey+(up?2:-2)}`;
   const ojos=G('eo',`<g class="blink">${Eo(xl,ey,r*.86,r,ojo)}${Eo(xr,ey,r*.86,r,ojo)}</g>`)
     +G('eh',L(arc(xl,1)+arc(xr,1),ojo,r*.5))
-    +G('es',L(arc(xl,0)+arc(xr,0),ojo,r*.5)+L(`M${xl-w-2} ${ey-r*2} l${w*1.6} ${r*.6} M${xr+w+2} ${ey-r*2} l${-w*1.6} ${r*.6}`,ojo,r*.42))
+    +G('es',L(arc(xl,0)+arc(xr,0),ojo,r*.5)+(cejas?L(`M${xl-w-1} ${ey-r*1.7} Q${xl-w*.2} ${ey-r*1.9} ${xl+w*.7} ${ey-r*2.5} M${xr+w+1} ${ey-r*1.7} Q${xr+w*.2} ${ey-r*1.9} ${xr-w*.7} ${ey-r*2.5}`,ojo,r*.42):''))
     +G('ez',L(`M${xl-w} ${ey} h${2*w} M${xr-w} ${ey} h${2*w}`,ojo,r*.5))
     +G('ew',E(xl,ey,r*1.45,r*1.55,'#FFFFFF')+E(xr,ey,r*1.45,r*1.55,'#FFFFFF')+D(xl,ey,r*.75,ojo)+D(xr,ey,r*.75,ojo))
-    +G('et',D(xl-1,ey-r*.45,r*.9,ojo)+D(xr-1,ey-r*.45,r*.9,ojo)+L(`M${xr-w} ${ey-r*2.6} l${2*w} ${-r*.7}`,ojo,r*.42));
+    +G('et',D(xl-1,ey-r*.45,r*.9,ojo)+D(xr-1,ey-r*.45,r*.9,ojo)+(cejas?L(`M${xr-w} ${ey-r*2.6} Q${xr} ${ey-r*3.2} ${xr+w} ${ey-r*2.7}`,ojo,r*.42):''));
   const sonrisa = tipo==='w'
     ? `M${mx-mw} ${my-1} Q${mx-mw/2} ${my+mw*.8} ${mx} ${my} Q${mx+mw/2} ${my+mw*.8} ${mx+mw} ${my-1}`
     : `M${mx-mw} ${my} Q${mx} ${my+mw*1.1} ${mx+mw} ${my}`;
@@ -125,7 +128,7 @@ const ESPECIES={
   },
   dibujo(o){
    const pi=o.piel, sh=o.concha, lnn=shade(sh,-.3);
-   const DOMO='M40 156 C36 92 72 58 116 58 C160 58 186 96 184 156Z';
+   const DOMO='M38 160 C34 92 72 58 116 58 C160 58 188 96 186 158 Q112 176 38 160Z';
    const hex=(cx,cy,r)=>'M'+Array.from({length:6},(_,i)=>{ const a=i*Math.PI/3; return `${(cx+r*Math.cos(a)).toFixed(1)} ${(cy+r*Math.sin(a)).toFixed(1)}`; }).join(' L')+'Z';
    const dib={
     placas: `<path d="${hex(114,108,24)}" fill="none" stroke="${lnn}" stroke-width="2.4"/>`+L('M102 87 L92 62 M126 87 L138 62 M138 108 L184 104 M126 129 L140 156 M102 129 L90 156 M90 108 L40 112',lnn,2.4),
@@ -133,12 +136,13 @@ const ESPECIES={
     manchas: [[84,96,10],[126,82,9],[152,116,11],[104,128,12],[66,132,8],[138,146,7]].map(([x,y,r])=>D(x,y,r,shade(sh,-.14))).join(''),
     liso: ''
    }[o.dibujo]||'';
-   const pata=x=>P(`M${x-13} 160 Q${x-15} 190 ${x} 192 Q${x+15} 190 ${x+13} 160Z`,pi);
+   /* las patas y el cuello salen de debajo del caparazón: se dibujan antes */
+   const pata=x=>P(`M${x-13} 150 Q${x-15} 190 ${x} 192 Q${x+15} 190 ${x+13} 150Z`,pi);
    return {
-    fondo: P('M182 150 L202 162 L180 166Z',pi)+pata(150)+pata(80),
-    cuerpo: P(DOMO,sh)+dib+`<path d="${DOMO}" fill="none" ${sk(sh)}/>`
-      +P('M32 152 Q112 170 192 152 Q196 162 188 168 Q112 184 38 168 Q28 162 32 152Z',shade('#F6E39A',.1))+pata(58)+pata(168)
-      +P('M60 160 Q48 132 44 118 L22 126 Q28 148 40 166Z',pi)+E(42,92,40,36,pi),
+    fondo: P('M176 150 L204 162 L178 170Z',pi)+pata(150)+pata(80)+pata(58)+pata(168)+P('M78 150 Q60 128 46 108 L24 122 Q36 146 56 164Z',pi),
+    cuerpo: P(DOMO,sh)+recorte(DOMO,dib)+`<path d="${DOMO}" fill="none" ${sk(sh)}/>`
+      +P('M28 154 Q112 178 196 152 Q200 162 192 168 Q112 188 34 172 Q24 164 28 154Z',shade('#F6E39A',.1))
+      +E(42,92,40,36,pi),
     cara: cara({xl:28,xr:60,ey:88,r:6,mx:42,my:106,mw:7,tipo:'u',mejillas:[[18,100],[66,100]]}),
     anc:{cabeza:[42,58,.6],ojos:[44,88,.9],cuello:[46,128,.5],mano:[70,160,.7],espalda:[114,100,.9]}
    };
@@ -199,8 +203,9 @@ const ESPECIES={
   },
   dibujo(o){
    const pe=o.piel, os=shade(pe,-.35);
-   const pata=P('M52 150 C24 150 18 184 40 190 C60 194 74 182 70 166Z',pe)+P('M30 190 l-8 6 M36 192 l-2 8 M44 192 l4 7',pe)+D(22,196,3.6,shade(pe,-.12))+D(34,200,3.6,shade(pe,-.12))+D(48,199,3.6,shade(pe,-.12));
-   const brazo=L('M72 148 Q64 168 62 186',ln(pe),11.4)+L('M72 148 Q64 168 62 186',pe,9)+D(54,190,4,pe)+D(62,192,4,pe)+D(70,190,4,pe);
+   /* muslo doblado detrás del cuerpo y pie palmeado en el suelo; brazo corto con mano apoyada */
+   const pata=E(36,192,20,8,pe)+P('M60 146 C30 146 22 176 34 188 C46 198 70 190 74 172Z',pe);
+   const brazo=E(74,170,10,19,pe,12)+E(70,190,13,7,pe);
    const man={puntos:[[66,74,5],[136,80,6],[84,124,4],[120,126,5],[100,62,4]].map(([x,y,r])=>D(x,y,r,os)).join(''),
      franjas:L('M76 66 Q100 58 124 66 M70 82 Q100 74 130 82',os,4.5)}[o.manchas]||'';
    return {
@@ -208,7 +213,7 @@ const ESPECIES={
     cuerpo: pata+espejo(pata)+P('M48 186 C36 150 54 116 100 114 C146 116 164 150 152 186 Q100 196 48 186Z',pe)+E(100,160,30,26,o.panza)+brazo+espejo(brazo)
       +C(66,60,24,pe)+C(134,60,24,pe)+P('M100 46 C152 46 176 70 176 98 C176 126 142 138 100 138 C58 138 24 126 24 98 C24 70 48 46 100 46Z',pe)
       +D(66,60,15,'#FFFFFF')+D(134,60,15,'#FFFFFF')+man+D(92,96,2.2,os)+D(108,96,2.2,os),
-    cara: cara({xl:66,xr:134,ey:60,r:8,mx:100,my:110,mw:22,tipo:'u',mejillas:[[48,104],[152,104]]}),
+    cara: cara({xl:66,xr:134,ey:60,r:8,mx:100,my:110,mw:22,tipo:'u',cejas:false,mejillas:[[48,104],[152,104]]}),
     anc:{cabeza:[100,48,.8],ojos:[100,62,1.9],cuello:[100,134,.85],mano:[156,160,.8],espalda:[100,140,.8]}
    };
   }
@@ -248,9 +253,9 @@ const ESPECIES={
    const ala=P('M44 98 C28 130 38 168 70 180 C70 150 64 118 44 98Z',shade(pe,-.12))+P('M44 146 C46 164 56 176 70 180 C70 166 68 152 64 140Z',al);
    const pie=E(84,188,10,6,'#B4B0BE')+E(116,188,10,6,'#B4B0BE');
    return {
-    fondo: P('M86 168 L78 206 L100 196 L122 206 L114 168Z',al),
+    fondo: P('M88 166 L86 202 L100 196 L114 202 L112 166Z',al),
     cuerpo: P('M100 32 C144 32 162 64 160 104 C158 150 136 184 100 184 C64 184 42 150 40 104 C38 64 56 32 100 32Z',pe)+E(100,146,30,34,shade(pe,.35))
-      +ala+espejo(ala)+(o.frente==='blanca'?E(100,62,15,8,'#FFFFFF'):'')+(o.garganta==='rosada'?E(100,118,20,10,'#F5B8D0'):'')
+      +ala+espejo(ala)+(o.frente==='blanca'?P('M84 78 Q100 58 116 78 Q100 74 84 78Z','#FFFFFF'):'')+(o.garganta==='rosada'?E(100,118,20,10,'#F5B8D0'):'')
       +C(72,78,11,'#FFFFFF')+C(128,78,11,'#FFFFFF')
       +P('M84 84 Q100 70 116 84 Q114 104 100 114 Q102 100 84 84Z','#EDE3D2')+L('M94 96 Q100 102 106 96',ln('#EDE3D2'),2)+pie,
     cara: cara({xl:72,xr:128,ey:78,r:6,boca:false,mx:100,my:110,mejillas:[[60,96],[140,96]]}),
@@ -269,8 +274,9 @@ const ESPECIES={
    const cu=o.cuerpo, ra=o.rayas, ab=o.forma==='abejorro';
    const alas=E(56,74,32,20,o.alas,-28)+E(64,104,22,14,o.alas,-12);
    const [ry,rx]=ab?[44,50]:[46,42];
-   const panza=E(100,144,rx,ry,cu)+L(`M${100-rx*.97} 132 Q100 144 ${100+rx*.97} 132 M${100-rx*.86} 160 Q100 172 ${100+rx*.86} 160`,ra,11).replace('round','butt')
-     +`<ellipse cx="100" cy="144" rx="${rx}" ry="${ry}" fill="none" ${sk(cu)}/>`;
+   const ELI=`M${100-rx} 144 a${rx} ${ry} 0 1 0 ${2*rx} 0 a${rx} ${ry} 0 1 0 ${-2*rx} 0Z`;
+   const panza=E(100,144,rx,ry,cu)+recorte(ELI,L(`M${100-rx-6} 128 Q100 142 ${100+rx+6} 128 M${100-rx-6} 158 Q100 172 ${100+rx+6} 158`,ra,11))
+     +`<path d="${ELI}" fill="none" ${sk(cu)}/>`;
    const pelo=ab?Array.from({length:12},(_,i)=>{ const a=(i/12)*Math.PI*2; return D(+(100+rx*Math.cos(a)).toFixed(1),+(144+ry*Math.sin(a)).toFixed(1),5,cu); }).join(''):'';
    return {
     fondo: alas+espejo(alas)+P('M92 186 L100 202 L108 186Z',ra),
@@ -290,11 +296,12 @@ const ESPECIES={
   dibujo(o){
    const pe=o.piel, pz=o.panza, os=shade(pe,-.25);
    const aleta=P('M50 118 Q20 128 22 156 Q44 150 60 136Z',shade(pe,-.08));
+   const CUE='M100 22 C142 22 158 58 156 102 C154 150 132 180 100 188 C68 180 46 150 44 102 C42 58 58 22 100 22Z';
    const pecas=o.manchas==='pecas'?[[66,56],[80,44],[130,50],[140,68],[58,140],[146,136],[70,160],[132,160]].map(([x,y])=>D(x,y,3,os)).join(''):'';
    return {
     fondo: P('M128 40 Q152 12 162 26 Q156 42 144 54Z',pe)+P('M100 176 Q70 182 58 204 Q84 204 100 192 Q116 204 142 204 Q130 182 100 176Z',pe),
-    cuerpo: aleta+espejo(aleta)+P('M100 22 C142 22 158 58 156 102 C154 150 132 180 100 188 C68 180 46 150 44 102 C42 58 58 22 100 22Z',pe)
-      +P('M76 136 C80 124 120 124 124 136 C126 160 114 176 100 180 C86 176 74 160 76 136Z',pz)+pecas+L('M94 34 Q100 30 106 34',os,2.4)
+    cuerpo: aleta+espejo(aleta)+P(CUE,pe)
+      +recorte(CUE,`<path d="M60 150 Q100 118 140 150 L140 200 L60 200Z" fill="${pz}"/>`)+`<path d="${CUE}" fill="none" ${sk(pe)}/>`+pecas+L('M94 34 Q100 30 106 34',os,2.4)
       +E(100,106,28,15,shade(pe,.4)),
     cara: cara({xl:76,xr:124,ey:82,r:6.5,mx:100,my:106,mw:12,tipo:'u',mejillas:[[64,98],[136,98]]}),
     anc:{cabeza:[100,26,.85],ojos:[100,82,1.2],cuello:[100,126,.7],mano:[150,140,.8],espalda:[100,130,.8]}
@@ -309,12 +316,14 @@ const ESPECIES={
   },
   dibujo(o){
    const c=o.color, os=shade(c,-.25), ve=o.ventosas;
-   const T=[['M60 136 Q30 166 38 186 Q46 198 58 188',[[44,168],[40,182]]],['M76 146 Q60 178 70 194 Q80 202 86 190',[[66,174],[70,188]]],['M92 150 Q88 184 98 196',[[90,172],[94,186]]]];
-   const ten=T.map(([d,pts])=>L(d,ln(c),19.4)+L(d,c,17)+pts.map(([x,y])=>D(x,y,3.4,ve)).join('')).join('');
+   /* tentáculos de afuera hacia adentro: cada uno se dibuja entero (contorno y relleno) antes del siguiente */
+   const uno=(d,pts)=>L(d,ln(c),19.4)+L(d,c,17)+pts.map(([x,y])=>D(x,y,3.2,ve)).join('');
+   const T1=['M56 132 Q28 158 32 180 Q36 196 52 190',[[36,168],[38,182]]], T2=['M74 146 Q62 176 70 192 Q78 200 88 192',[[66,172],[72,186]]];
+   const ten=uno(...T1)+espejo(uno(...T1))+uno(...T2)+espejo(uno(...T2))+uno('M100 150 Q96 178 104 196',[[98,172],[101,186]]);
    const man={puntos:[[72,44,6],[118,36,5],[136,64,7],[60,74,5],[100,58,4]].map(([x,y,r])=>D(x,y,r,os)).join(''),
      anillos:[[72,46],[120,40],[138,70],[60,76]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="6" fill="none" stroke="#6FA3CB" stroke-width="3"/>`).join('')}[o.manchas]||'';
    return {
-    fondo: ten+espejo(ten),
+    fondo: ten,
     cuerpo: P('M100 18 C148 18 168 56 164 98 C160 134 138 154 100 154 C62 154 40 134 36 98 C32 56 52 18 100 18Z',c)+man,
     cara: cara({xl:76,xr:124,ey:102,r:7,mx:100,my:120,mw:7,mejillas:[[62,118],[138,118]]}),
     anc:{cabeza:[100,22,.95],ojos:[100,102,1.2],cuello:[100,148,.8],mano:[160,166,.8],espalda:[100,120,.8]}

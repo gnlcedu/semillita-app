@@ -531,3 +531,24 @@ input[type=range].sz{width:110px;accent-color:var(--lavD);flex:none}
 .mp-chip svg{overflow:hidden}
 /* pestañas centradas que, si no caben, se desplazan sin cortar la primera */
 .tabs.centro>:first-child{margin-left:auto}.tabs.centro>:last-child{margin-right:auto}
+/* niño: sus cejas normales se esconden mientras hace un gesto que trae sus propias cejas */
+.mascot.sad .crt .cj,.mascot.think .crt .cj,.mascot.surprised .crt .cj{display:none}
+
+/* ===== Fase 3: el niño y su animalito juntos (20-mi-personaje.js) ===== */
+.hero .duo{display:flex;align-items:flex-end;flex:none}
+.hero .duo .mascot+.mascot{margin-left:-18px}
+.pcard .av.av-duo{position:relative;width:84px;height:84px;margin:0 auto}
+.av-duo .cara{display:block;width:84px;height:84px}
+.av-duo .cara svg{width:100%;height:100%;display:block;overflow:hidden}
+.av-duo>span:last-child{position:absolute;right:-34px;bottom:-10px}
+/* en las escenas: caja del niño junto al animalito (mide como ninoMascot a 0,95 × --ps) */
+.scene-pet .kid-box{position:absolute;bottom:0;width:calc(var(--ps) * 1.13);pointer-events:none}
+.scene-pet .kid-izq{right:86%}
+.scene-pet .kid-der{left:86%}
+.scene-pet .kid-box .mascot{display:flex}
+.scene-pet .kid-box .pet-prop{right:auto;transform:none;animation:none}
+.pet-shop .kid-box .pet-prop{left:28%;top:50%;width:44%;height:34%}
+.pet-lab .kid-box .pet-prop{left:21%;top:48%;width:58%;height:40%}
+.pet-garden .kid-box .pet-prop{left:66%;top:56%;width:52%;height:36%;transform:rotate(-14deg);transform-origin:20% 80%;animation:water 3.2s ease-in-out infinite}
+.pet-diver .kid-box .pet-prop{left:16%;top:25%;width:68%;height:19%}
+.pet-music .kid-box .pet-prop{left:48%;top:52%;width:62%;height:42%;animation:bob 1.6s ease-in-out infinite}

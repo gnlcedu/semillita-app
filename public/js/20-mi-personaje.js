@@ -96,6 +96,41 @@ vHome=function(){
     f.insertAdjacentHTML('beforebegin',`<button class="chip" id="miNino"><span class="mp-chip">${nino(ninoDe(p),{solo:'cabeza'})}</span> Mi personaje</button>`);
     document.getElementById('miNino').addEventListener('click',()=>go({name:'miNino'}));
   }
+  /* fase 3: el niño saluda junto a su animalito */
+  const m=p&&p.nino&&app.querySelector('.hero .mascot');
+  if (m && !document.getElementById('nin')){
+    m.insertAdjacentHTML('beforebegin',`<div class="duo">${ninoMascot(ninoDe(p),74,'nin')}</div>`);
+    const duo=app.querySelector('.hero .duo'); duo.appendChild(m); m.style.setProperty('--ms','62px');
+    document.getElementById('nin').addEventListener('click',()=>{ react('happy'); speak(pick([`¡Hola, ${p.name}!`,'¡Vamos a jugar juntos!','¡Qué bonito día!'])); });
+  }
   return r;
+};
+
+/* ---------- fase 3: el niño y su animalito juntos ---------- */
+/* react() del animalito principal también hace reaccionar al niño (inicio #nin, escena #scn) */
+const _react=react;
+react=function(mood,id='msc'){
+  _react(mood,id);
+  if (id==='msc') ['nin','scn'].forEach(k=>{ if(document.getElementById(k)) _react(mood,k); });
+};
+
+/* tarjetas de perfil: la cara del niño con su animalito al lado */
+const _vProfiles=vProfiles;
+vProfiles=function(){
+  _vProfiles();
+  S.profiles.forEach(p=>{ if(!p.nino) return; const av=app.querySelector(`.pcard[data-id="${p.id}"] .av`); if(!av) return;
+    av.classList.add('av-duo'); av.innerHTML=`<span class="cara">${nino(ninoDe(p),{solo:'cabeza'})}</span>${petMini(p,40)}`; });
+};
+
+/* escenas de los juguetes: el niño va al lado de su animalito, del lado que mira al centro.
+   La pieza del juguete (delantal, bata, regadera, careta, instrumento) la lleva el niño. */
+const _scenePet=window.scenePet;
+window.scenePet=(root,opts={})=>{
+  const el=_scenePet(root,opts), p=prof(); if(!el||!p||!p.nino) return el;
+  const size=opts.size||64, lado=/(^|;)\s*right/.test(opts.at||'')?'izq':'der';
+  const caja=document.createElement('div'); caja.className='kid-box kid-'+lado; caja.innerHTML=ninoMascot(ninoDe(p),Math.round(size*.95),'scn');
+  const prop=el.querySelector('.pet-prop'); if(prop) caja.appendChild(prop);
+  el.appendChild(caja);
+  return el;
 };
 })();

@@ -128,13 +128,17 @@ function nino(datos={}, {solo=''}={}){
   }[o.ojos]||`<ellipse cx="${x}" cy="${ey}" rx="6" ry="7.5" fill="${I}"/>`);
   const arcoOjo=(x,w=3.6)=>L(`M${x-8} ${ey+2} Q${x} ${ey-7} ${x+8} ${ey+2}`,I,w);
   const xl=100-ex, xr=100+ex;
+  /* cejas de cada gesto, del color y grosor de las cejas elegidas (las normales se esconden durante el gesto, ver .cj en CSS) */
+  const ccj=shade(cp,-.12), gc={finas:2.6,gruesas:5,arqueadas:3}[o.cejas]||0, cj=d=>gc?L(d,ccj,gc):'';
+  const cejaTriste=cj(`M${xl-9} ${ey-13} Q${xl-2} ${ey-15} ${xl+8} ${ey-20} M${xr+9} ${ey-13} Q${xr+2} ${ey-15} ${xr-8} ${ey-20}`);
+  const cejaArriba=(x)=>`M${x-9} ${ey-19} Q${x} ${ey-27} ${x+9} ${ey-19}`;
   const ojos = G('eo',`<g class="blink">${ojo(xl,-1)}${o.expr==='guino'?'':ojo(xr,1)}</g>${o.expr==='guino'?arcoOjo(xr):''}`)
     + G('eh',arcoOjo(xl)+arcoOjo(xr))
-    + G('es',L(`M${xl-8} ${ey-2} Q${xl} ${ey+6} ${xl+8} ${ey-2} M${xr-8} ${ey-2} Q${xr} ${ey+6} ${xr+8} ${ey-2}`,I,3.6)+L(`M${xl-10} ${ey-16} l14 5 M${xr+10} ${ey-16} l-14 5`,I,3))
+    + G('es',L(`M${xl-8} ${ey-2} Q${xl} ${ey+6} ${xl+8} ${ey-2} M${xr-8} ${ey-2} Q${xr} ${ey+6} ${xr+8} ${ey-2}`,I,3.6)+cejaTriste)
     + G('ez',L(`M${xl-8} ${ey} h16 M${xr-8} ${ey} h16`,I,3.6))
-    + G('ew',E(xl,ey,10,11,'#FFFFFF')+E(xr,ey,10,11,'#FFFFFF')+D(xl,ey,5,I)+D(xr,ey,5,I))
-    + G('et',D(xl-2,ey-3,6.5,I)+D(xr-2,ey-3,6.5,I)+L(`M${xr-9} ${ey-19} l16 -5`,I,3));
-  const ccj=shade(cp,-.12), cejas={finas:L(`M${xl-8} ${ey-15} Q${xl} ${ey-19} ${xl+8} ${ey-15} M${xr-8} ${ey-15} Q${xr} ${ey-19} ${xr+8} ${ey-15}`,ccj,2.6),
+    + G('ew',E(xl,ey,10,11,'#FFFFFF')+E(xr,ey,10,11,'#FFFFFF')+D(xl,ey,5,I)+D(xr,ey,5,I)+cj(cejaArriba(xl)+cejaArriba(xr)))
+    + G('et',D(xl-2,ey-3,6.5,I)+D(xr-2,ey-3,6.5,I)+cj(`M${xl-8} ${ey-15} Q${xl} ${ey-17} ${xl+8} ${ey-15}`+cejaArriba(xr)));
+  const cejas={finas:L(`M${xl-8} ${ey-15} Q${xl} ${ey-19} ${xl+8} ${ey-15} M${xr-8} ${ey-15} Q${xr} ${ey-19} ${xr+8} ${ey-15}`,ccj,2.6),
     gruesas:L(`M${xl-9} ${ey-15} Q${xl} ${ey-19} ${xl+9} ${ey-16} M${xr-9} ${ey-16} Q${xr} ${ey-19} ${xr+9} ${ey-15}`,ccj,5),
     arqueadas:L(`M${xl-9} ${ey-14} Q${xl} ${ey-24} ${xl+9} ${ey-16} M${xr-9} ${ey-16} Q${xr} ${ey-24} ${xr+9} ${ey-14}`,ccj,3)}[o.cejas]||'';
   const nariz={boton:C(100,112,4.5,piel), curva:L('M98 106 Q104 112 98 115',pielO,2.4)}[o.nariz]||`<ellipse cx="100" cy="112" rx="3.6" ry="2.8" fill="${shade(piel,-.2)}"/>`;
@@ -179,7 +183,7 @@ function nino(datos={}, {solo=''}={}){
   const vb = solo==='cabeza' ? (o.pelo==='afro'?'4 -12 192 192':'22 4 156 156') : '-14 -12 228 306';
   return `<svg viewBox="${vb}" class="crt nn" aria-hidden="true" focusable="false">
     ${atras}${cuerpo}${cuello}${orejas}<path d="${CARA}" fill="${piel}" ${sk(piel)}/>
-    ${mejillas}${pecas}${ojos}${cejas}${nariz}${bocas}${adelante}${pon('cara')}${pon('cabeza')}
+    ${mejillas}${pecas}${ojos}${G("cj",cejas)}${nariz}${bocas}${adelante}${pon('cara')}${pon('cabeza')}
   </svg>`;
 }
 
