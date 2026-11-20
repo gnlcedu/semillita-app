@@ -100,7 +100,7 @@ vHome=function(){
   const m=p&&p.nino&&app.querySelector('.hero .mascot');
   if (m && !document.getElementById('nin')){
     m.insertAdjacentHTML('beforebegin',`<div class="duo">${ninoMascot(ninoDe(p),74,'nin')}</div>`);
-    const duo=app.querySelector('.hero .duo'); duo.appendChild(m); m.style.setProperty('--ms','62px');
+    const duo=app.querySelector('.hero .duo'); duo.appendChild(m); m.style.setProperty('--ms','62px'); m.classList.add('pet-'+modoPet(p));
     document.getElementById('nin').addEventListener('click',()=>{ react('happy'); speak(pick([`¡Hola, ${p.name}!`,'¡Vamos a jugar juntos!','¡Qué bonito día!'])); });
   }
   return r;
@@ -124,9 +124,14 @@ vProfiles=function(){
 
 /* escenas de los juguetes: el niño va al lado de su animalito, del lado que mira al centro.
    La pieza del juguete (delantal, bata, regadera, careta, instrumento) la lleva el niño. */
+/* dónde va cada animalito: solo los que tienen alas vuelan; en el agua nadan los marinos; los demás, en el piso */
+const VUELAN=['mariposa','abeja','buho','cotorra'], NADAN=['delfin','pulpo','tortuga'];
+window.modoPet=(p,agua=false)=>{ const sp=SPECIES[p.avatar]; return VUELAN.includes(sp)?'vuela':(agua&&NADAN.includes(sp))?'nada':'piso'; };
 const _scenePet=window.scenePet;
 window.scenePet=(root,opts={})=>{
-  const el=_scenePet(root,opts), p=prof(); if(!el||!p||!p.nino) return el;
+  const el=_scenePet(root,opts), p=prof(); if(!el||!p) return el;
+  el.classList.add('pet-'+modoPet(p,opts.agua));
+  if (!p.nino) return el;
   const size=opts.size||64, lado=/(^|;)\s*right/.test(opts.at||'')?'izq':'der';
   const caja=document.createElement('div'); caja.className='kid-box kid-'+lado; caja.innerHTML=ninoMascot(ninoDe(p),Math.round(size*.95),'scn');
   const prop=el.querySelector('.pet-prop'); if(prop) caja.appendChild(prop);

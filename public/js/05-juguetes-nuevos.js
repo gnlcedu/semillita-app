@@ -36,6 +36,7 @@ function toyShop(root){
   addHTML(root, `<div class="abs" style="inset:0 0 var(--tbar-h) 0;background:linear-gradient(#FFF4E4 0 38%,#F1E0C6 38%)"></div>
     ${scene('colmado','inset:0 0 var(--tbar-h) 0')}
     <div class="abs" style="left:0;right:0;top:0;height:30px;background:repeating-linear-gradient(90deg,var(--c-rosa) 0 30px,var(--white) 30px 60px);border-radius:0 0 50% 50%/0 0 14px 14px;z-index:1"></div>
+    <div class="abs mostrador" style="right:0;top:82px;width:176px;height:30px;z-index:5;pointer-events:none"></div>
     <div id="cu" class="abs" style="left:14px;top:46px;display:flex;align-items:flex-end;gap:var(--s-2);max-width:68%;z-index:5"></div>
     <div id="sh" class="abs" style="left:10px;right:10px;top:150px;bottom:calc(var(--tbar-h) + 86px);display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(3,minmax(0,max-content));align-content:start;gap:var(--s-2)"></div>
     <div class="abs caja-r" style="right:14px;bottom:calc(var(--tbar-h) + 92px);width:84px;height:84px;z-index:0;pointer-events:none"><span class="cajon">${ilu('cajon','100%')}</span>${ilu('caja','100%')}</div>

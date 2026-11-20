@@ -200,7 +200,7 @@ function toyGarden2(root){
   const mk=(parent,big)=>{ const p=document.createElement('button'); p.style.cssText=`position:relative;width:${big?30:28}%;max-width:120px;height:150px;display:flex;flex-direction:column;justify-content:flex-end;align-items:center`;
     p.innerHTML=`<span class="bug abs" style="top:24px;right:6px;font-size:var(--fs-2xl);display:none">${emo('🐛')}</span><span class="thirst abs" style="top:0;left:6px;font-size:var(--fs-xl);display:none">${emo('💧')}<b class="bang">!</b></span><span class="pt" style="font-size:var(--fs-7xl);line-height:1;transform-origin:50% 100%;transition:filter .5s,transform .5s"></span><span class="meter" style="font-size:var(--fs-2xs);height:12px;letter-spacing:-1px"></span><span class="mound"></span>`;
     parent.appendChild(p); const pl={el:p,t:null,st:0,prog:0,water:0,bug:false,fert:0}; plots.push(pl); p.addEventListener('click',()=>tap(pl)); };
-  sceneParallax(root); scenePet(root,{at:'right:3%;top:calc((100% - var(--tbar-h)) * .46 - 92px)',size:62,prop:ilu('regadera','100%'),cls:'pet-garden'});
+  sceneParallax(root); scenePet(root,{at:'right:3%;top:calc((100% - var(--tbar-h)) * .46 - 44px)',size:62,prop:ilu('regadera','100%'),cls:'pet-garden'});
   const A=root.querySelector('#plotsA'), B=root.querySelector('#plotsB'); for(let i=0;i<3;i++) mk(A,false); for(let i=0;i<3;i++) mk(B,true);
   const P=pl=>PL[pl.t];
   function show(pl,anim=true){ const s=pl.el.querySelector('.pt');
@@ -314,7 +314,7 @@ function toyAquarium2(root){
       ${[8,30,66,88].map(x=>`<span class="abs" style="left:${x}%;bottom:26px;font-size:var(--fs-6xl);transform-origin:50% 100%;animation:palm 4s ease-in-out ${-x/20}s infinite;pointer-events:none">${ilu('alga','1.1em')}</span>`).join('')}
       <div id="cnt" class="abs" style="left:12px;top:12px;background:rgba(255,255,255,.85);border-radius:var(--r-sm);padding:var(--s-1) var(--s-3);font-weight:800;font-size:var(--fs-xs)"></div></div>
     <div class="tbar"><button id="ad">➕${emo('🐠')}</button><button id="dc">${emo('🏰')}</button><button id="lt">💡</button><button id="cl" aria-label="Vaciar">${kic('borrar','1em')}</button></div>`);
-  const tk=root.querySelector('#tk'); const Wt=()=>tk.clientWidth, Ht=()=>tk.clientHeight; sceneParallax(root); scenePet(root,{at:'left:6%;top:24%',size:58,prop:ilu('careta','100%'),cls:'pet-diver'});
+  const tk=root.querySelector('#tk'); const Wt=()=>tk.clientWidth, Ht=()=>tk.clientHeight; sceneParallax(root); scenePet(root,{at:'left:4%;bottom:calc(var(--tbar-h) + 10px)',size:58,prop:ilu('careta','100%'),cls:'pet-diver',agua:true});
   const count=()=>{ const g={}; fish.forEach(f=>g[f.n]=(g[f.n]||0)+1); root.querySelector('#cnt').innerHTML=Object.entries(g).map(([n,c])=>`${c} ${emo(FISH.find(x=>x[1]===n)[0],'1.5em')}`).join('  ')||'Acuario vacío'; };
   function add(i){ if (fish.length>=18){ tsay('¡El acuario está lleno!'); return; } const [e,n,fact]=FISH[i];
     const el=document.createElement('span'); el.className='abs fishw'; el.innerHTML=emo(e); el.style.cssText=`left:0;top:0;font-size:${n==='ballena'?62:n==='medusa'?38:42}px;will-change:transform;cursor:pointer`;

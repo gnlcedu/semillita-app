@@ -377,7 +377,7 @@ input[type=range].sz{width:110px;accent-color:var(--lavD);flex:none}
 .pet-music .pet-prop{right:-62%;top:26%;width:66%;height:66%;animation:bob 1.6s ease-in-out infinite}
 /* acuario: careta de buceo sobre los ojos y nado suave */
 .pet-diver .pet-prop{left:14%;top:34%;width:72%;height:34%}
-.pet-diver{animation:swim 9s ease-in-out infinite alternate}
+/* .pet-diver ya no nada por todo el acuario: el niño va en la arena (ver «a nivel del piso») */
 @keyframes swim{from{transform:translate(0,0) rotate(-4deg)}50%{transform:translate(40px,-14px) rotate(3deg)}to{transform:translate(90px,8px) rotate(-2deg)}}
 /* laboratorio: bata */
 .pet-lab .pet-prop{left:20%;top:48%;width:60%;height:44%}
@@ -555,3 +555,22 @@ input[type=range].sz{width:110px;accent-color:var(--lavD);flex:none}
 /* «El camino de la semilla» con el niño: trote al caminar (se apaga con movimiento reducido por la regla global) */
 .corre .mascot .body{animation:trote .34s ease-in-out infinite}
 @keyframes trote{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-7%) rotate(3deg)}}
+
+/* ===== A nivel del piso: solo vuelan los animalitos con alas ===== */
+/* la sombra queda bajo los pies (antes quedaba unos px más abajo y parecían flotar) */
+.mascot .shadow{margin-top:-5px}
+/* los dibujos de animalitos tienen aire debajo de las patas: se compensa */
+.mascot:not(.nino) .body .crt{margin-bottom:calc(var(--ms) * -.08)}
+/* con alas: vuelan un poco más arriba, con un aleteo suave; su sombra se queda en el piso */
+.pet-vuela>.mascot .body,.mascot.pet-vuela .body{animation:revolotear 2.2s ease-in-out infinite;translate:0 calc(var(--ms) * -.32)}
+.pet-vuela>.mascot .shadow,.mascot.pet-vuela .shadow{width:40%;opacity:.7}
+@keyframes revolotear{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-7px) rotate(2deg)}}
+/* marinos en el agua: flotan suave sobre la arena */
+.pet-nada>.mascot .body{animation:flotar 3.4s ease-in-out infinite;translate:0 calc(var(--ms) * -.18)}
+@keyframes flotar{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-6px) rotate(3deg)}}
+/* colmado: mostrador de madera; el niño atiende detrás */
+.mostrador{background:linear-gradient(#D9A877 0 10px,#E6C39C 10px);border:1.6px solid #B98A62;border-bottom:0;border-radius:var(--r-sm) 0 0 0;box-shadow:0 -2px 0 rgba(74,70,88,.08)}
+/* «El camino de la semilla»: pies en el piso, sin el balanceo de reposo (solo trote al caminar; los alados siguen aleteando) */
+.pl-ent{display:flex;align-items:flex-end;justify-content:center}
+.pl-ent .mascot:not(.pet-vuela) .body{animation:none}
+.pl-ent.corre .mascot:not(.pet-vuela) .body{animation:trote .34s ease-in-out infinite}
