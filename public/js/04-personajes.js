@@ -99,6 +99,8 @@ const petMini = (p,s=40)=>`<span style="display:inline-block;width:${s}px;height
 
 /* ---------- XP, nivel y stickers ---------- */
 const STK=['🦄','🐙','🦖','🐳','🦒','🦩','🐧','🦔','🐞','🦋','🍉','🍍','🍩','🧁','🍓','🥭','🚀','🪐','🌙','⭐','☄️','🛸','🌈','⛅','🌴','🌺','🐚','🏝️','🌋','🌻','🎸','🥁','🎺','🎻','🪇','🎨','⚽','🏀','⚾','🛼','🪁','🎈','👑','💎','🧸','🪀','🎁','🏆'];
+/* stickers: los de emoji se muestran con emoDOM; los dibujados (st_…) con su pieza de PLANO */
+const stkArt=s=>/^st_/.test(s)&&typeof ilu==='function'?ilu(s.slice(3),'1em'):s;
 const STK_PAGES=[['Animales',0],['Frutas y dulces',10],['Espacio y cielo',16],['Naturaleza',23],['Música y arte',30],['Juegos y premios',36]];
 function toast(html){
   let t=document.getElementById('toast'); if(!t){ t=document.createElement('div'); t.id='toast'; t.style.cssText='position:fixed;left:50%;top:14px;transform:translate(-50%,-140%);background:var(--card);border:var(--bw) solid var(--line);border-radius:var(--r-md);padding:var(--s-3) var(--s-5);font-weight:800;z-index:60;transition:transform .35s;box-shadow:var(--sh-2);white-space:nowrap'; document.body.appendChild(t); }
@@ -140,7 +142,7 @@ function vFriend(){
   } else {
     const have=p.stickers||[];
     body=`<p style="font-weight:800;margin:var(--s-1) 0 var(--s-3)">${have.length} de ${STK.length} stickers</p>`+STK_PAGES.map(([n,st],pi)=>{ const end=(STK_PAGES[pi+1]||[0,STK.length])[1];
-      return `<h3 style="font-size:var(--fs-sm);margin:var(--s-4) 0 var(--s-2)">${n}</h3><div style="display:grid;grid-template-columns:repeat(5,1fr);gap:var(--s-2)">${STK.slice(st,end).map(s=>`<div style="aspect-ratio:1;border-radius:var(--r-md);background:${have.includes(s)?'#fff':'#F1EDE6'};border:2px ${have.includes(s)?'solid':'dashed'} var(--line);display:grid;place-items:center;font-size:var(--fs-3xl)">${have.includes(s)?`<span style="animation:popin .4s both">${s}</span>`:'<span style="opacity:.25;font-size:var(--fs-lg)">?</span>'}</div>`).join('')}</div>`; }).join('');
+      return `<h3 style="font-size:var(--fs-sm);margin:var(--s-4) 0 var(--s-2)">${n}</h3><div style="display:grid;grid-template-columns:repeat(5,1fr);gap:var(--s-2)">${STK.slice(st,end).map(s=>`<div style="aspect-ratio:1;border-radius:var(--r-md);background:${have.includes(s)?'#fff':'#F1EDE6'};border:2px ${have.includes(s)?'solid':'dashed'} var(--line);display:grid;place-items:center;font-size:var(--fs-3xl)">${have.includes(s)?`<span style="animation:popin .4s both;line-height:0">${stkArt(s)}</span>`:'<span style="opacity:.25;font-size:var(--fs-lg)">?</span>'}</div>`).join('')}</div>`; }).join('');
   }
   app.innerHTML=`<div class="top"><button class="icon-btn" id="back">←</button><h2>Mi amigo ${mname(p.avatar)}</h2></div>
     <div style="display:flex;justify-content:center;margin:var(--s-1) 0 var(--s-2)">${mascot(p.avatar,150,'msc','')}</div>

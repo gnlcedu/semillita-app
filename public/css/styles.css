@@ -579,3 +579,17 @@ input[type=range].sz{width:110px;accent-color:var(--lavD);flex:none}
 .ficha b{font-size:var(--fs-md)}
 .ficha p{margin:0;font-weight:600}
 .ficha .fi-oir{align-self:flex-start;min-height:var(--tap)}
+
+/* ===== Medallas (22-recompensas-b.js) ===== */
+.medalla-art{display:inline-block;vertical-align:middle;line-height:0}
+.medalla-art svg{width:100%;height:100%;display:block;overflow:visible}
+.md-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:var(--s-2)}
+.md-it{background:var(--card);border:var(--bw) solid var(--line);border-radius:var(--r-md);padding:var(--s-2);display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center;box-shadow:var(--sh-btn)}
+.md-it .md-dib{width:62px;height:62px}
+.md-it b{font-size:var(--fs-xs)}
+.md-it small{font-size:var(--fs-2xs);font-weight:700;color:#5A566B;line-height:1.2}
+.md-it:not(.ok) .md-dib{opacity:.35;filter:grayscale(1)}
+.md-it.ok{background:var(--butter)}
+.stk-peel .medalla-art{width:1em;height:1em}
+.mp-lugar{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}
+.mp-pais{display:block;width:100%;height:64px;border-radius:var(--r-sm)}

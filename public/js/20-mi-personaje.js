@@ -9,7 +9,7 @@
    Se carga después de 19-nino.js.
    ========================================================= */
 (function(){
-const PEST=[['cara','Cara'],['pelo','Pelo'],['ropa','Ropa'],['zapatos','Zapatos'],['cosas','Cosas'],['gestos','Gestos']];
+const PEST=[['cara','Cara'],['pelo','Pelo'],['ropa','Ropa'],['zapatos','Zapatos'],['cosas','Cosas'],['gestos','Gestos'],['lugar','Lugar']];
 const RANURA={cabeza:'En la cabeza',cara:'En la cara',cuello:'En el cuello',mano:'En la mano',espalda:'En la espalda'};
 const FRASES=['¡Me encanta!','¡Qué bonito!','¡Así me gusta!','¡Wao!','¡Te ves genial!'];
 const ninoDe=p=>({...NINO_DEF,...(p.nino||{}),acc:{...NINO_DEF.acc,...((p.nino||{}).acc||{})}});
@@ -48,6 +48,12 @@ window.VIEWS.miNino=function(){
   } else if (tab==='cosas'){
     body=Object.entries(O.acc).map(([s,l])=>grupo(RANURA[s],l.map(([k,nm,nv])=>op('acc.'+s,k,nm,{nv,cab:s==='cabeza'||s==='cara',on:n.acc[s]===k})).join(''))).join('')
       +`<p class="muted" style="font-weight:700;margin-top:var(--s-3)">Toca otra vez una cosa para quitarla.</p>`;
+  } else if (tab==='lugar' && window.PAISAJES){
+    /* paisaje del inicio: se abren por nivel */
+    body=`<h3 class="mp-h">Paisaje del inicio</h3><div class="mp-grid mp-lugar">${PAISAJES.map(([k,nm,nv,bg])=>{ const lock=nv>lvl, on=(p.paisaje||'campo')===k;
+      return `<button class="mp-op ${on?'on':''}" data-lugar="${k}" ${lock?`data-lock="${nv}"`:''} aria-pressed="${on}" aria-label="${nm}${lock?', se abre en el nivel '+nv:''}">
+        <span class="mp-pais" style="background:${bg} ${paisajeImg(k)||'var(--paisaje)'} bottom center/auto 80% repeat-x;${lock?'opacity:.3;filter:grayscale(1)':''}"></span>
+        <small>${lock?`${ilu('candado','1em')} Nivel ${nv}`:nm}</small></button>`; }).join('')}</div>`;
   } else {
     body=grupo('Su cara de siempre',O.expr.map(([k,nm])=>op('expr',k,nm,{cab:true})).join(''))
       +`<h3 class="mp-h">Haz que reaccione</h3><div class="row" style="gap:var(--s-2);flex-wrap:wrap">${[['happy','Feliz'],['surprised','Sorpresa'],['think','Pensando'],['sad','Triste']].map(([m,nm])=>`<button class="chip" data-m="${m}">${nm}</button>`).join('')}</div>`;
@@ -75,6 +81,8 @@ window.VIEWS.miNino=function(){
     if (Math.random()<.35) speak(pick(FRASES));
   });
   bind('[data-m]',el=>react(el.dataset.m,'nin'));
+  bind('[data-lugar]',el=>{ if (el.dataset.lock){ toast(`Se abre en el nivel ${el.dataset.lock}. ¡Sigue jugando!`); speak(`Se abre en el nivel ${el.dataset.lock}. ¡Sigue jugando!`); return; }
+    p.paisaje=el.dataset.lugar; save(); popS(); otraVez(); alegre(); });
   bind('#nin',()=>{ react('happy','nin'); speak(pick([`¡Hola! Soy ${p.name}.`,'¡Jiji!','¡Vamos a jugar!'])); });
   bind('#msc',()=>{ react('happy'); speak(`¡Soy ${mname(p.avatar)}, tu amigo!`); });
 };

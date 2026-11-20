@@ -25,7 +25,7 @@ if (typeof win==='function'){ const _win=win;
 
 /* ---------- sticker que se despega ---------- */
 function showSticker(s){
-  const art=typeof emo==='function'?emo(s,'1em'):s;
+  const art=/^st_/.test(s)&&typeof stkArt==='function'?stkArt(s):typeof emo==='function'?emo(s,'1em'):s;
   const el=document.createElement('div'); el.className='stk-peel'; el.setAttribute('role','status');
   el.innerHTML=`<span class="stk-card"><span class="stk-art">${art}</span><span class="stk-fold"></span></span><span>¡Nuevo sticker!<br><small class="muted">Míralo en tu álbum</small></span>`;
   document.body.appendChild(el);
