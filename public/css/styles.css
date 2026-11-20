@@ -509,3 +509,23 @@ input[type=range].sz{width:110px;accent-color:var(--lavD);flex:none}
 .tbar.dos button{font-size:var(--fs-sm);padding:0 var(--s-2);max-width:calc(50% - 6px);white-space:normal;line-height:1.1;text-align:center}
 .tbar.dos .sep{display:none}
 .tbar.desliza{-webkit-mask-image:linear-gradient(90deg,#000 80%,transparent);mask-image:linear-gradient(90deg,#000 80%,transparent)}
+
+/* ===== Editor «Mi personaje» (20-mi-personaje.js) ===== */
+.mp-prev{position:sticky;top:0;z-index:3;display:flex;align-items:flex-end;justify-content:center;gap:var(--s-2);padding:var(--s-2) 0 var(--s-3);background:var(--paper);margin:0 calc(-1 * var(--s-4));padding-inline:var(--s-4)}
+.mp-prev .mp-amigo{margin-bottom:var(--s-1)}
+.mp-h{font-size:var(--fs-sm);margin:var(--s-4) 0 var(--s-2)}
+.mp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:var(--s-2)}
+.mp-op{background:var(--card);border:var(--bw) solid var(--line);border-radius:var(--r-md);padding:var(--s-2) var(--s-1);display:flex;flex-direction:column;align-items:center;gap:var(--s-1);box-shadow:var(--sh-btn);min-height:var(--tap)}
+.mp-op.on{background:var(--butter);border-color:var(--ink)}
+.mp-op:active{transform:translateY(2px);box-shadow:var(--sh-press)}
+.mp-op small{font-weight:700;font-size:var(--fs-2xs);line-height:1.15;text-align:center}
+.mp-dib{display:block;width:58px;height:78px}
+.mp-dib.cab{width:62px;height:62px}
+.mp-dib svg,.mp-chip svg{width:100%;height:100%;display:block;overflow:visible}
+.mp-sw{display:flex;flex-wrap:wrap;gap:var(--s-2)}
+.mp-sw button{width:var(--tap);height:var(--tap);border-radius:50%;border:var(--bw) solid var(--line-2);box-shadow:var(--sh-btn)}
+.mp-sw button.on{outline:3px solid var(--ink);outline-offset:2px}
+.mp-chip{display:inline-block;width:1.6em;height:1.6em;vertical-align:middle;margin:-6px 2px -6px -6px}
+.mp-tabs{flex-wrap:wrap;overflow:visible;justify-content:center}
+.mp-dib.cab svg{overflow:hidden}
+.mp-chip svg{overflow:hidden}
