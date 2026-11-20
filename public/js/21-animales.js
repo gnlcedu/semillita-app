@@ -355,7 +355,8 @@ creature=function(sp,o={}){
   const k0=Object.keys(E.rasgos)[0];
   if (o.color && !(o.rasgos||{})[k0] && E.rasgos[k0][1].some(([v])=>v===o.color)) r[k0]=o.color;
   const d=E.dibujo(r), out=o.outfit||{}, a=s=>accesorio(s,out[s],d.anc);
-  const aura=(o.level||1)>=5?`<circle cx="100" cy="118" r="92" fill="#FBF1C8"/>`:'';
+  /* aura de los niveles altos: dorada (5-6), verde jardín (7-8), azul cielo (9) y lila (10) */
+  const lv=o.level||1, aura=lv>=5?`<circle cx="100" cy="118" r="92" fill="${lv>=10?'#EFE8FB':lv>=9?'#DDEFF6':lv>=7?'#E6F4DD':'#FBF1C8'}"/>`:'';
   return `<svg viewBox="-12 -12 224 224" class="crt" aria-hidden="true" focusable="false">${aura}${a('back')}${d.fondo}${d.cuerpo}${d.cara}${a('neck')}${a('eyes')}${a('hat')}${a('hand')}${o.casco?casco(d.anc):''}</svg>`;
 };
 Object.assign(window,{ESPECIES,defRasgos});

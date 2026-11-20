@@ -44,19 +44,28 @@ if (typeof giveSticker==='function'){
 function showLevelUp(p,lvl){
   const o=petOf(p), news=Object.entries(ACC).filter(([,a])=>a[2]===lvl);
   const outfit={...(o.outfit||{})}; if (news.length) outfit[news[0][1][0]]=news[0][0];
+  /* ropa nueva del niño en este nivel (si ya armó su personaje): se estrena la primera cosa nueva */
+  const kidNews=[]; let kid='';
+  if (p.nino && typeof NINO_OPC!=='undefined' && typeof ninoMascot==='function'){
+    const d=ninoDe(p), prueba={...d,acc:{...d.acc}};
+    ['camisa','abajo','zapatos'].forEach(c=>NINO_OPC[c].filter(x=>x[2]===lvl).forEach(([k,n])=>{ kidNews.push(n); if(kidNews.length===1) prueba[c]=k; }));
+    Object.entries(NINO_OPC.acc).forEach(([sl,l])=>l.filter(x=>x[2]===lvl).forEach(([k,n])=>{ kidNews.push(n); if(kidNews.length===1) prueba.acc[sl]=k; }));
+    kid=ninoMascot(prueba,96,'lvn','happy');
+  }
   const medal=`medalla_${((lvl-2)%3)+1}`;
   const el=document.createElement('div'); el.className='lvup'; el.setAttribute('role','dialog'); el.setAttribute('aria-label','Tu amigo subió de nivel');
   el.innerHTML=`<div class="lvup-card">
     <div class="lvup-medal">${typeof ilu==='function'?ilu(medal,'100%'):'🏅'}</div>
-    <div class="lvup-pet"><div class="mascot happy" style="--ms:120px"><span class="body">${creature(o.sp,{...o,outfit,level:lvl})}</span><span class="shadow"></span></div></div>
-    <h2>¡${mname(p.avatar)} creció!</h2>
-    <p style="margin:var(--s-1) 0 var(--s-3);font-weight:700">Ahora es <b>${LEVELN[lvl-1]}</b></p>
-    ${news.length?`<p class="muted" style="margin:0 0 var(--s-2);font-weight:800">Ropa nueva</p><div class="lvup-items">${news.map(([k,a])=>`<span class="chip">${a[1]}</span>`).join('')}</div>`:''}
+    <div class="lvup-pet">${kid}<div class="mascot happy" style="--ms:${kid?96:120}px"><span class="body">${creature(o.sp,{...o,outfit,level:lvl})}</span><span class="shadow"></span></div></div>
+    <h2>${kid?`¡${esc(p.name)} y ${mname(p.avatar)} crecieron!`:`¡${mname(p.avatar)} creció!`}</h2>
+    <p style="margin:var(--s-1) 0 var(--s-3);font-weight:700">Nivel ${lvl}: <b>${LEVELN[lvl-1]}</b></p>
+    ${news.length||kidNews.length?`<p class="muted" style="margin:0 0 var(--s-2);font-weight:800">Cosas nuevas</p><div class="lvup-items">${[...new Set([...news.map(([,a])=>a[1]),...kidNews])].map(n=>`<span class="chip">${n}</span>`).join('')}</div>`:''}
     <button class="btn full" style="margin-top:var(--s-4)">¡Genial!</button></div>`;
   const close=()=>{ el.classList.add('out'); setTimeout(()=>el.remove(),300); };
   el.addEventListener('click',close); document.body.appendChild(el);
   if (!reduce() && typeof sparks==='function') setTimeout(()=>sparks(el.querySelector('.lvup-medal'),7),450);
-  speak(`¡Crecí! Ahora soy ${LEVELN[lvl-1]}. ${news.length?'Tengo ropa nueva: '+news.map(([,a])=>a[1]).join(', '):''}`);
+  const todas=[...new Set([...news.map(([,a])=>a[1]),...kidNews])];
+  speak(`¡Subimos al nivel ${lvl}: ${LEVELN[lvl-1]}! ${todas.length?'Hay cosas nuevas: '+todas.join(', '):''}`);
 }
 window.showLevelUp=showLevelUp;
 if (typeof addXP==='function'){

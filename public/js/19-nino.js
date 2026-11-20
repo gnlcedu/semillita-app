@@ -27,17 +27,18 @@ const NINO_OPC={
            ['#F5B8D0','Rosado'],['#8DBDE6','Azul'],['#C9B8EE','Morado'],['#A3D69B','Verde']],
   /* ropa: [id, nombre, nivel] */
   camisa:[['camiseta','Camiseta',1],['rayas','Rayas',1],['uniforme','Uniforme escolar',1],['polo','Polo',2],['sueter','Suéter',2],
-          ['jersey','Camiseta de pelota',3],['estrella','Estrella',3],['vestido','Vestido',1]],
-  abajo:[['pantalon','Pantalón',1],['short','Pantaloncito',1],['falda','Falda',1]],
-  zapatos:[['tenis','Tenis',1],['escolares','Escolares',1],['sandalias','Sandalias',2],['chancletas','Chancletas',2],['botas','Botas',3]],
+          ['jersey','Camiseta de pelota',3],['estrella','Estrella',3],['vestido','Vestido',1],
+          ['explorador','Camisa de explorador',6],['flores','Camisa de flores',7],['guayabera','Guayabera',8]],
+  abajo:[['pantalon','Pantalón',1],['short','Pantaloncito',1],['falda','Falda',1],['bermuda','Bermuda',6]],
+  zapatos:[['tenis','Tenis',1],['escolares','Escolares',1],['sandalias','Sandalias',2],['chancletas','Chancletas',2],['botas','Botas',3],['lluvia','Botas de lluvia',7]],
   colRopa:['#F4A6A6','#F7C59F','#F6D36F','#B9E3C6','#7FC08E','#A9D3F0','#8DBDE6','#C9B8EE','#F5B8D0','#FFFFFF','#D9DDE6','#6E7FB0','#C29A7C','#5A5266'],
   /* accesorios: ranura → [id, nombre, nivel] */
   acc:{
-    cabeza:[['gorra','Gorra',1],['lazo','Lazo',1],['diadema','Diadema',1],['gorro','Gorro de lana',2],['sombrero','Sombrero',3],['flores','Corona de flores',4]],
-    cara:[['gafas','Gafas',1],['curita','Curita',1],['gafas_sol','Gafas de sol',3],['gafas_estrella','Gafas de estrella',4]],
-    cuello:[['corbatin','Corbatín',1],['bufanda','Bufanda',2],['collar','Collar',3],['medalla','Medalla',5]],
-    mano:[['globo','Globo',1],['libro','Libro',1],['pelota','Pelota de béisbol',2],['flor','Flor',3]],
-    espalda:[['mochila','Mochila',1],['capa','Capa',3],['alas','Alas',4]]
+    cabeza:[['gorra','Gorra',1],['lazo','Lazo',1],['diadema','Diadema',1],['gorro','Gorro de lana',2],['sombrero','Sombrero',3],['flores','Corona de flores',4],['guano','Sombrero de guano',6],['safari','Casco de explorador',8],['laurel','Corona de hojas',10]],
+    cara:[['gafas','Gafas',1],['curita','Curita',1],['gafas_sol','Gafas de sol',3],['gafas_estrella','Gafas de estrella',4],['corazones','Gafas de corazón',7]],
+    cuello:[['corbatin','Corbatín',1],['bufanda','Bufanda',2],['collar','Collar',3],['medalla','Medalla',5],['panuelo','Pañuelo',6],['semillas','Collar de semillas',9]],
+    mano:[['globo','Globo',1],['libro','Libro',1],['pelota','Pelota de béisbol',2],['flor','Flor',3],['binoculares','Binoculares',8],['hoja','Hoja paraguas',9]],
+    espalda:[['mochila','Mochila',1],['capa','Capa',3],['alas','Alas',4],['explorador','Mochila de explorador',7],['capahojas','Capa de hojas',10]]
   }
 };
 const NINO_DEF={piel:'p3',cara:'redonda',ojos:'puntos',colOjos:'#6B4A35',cejas:'finas',nariz:'punto',expr:'feliz',mejillas:true,pecas:false,
@@ -98,10 +99,12 @@ function nino(datos={}, {solo='', buzo=false, pieza=null}={}){
   if (!vestido){
     if (o.abajo==='pantalon') piernas+=P('M60 224 H140 L136 280 H106 L102 248 H98 L94 280 H64Z',ca);
     else if (o.abajo==='short') piernas+=P('M60 224 H140 L138 256 H104 L100 242 L96 256 H62Z',ca)+L('M100 228 V242',shade(ca,-.2),1.6);
+    else if (o.abajo==='bermuda') piernas+=P('M60 224 H140 L138 266 H104 L100 244 L96 266 H62Z',ca)+L('M100 228 V244',shade(ca,-.2),1.6)+L('M64 258 H96 M104 258 H136',shade(ca,-.15),1.6);
     else piernas+=P('M62 222 H138 L152 262 Q100 270 48 262Z',ca)+L('M80 230 L74 262 M100 230 V266 M120 230 L126 262',shade(ca,-.18),1.6);
   }
   /* zapatos (el derecho es el espejo del izquierdo) */
   const pie={
+    lluvia: P('M70 246 H98 V282 Q100 291 90 291 H70 Q64 291 64 284 Q64 276 70 274Z',cz)+L('M70 254 H98',shade(cz,.45),4)+[[78,266],[90,274],[80,282]].map(([x,y])=>D(x,y,2.2,shade(cz,.5))).join(''),
     tenis: P('M68 286 Q66 272 82 272 Q96 272 98 282 Q98 290 90 290 H72 Q68 290 68 286Z',cz)+L('M70 287 H96','#FFFFFF',2.6)+L('M80 276 l6 2 M82 281 l6 1',shade(cz,-.25),1.6),
     escolares: P('M68 286 Q66 274 82 274 Q96 274 98 283 Q98 290 90 290 H72 Q68 290 68 286Z',cz)+L('M76 278 Q84 276 90 280',shade(cz,.4),1.6),
     sandalias: E(84,282,13,8,piel)+L('M73 282 H95 M78 276 L84 286 L90 276',cz,3.6)+P('M68 288 Q68 284 74 284 H96 Q100 284 100 288 Q100 291 96 291 H72 Q68 291 68 288Z',shade(cz,-.08)),
@@ -119,6 +122,9 @@ function nino(datos={}, {solo='', buzo=false, pieza=null}={}){
     case 'uniforme': torso=P(T,cc)+cuelloCamisa()+R(112,180,14,14,3,shade(cc,-.06))+[178,194,210,224].map(y=>D(100,y,2.2,shade(cc,-.3))).join('')+L('M100 166 V232',shade(cc,-.16),1.4); break;
     case 'sueter': torso=P(T,cc)+P('M78 200 H122 L126 226 H74Z',shade(cc,-.08))+L('M92 156 V176 M108 156 V176','#FFFFFF',2.2); break;
     case 'jersey': torso=P(T,cc)+L('M86 154 L100 170 L114 154',shade(cc,-.3),3)+L('M100 170 V232',shade(cc,-.22),1.6)+D(104,184,2,shade(cc,-.3))+D(104,200,2,shade(cc,-.3))+`<text x="122" y="210" text-anchor="middle" font-family="Nunito,sans-serif" font-weight="900" font-size="20" fill="${shade(cc,-.35)}">7</text>`; break;
+    case 'explorador': torso=P(T,cc)+cuelloCamisa()+R(70,176,20,18,3,shade(cc,-.08))+R(110,176,20,18,3,shade(cc,-.08))+L('M70 182 H90 M110 182 H130',shade(cc,-.25),1.4)+[184,200,216].map(y=>D(100,y,2.2,shade(cc,-.3))).join(''); break;
+    case 'flores': torso=P(T,cc)+L('M88 153 Q100 162 112 153',shade(cc,-.2),2)+[[76,180],[120,176],[98,204],[72,218],[126,214]].map(([x,y],k)=>petalos(x,y,5,4,3.4,4,['#F5B8D0','#F6D36F','#FFFFFF'][k%3])+D(x,y,2.2,'#F6B27C')).join('')+`<path d="${T}" fill="none" ${sk(cc)}/>`; break;
+    case 'guayabera': torso=P(T,cc)+cuelloCamisa()+L('M78 160 V230 M88 162 V230 M112 162 V230 M122 160 V230',shade(cc,-.14),1.6)+R(66,184,16,14,3,shade(cc,-.05))+R(118,184,16,14,3,shade(cc,-.05))+R(66,208,16,14,3,shade(cc,-.05))+R(118,208,16,14,3,shade(cc,-.05))+[176,192,208,224].map(y=>D(100,y,2,shade(cc,-.3))).join(''); break;
     case 'estrella': torso=P(T,cc)+L('M88 153 Q100 162 112 153',shade(cc,-.2),2)+estrella(100,194,15,7,'#F6D36F'); break;
     case 'vestido': torso=P(VEST,cc)+L('M66 196 H134',shade(cc,-.18),2.4)+[[80,220],[110,214],[96,238],[124,240],[70,244]].map(([x,y])=>D(x,y,3,shade(cc,.55))).join(''); break;
     case 'traje': torso=P(T,cc)+L('M100 154 V232',shade(cc,-.25),2)+L('M64 182 L76 182 M124 182 L136 182',shade('#F6D36F',0),4)+L('M84 154 L80 230 M116 154 L120 230','#5A5266',3.4); break;
@@ -181,11 +187,21 @@ function nino(datos={}, {solo='', buzo=false, pieza=null}={}){
     libro:()=>R(140,206,26,32,3,'#8DBDE6')+R(143,209,20,26,2,'#FFFFFF')+C(151,220,9,piel),
     pelota:()=>C(160,212,11,'#FFFFFF')+L('M152 204 Q157 212 152 220 M168 204 Q163 212 168 220','#F29A8E',1.6)+C(151,220,9,piel),
     flor:()=>L('M152 216 Q156 188 160 172','#7FC08E',3.5)+petalos(160,166,5,6,4.8,5.6,'#F5B8D0')+D(160,166,3.4,'#F6D36F')+C(151,220,9,piel),
+    guano:()=>E(100,60,78,13,'#E8CF94')+P('M66 60 Q66 20 100 20 Q134 20 134 60Z','#EBD49C')+L('M68 48 H132','#C98256',5)+L('M82 30 L85 58 M100 22 V58 M118 30 L115 58',shade('#EBD49C',-.2),1.6),
+    safari:()=>P('M48 72 Q48 20 100 20 Q152 20 152 72Z','#E6D3A6')+E(100,72,62,10,shade('#E6D3A6',-.06))+L('M50 60 H150','#A3C27A',6),
+    laurel:()=>[198,214,230,246,262,278,294,310,326,342].map((a,k)=>{ const r=a*Math.PI/180, x=+(100+58*Math.cos(r)).toFixed(1), y=+(92+52*Math.sin(r)).toFixed(1); return E(x,y,11,4.6,k%2?'#A3D69B':'#7FC08E',a+90); }).join(''),
+    corazones:()=>[xl,xr].map(x=>`<g transform="translate(${x} ${ey}) scale(1.15)">${P('M0 9 C-17 -2 -13 -17 0 -8 C13 -17 17 -2 0 9Z','#F5B8D0')}</g>`).join('')+L(`M${xl+14} ${ey-2} H${xr-14}`,shade('#F5B8D0',-.3),3),
+    panuelo:()=>P('M74 150 Q100 162 126 150 L100 184Z','#F29A8E')+D(90,158,2.4,'#FFFFFF')+D(108,160,2.4,'#FFFFFF')+D(100,172,2.4,'#FFFFFF'),
+    semillas:()=>Array.from({length:9},(_,k)=>{ const a=(20+k*17.5)*Math.PI/180; return E(+(100+24*Math.cos(a)).toFixed(1),+(150+15*Math.sin(a)).toFixed(1),4.6,3.4,k%2?'#C29A7C':'#F2D29B'); }).join(''),
+    binoculares:()=>`<g transform="translate(138 192)">${R(0,0,12,20,4,'#8DBDE6')}${R(14,0,12,20,4,'#8DBDE6')}${R(10,5,6,7,1,shade('#8DBDE6',-.3))}${C(6,20,4,'#D6ECFA')}${C(20,20,4,'#D6ECFA')}</g>`+C(151,220,9,piel),
+    hoja:()=>L('M151 214 L162 132','#7FC08E',4)+P('M162 132 Q126 126 122 154 Q144 144 162 152 Q180 144 202 156 Q200 126 162 132Z','#8FCB86')+L('M162 134 V152',shade('#8FCB86',-.3),2)+C(151,220,9,piel),
+    explorador:()=>R(50,166,100,64,16,'#A3C27A')+R(60,198,24,18,5,shade('#A3C27A',-.1)),
+    capahojas:()=>P('M72 158 L38 266 Q100 278 162 266 L128 158Z','#8FCB86')+L('M100 166 V270 M100 196 L66 180 M100 196 L134 180 M100 228 L56 212 M100 228 L144 212',shade('#8FCB86',-.3),1.8),
     mochila:()=>R(50,166,100,64,16,'#F7C59F'),
     capa:()=>P('M72 158 L38 266 Q100 278 162 266 L128 158Z','#F29A8E'),
     alas:()=>P('M66 176 Q14 140 18 196 Q30 224 66 206Z','#FFFFFF')+P('M134 176 Q186 140 182 196 Q170 224 134 206Z','#FFFFFF')
   }, pon=s=>A[s]&&ac[A[s]]?ac[A[s]]():'';
-  const tirantes=A.espalda==='mochila'?L('M80 154 Q76 180 78 204 M120 154 Q124 180 122 204',shade('#F7C59F',-.2),5):'';
+  const tirantes=A.espalda==='mochila'||A.espalda==='explorador'?L('M80 154 Q76 180 78 204 M120 154 Q124 180 122 204',shade(A.espalda==='mochila'?'#F7C59F':'#A3C27A',-.2),5):'';
 
   /* careta (ojos visibles a través del vidrio), correa y regulador con su manguera hasta el tanque */
   const equipo=L('M44 96 Q46 82 58 84 M156 96 Q154 82 142 84','#5A5266',4)

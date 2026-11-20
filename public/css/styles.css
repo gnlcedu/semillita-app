@@ -420,7 +420,7 @@ input[type=range].sz{width:110px;accent-color:var(--lavD);flex:none}
 .lvup-card{position:relative;width:100%;max-width:360px;background:var(--card);border-radius:var(--r-xl);padding:76px var(--s-5) var(--s-5);text-align:center;box-shadow:var(--sh-3);animation:popin .45s var(--ease-pop) backwards}
 .lvup-card h2{font-size:var(--fs-2xl)}
 .lvup-medal{position:absolute;left:50%;top:-58px;width:66px;margin-left:-33px;line-height:0;transform-origin:50% 0;animation:medal 1.6s ease-in-out .2s both}
-.lvup-pet{display:grid;place-items:center;margin:0 0 var(--s-2)}
+.lvup-pet{display:flex;align-items:flex-end;justify-content:center;gap:var(--s-1);margin:0 0 var(--s-2)}
 .lvup-items{display:flex;flex-wrap:wrap;gap:var(--s-2);justify-content:center}
 @keyframes medal{0%{transform:translateY(-60px) rotate(0);opacity:0}30%{transform:translateY(0) rotate(10deg);opacity:1}55%{transform:rotate(-7deg)}75%{transform:rotate(4deg)}100%{transform:rotate(0)}}
 

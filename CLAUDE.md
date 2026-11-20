@@ -8,7 +8,7 @@ App educativa para niños de 5 a 12 años (República Dominicana), estilo Pok Po
   1. `01-nucleo.js` — estado `S` (localStorage `semillita.v1`), utilidades (`rnd`, `pick`, `shuffle`, `Q`, `NQ`), generadores de los 20 retos por grado (`GAMES`), voz `speak()`, sonido `tone()`, vistas base (`render`, `go`, perfiles, retos, zona de adultos), `react()`.
   2. `02-juguetes.js` — sala de juegos (`TOYS`), utilidades de juguetes (`tsay`, `note`, `dragify`, `addHTML`), 14 juguetes originales.
   3. `03-niveles-ingenio.js` — niveles por edad (`LV()`, `setLV`, `win()`), versiones con retos y 6 juegos de ingenio.
-  4. `04-personajes.js` — `creature(especie, opciones)` (SVG de los animalitos), accesorios `ACC`, XP/niveles, stickers, pantalla "Mi amigo", inicio `vHome`.
+  4. `04-personajes.js` — `creature(especie, opciones)` (SVG de los animalitos), accesorios `ACC`, XP/niveles (`LEVELN` y `XPT`: 10 niveles, de Semillita a Guardián de la naturaleza; cada nivel abre ropa y accesorios del animalito en `ACC` y del niño en `NINO_OPC`), stickers, pantalla "Mi amigo", inicio `vHome`.
   5. `/kenney/kenney.js` — **generado** por `npm run kenney`: lista de imágenes de Kenney (`window.KENNEY`).
   6. `08-ilustraciones.js` — `ILU` (SVG propios), `ilu()`, `emo()`, `kic()`, `toyIcon()`, `emoDOM()`.
   7. `09-escenarios.js` — `scene()`, `sceneParallax()`, `scenePet()`, `setPetProp()`; envuelve `tsay` para la expresión de sorpresa.
