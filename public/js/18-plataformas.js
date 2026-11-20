@@ -3,13 +3,15 @@
    maceta, la semillita crece y florece. Hay obstáculos del jardín (espinas, gusanos, caracoles, abejas y arroyos):
    cada tropiezo quita un corazón y, si se acaban los tres, el camino se intenta de nuevo. No hay reloj.
    La dificultad sube sola: cada camino completado abre una etapa más larga y con más obstáculos; el nivel por
-   edad (LV) fija el punto de partida. Niveles 2 y 3: además se forma una palabra con sus letras en orden.
+   edad (LV) fija el punto de partida. Son 12 caminos: desde el 7 hay tablas que se caen, desde el 8 ráfagas de viento
+   y desde el 9 puentes de tablas sobre el arroyo. El camino alcanzado se guarda en el perfil (p.camino). Niveles 2 y 3: además se forma una palabra con sus letras en orden.
    El camino se arma al azar en cada intento y todo se escala a la altura de la pantalla (celular o tablet).
    Piezas: «Platformer Pack Redux» y «Background Elements» de Kenney (CC0), recoloreadas en 17-entorno.js;
    semilla, gota, sol y flor son piezas propias. */
 function toyCamino(root){
   const lv=LV(), E=window.ENTORNO||{}, pid=(prof()||{}).id||'x';
-  toyCamino.etapas=toyCamino.etapas||{};          /* etapa alcanzada por perfil; dura mientras la app esté abierta */
+  toyCamino.etapas=toyCamino.etapas||{};          /* etapa alcanzada por perfil; se guarda en p.camino */
+  if (!toyCamino.etapas[pid] && prof() && prof().camino) toyCamino.etapas[pid]=prof().camino;
   const PALABRAS = lv===2 ? ['SOL','FLOR','AGUA','HOJA','RAÍZ'] : ['SEMILLA','TIERRA','PLANTA','JARDÍN','FRUTO','TALLO'];
   const cuerpo=n=>E[n]?E[n].p.map(q=>`<path d="${q[1]}" fill="${q[0]}"/>`).join(''):'';
   /* pieza con contorno plano, base centrada en (x, yb) */
@@ -24,10 +26,10 @@ function toyCamino(root){
   const VISTA={semilla:'🌰',agua:'💧',sol:'☀️'};
 
   function armar(){
-    const W=cam.clientWidth, H=cam.clientHeight, etapa=toyCamino.etapas[pid]||1, dif=Math.min(6,(lv-1)+(etapa-1));
+    const W=cam.clientWidth, H=cam.clientHeight, etapa=toyCamino.etapas[pid]||1, dif=Math.min(11,(lv-1)+(etapa-1));
     /* T = lado de una loseta: se achica en pantallas bajas para que quepan las plataformas altas */
     const T=Math.max(30,Math.min(56,Math.floor((H-70)/6.3))), k=T/56, gy=H-Math.round(T*1.5);
-    const tramos=[], plats=[], cajas=[], resortes=[], espinas=[], bichos=[], moviles=[], items=[], adornos=[], huecos=[], ocupado=[];
+    const tramos=[], plats=[], cajas=[], resortes=[], espinas=[], bichos=[], moviles=[], items=[], adornos=[], huecos=[], ocupado=[], caen=[], vientos=[];
     let x=0;
     const suelo=n=>{ const u=tramos[tramos.length-1]; if (u && u[1]===x-1) u[1]=x+n-1; else tramos.push([x,x+n-1]); x+=n; };
     const pon=(kk,tx,al,ch)=>items.push({k:kk,x:tx*T+T/2,y:gy-al*T-30*k,ch});
@@ -41,10 +43,16 @@ function toyCamino(root){
       espinas(a){ const dos=dif>=3; suelo(dos?8:6); espinas.push(a+3); ocupado.push(a+3); pon('semilla',a+1,0); pon('agua',a+3,2); if (dos){ espinas.push(a+5.7); ocupado.push(a+5,a+6); } pon('sol',a+4.4,1); },
       bicho(a){ suelo(7); const lento=rnd(0,1); bichos.push({n:lento?'p_caracol':'p_gusano',a:a+1.3,b:a+5.7,v:(lento?26:46)+8*dif,quien:lento?'caracol':'gusano'}); pon('semilla',a+2,0); pon('semilla',a+4,0); pon('sol',a+3,1.6); },
       abeja(a){ suelo(6); bichos.push({n:'p_abeja',a:a+3,b:a+3,v:0,vuela:1,quien:'abeja'}); pon('semilla',a+1,0); pon('agua',a+3,0); pon('estrella',a+4.6,1); },
+      /* tablas que se caen un momento después de pisarlas (vuelven a su lugar) */
+      cae(a){ suelo(2); const g0=x; x+=6; caen.push([g0+.6,1,2],[g0+3.4,1.6,2]); pon('sol',g0+1.6,2.2); pon('agua',g0+4.4,2.8); suelo(3); pon('semilla',x-2,0); },
+      /* ráfagas de viento que empujan hacia atrás: se ven venir (líneas de viento) */
+      viento(a){ suelo(9); vientos.push([a+1,a+8]); pon('semilla',a+2,0); pon('sol',a+4.5,1.4); pon('agua',a+7,0); adornos.push(['p_pasto',a+3,24]); },
+      /* puente de tablas sobre el arroyo: algunas se caen */
+      puente(a){ suelo(2); const g0=x; x+=7; for(let i=0;i<7;i++) caen.push([g0+i,0,1,i%2===1||dif>=10]); pon('estrella',g0+3.5,1.4); suelo(3); },
       movil(a){ suelo(2); const g0=x; x+=5; moviles.push({a:g0+.2,b:g0+2.8,n:2,v:52+4*dif}); pon('agua',g0+2,1.5); suelo(3); pon('sol',x-2,1); }
     };
-    const baraja=['llano','escalon','caja','resorte']; if (dif>=1) baraja.push('hueco','espinas','bicho'); if (dif>=2) baraja.push('abeja','bicho','espinas'); if (dif>=3) baraja.push('movil','hueco','abeja');
-    const nTramos=Math.min(13,6+dif+(lv>2?1:0));
+    const baraja=['llano','escalon','caja','resorte']; if (dif>=1) baraja.push('hueco','espinas','bicho'); if (dif>=2) baraja.push('abeja','bicho','espinas'); if (dif>=3) baraja.push('movil','hueco','abeja'); if (dif>=6) baraja.push('cae'); if (dif>=7) baraja.push('viento','cae'); if (dif>=8) baraja.push('puente','viento'); if (dif>=10) baraja.push('puente','cae','abeja');
+    const nTramos=Math.min(16,6+dif+(lv>2?1:0));
     /* inicio */
     suelo(6); [2,3,4].forEach(i=>pon('semilla',i,0)); huecos.push(1);
     let ant='';
@@ -73,6 +81,11 @@ function toyCamino(root){
     /* plataformas que se mueven sobre el arroyo */
     moviles.forEach((m,i)=>{ const o={x:m.a*T,y:gy,w:m.n*T,h:20,paso:1,movil:1,x0:m.a*T,x1:m.b*T,v:m.v*k,id:'mv'+i}; sol.push(o);
       h+=`<div id="mv${i}" class="abs" style="left:0;top:${gy}px;width:${m.n*T}px;height:${T*100/175}px;z-index:2;will-change:transform;transform:translate3d(${o.x}px,0,0)"><svg aria-hidden="true" viewBox="0 0 ${m.n*175} 100" preserveAspectRatio="none" style="width:100%;height:100%;display:block"><defs><g id="pl-m${i}">${cuerpo('p_plataforma')}</g></defs>${Array.from({length:m.n},(_,j)=>`<use href="#pl-m${i}" x="${j*175}"/>`).join('')}</svg></div>`; });
+    /* tablas que se caen: c = [loseta, altura, ancho, cae] (las del puente que no caen quedan firmes) */
+    caen.forEach(([tx,al,n,cae],i)=>{ const y=gy-al*T, o={x:tx*T+(n===1?2:0),y,y0:y,w:n*T-(n===1?4:0),h:20,paso:1,cae:cae!==false,t:0,vy:0,id:'ca'+i}; sol.push(o);
+      h+=`<div id="ca${i}" class="abs" style="left:${o.x}px;top:${y}px;width:${o.w}px;height:${T*100/175}px;z-index:2;will-change:transform"><svg aria-hidden="true" viewBox="0 0 ${n*175} 100" preserveAspectRatio="none" style="width:100%;height:100%;display:block"><defs><g id="pl-c${i}">${cuerpo('p_plataforma')}</g></defs>${Array.from({length:n},(_,j)=>`<use href="#pl-c${i}" x="${j*175}"/>`).join('')}${o.cae?`<path d="M${n*175*.3} 30 l20 30 l-10 20 M${n*175*.7} 24 l-14 34" stroke="#8C6A50" stroke-width="6" fill="none"/>`:''}</svg></div>`; });
+    /* zonas de viento: líneas que aparecen cuando sopla */
+    const zonasV=vientos.map(([a,b],i)=>{ h+=`<div id="vi${i}" class="abs viento-z" style="left:${a*T}px;top:${gy-3*T}px;width:${(b-a)*T}px;height:${3*T}px;z-index:4;pointer-events:none;opacity:0">${[0,1,2].map(j=>`<span style="top:${18+j*30}%;left:${10+j*22}%"></span>`).join('')}</div>`; return {x0:a*T,x1:b*T,id:'vi'+i,fase:rnd(0,30)/10}; });
     /* obstáculos */
     const peligros=[];
     espinas.forEach(tx=>{ const cx=tx*T+T/2, w=40*k, al=20*k; peligros.push({x:cx,w,h:al,y:gy,quien:'espinas'}); h+=pz('p_espinas',cx,gy+1,al,3,'#B9C6CC'); });
@@ -103,11 +116,17 @@ function toyCamino(root){
         ${palabra?`<div id="pal" aria-label="Palabra para formar" style="display:flex;gap:3px;background:var(--card);border:var(--bw) solid var(--line);border-radius:var(--r-sm);padding:var(--s-1) var(--s-2);box-shadow:var(--sh-1)">${[...palabra].map((c,i)=>`<span data-l="${i}" style="width:20px;height:26px;display:grid;place-items:center;border-bottom:3px solid var(--line-2);font-weight:800;font-size:var(--fs-sm);color:#5A566B">${c}</span>`).join('')}</div>`:''}</div>`;
     const q=s=>cam.querySelector(s);
     items.forEach((it,i)=>{ it.el=q(`[data-it="${i}"]`); });
-    sol.forEach(o=>{ if (o.movil) o.el=q('#'+o.id); }); peligros.forEach(o=>{ if (o.id) o.el=q('#'+o.id); });
-    st={W,H,T,k,gy,WW,sol,items,peligros,palabra,letra:0,mx,etapa,dif, n:{semilla:0,agua:0,sol:0,estrella:0}, vidas:3, inv:0, emp:0, empT:0,
+    sol.forEach(o=>{ if (o.movil||o.cae) o.el=q('#'+o.id); }); zonasV.forEach(z=>{ z.el=q('#'+z.id); }); peligros.forEach(o=>{ if (o.id) o.el=q('#'+o.id); });
+    st={W,H,T,k,gy,WW,sol,items,peligros,zonasV,palabra,letra:0,mx,etapa,dif, n:{semilla:0,agua:0,sol:0,estrella:0}, vidas:3, inv:0, emp:0, empT:0,
       px:1.6*T, py:gy, vx:0, vy:0, piso:true, tPiso:0, cx:0, seg:{x:1.6*T,y:gy}, mira:1, fin:false, aviso:0, dicho:{}, sobre:null, pw, ph,
       pj:q('#pj'), pjv:q('#pjv'), pet:q('#pet'), petv:q('#petv'), qw, qh, qx:.6*T, qy:gy, qm:1, hist:[], giro:SPECIES[prof().avatar]==='tortuga'?-1:1,  /* la tortuga se dibuja mirando a la izquierda */ mun:q('#mun'), lej:q('#lej'), mac:q('#mac')};
     pintar();
+    /* cuando aparece algo nuevo, el animalito lo explica una vez */
+    toyCamino.dicho=toyCamino.dicho||{};
+    const aviso=(k2,t)=>{ if(!toyCamino.dicho[k2]){ toyCamino.dicho[k2]=1; setTimeout(()=>{ if(vivo) tsay(t); },1800); return true; } };
+    (caen.some(c=>c[3]!==false&&c[1]>0)&&aviso('cae','¡Ojo! Las tablas rotas se caen un momento después de pisarlas. ¡Cruza rápido!'))
+      || (vientos.length&&aviso('viento','Cuando veas las líneas del viento, espera: el viento te empuja hacia atrás.'))
+      || (caen.some(c=>c[1]===0)&&aviso('puente','Un puente de tablas: las que tienen grietas se caen.'));
   }
   function pintar(){ const s=st; s.pj.style.transform=`translate3d(${s.px-s.pw/2}px,${s.py-s.ph}px,0)`; s.pjv.style.transform=`scaleX(${s.mira*(s.pet?1:s.giro)})`; s.pjv.classList.toggle('corre', s.piso && Math.abs(s.vx)>1);
     if (s.pet){ s.pet.style.transform=`translate3d(${s.qx-s.qw/2}px,${s.qy-s.qh}px,0)`; s.petv.style.transform=`scaleX(${s.qm*s.giro})`; s.petv.classList.toggle('corre', !!s.qmov); }
@@ -148,7 +167,7 @@ function toyCamino(root){
     s.fin=true; s.vx=0; s.pj.style.opacity='1'; const etapas=['🌱','🌿','🌻'];
     etapas.forEach((e,i)=>setTimeout(()=>{ if(!vivo||st!==s) return; s.mac.innerHTML=emo(e); note(523+i*131,.25,'sine',.1); if(!RM) s.mac.animate([{transform:'scale(.6)'},{transform:'scale(1.12)'},{transform:'scale(1)'}],{duration:380,easing:'ease-out'}); },500+i*750));
     setTimeout(()=>{ if(!vivo||st!==s) return; const completa=!s.palabra||s.letra===[...s.palabra].length;
-      if (lv===3) toyCamino.etapas[pid]=s.etapa+1;
+      if (lv===3){ toyCamino.etapas[pid]=Math.min(12,s.etapa+1); const pp=prof(); if(pp){ pp.camino=toyCamino.etapas[pid]; save(); } }
       if (completa){ confetti(); win(s.palabra?`¡Tu semillita floreció y formaste la palabra ${s.palabra}!`:`¡Tu semillita floreció! Recogiste ${s.n.semilla} semillas, ${s.n.agua} gotas y ${s.n.sol} soles.`); }
       else { react('happy'); tsay(`¡Tu semillita floreció! La próxima vez completa la palabra ${s.palabra.toLowerCase()}.`); }
       addHTML(cam, `<button id="otra" class="btn abs" style="left:50%;top:36%;transform:translateX(-50%);z-index:8;white-space:nowrap">Siguiente camino</button>`); cam.querySelector('#otra').addEventListener('click',armar);
@@ -159,12 +178,24 @@ function toyCamino(root){
     /* plataformas que se mueven: llevan al animalito si va encima */
     for (const o of s.sol){ if (!o.movil) continue; let nx=o.x+o.v*dt; if (nx>o.x1){ nx=o.x1; o.v=-Math.abs(o.v); } else if (nx<o.x0){ nx=o.x0; o.v=Math.abs(o.v); }
       if (s.sobre===o && s.piso) s.px+=nx-o.x; o.x=nx; if (o.el) o.el.style.transform=`translate3d(${nx}px,0,0)`; }
-    /* bichos: caminan de un lado a otro; la abeja sube y baja */
+    /* tablas que se caen: tiemblan 0,6 s después de pisarlas, caen y a los 3 s vuelven */
+    for (const o of s.sol){ if (!o.cae||!o.el) continue;
+      if (!o.t && s.sobre===o && s.piso) o.t=ahora;
+      if (o.t){ const e=ahora-o.t;
+        if (e<.6){ o.el.style.transform=`translate3d(${RM?0:Math.sin(e*60)*2}px,0,0)`; }
+        else if (e<3.6){ o.cayendo=1; o.vy+=1400*k*dt; o.y+=o.vy*dt; o.el.style.transform=`translate3d(0,${o.y-o.y0}px,0)`; o.el.style.opacity=Math.max(0,1-(e-.6)/1.2); }
+        else { o.t=0; o.cayendo=0; o.vy=0; o.y=o.y0; o.el.style.transform='translate3d(0,0,0)'; o.el.style.opacity=1; } } }
+    /* viento: sopla 1,6 s de cada 4 s; antes de soplar se ven las líneas, así se puede esperar */
+    let empujeV=0;
+    for (const z of s.zonasV||[]){ const c=(ahora+z.fase)%4, sopla=c>1.2&&c<2.8, avisa=c>.6&&c<=1.2;
+      if (z.el) z.el.style.opacity = sopla?1:avisa?.45:0;
+      if (sopla && s.px>z.x0-20*k && s.px<z.x1+20*k) empujeV=-95*k; }
+
     for (const o of s.peligros){ if (!o.el) continue;
       if (o.vuela){ o.y=o.y0+Math.sin(ahora*1.6+o.fase)*s.T*.45; }
       else { o.x+=o.v*o.dir*dt; if (o.x>o.b){ o.x=o.b; o.dir=-1; } else if (o.x<o.a){ o.x=o.a; o.dir=1; } }
       o.el.style.transform=`translate3d(${o.x-o.w/2}px,${o.y-o.h}px,0)`; o.el.firstElementChild.style.transform=`scaleX(${o.dir>0?-1:1})`; }
-    if (!s.fin){ s.vx = ahora<s.empT ? s.emp : dir*210*k; if(dir && ahora>=s.empT) s.mira=dir; }
+    if (!s.fin){ s.vx = ahora<s.empT ? s.emp : dir*210*k+empujeV; if(dir && ahora>=s.empT) s.mira=dir; }
     if (s.inv && ahora>=s.inv){ s.inv=0; s.pj.style.opacity='1'; }
     if (s.piso) s.tPiso=ahora;
     if (!s.fin && ctl.salto>0 && ahora-ctl.salto<.14 && ahora-s.tPiso<.12){ s.vy=-680*k; s.piso=false; ctl.salto=-1; s.tPiso=-1; note(520,.08,'sine',.06); }
@@ -175,7 +206,7 @@ function toyCamino(root){
     for (const o of s.sol){ if (o.paso) continue; if (s.py>o.y+2 && s.py-mh<o.y+o.h){ if (s.vx>0 && s.px+mw<=o.x && nx+mw>o.x) nx=o.x-mw; else if (s.vx<0 && s.px-mw>=o.x+o.w && nx-mw<o.x+o.w) nx=o.x+o.w+mw; } }
     /* vertical */
     let ny=s.py+s.vy*dt; s.piso=false; s.sobre=null; const pie=14*k;
-    for (const o of s.sol){ if (nx+pie<=o.x || nx-pie>=o.x+o.w) continue;
+    for (const o of s.sol){ if (o.cayendo || nx+pie<=o.x || nx-pie>=o.x+o.w) continue;
       if (s.vy>=0 && s.py<=o.y+.5 && ny>=o.y){ ny=o.y; if (o.resorte){ s.vy=-1010*k; note(392,.18,'triangle',.08); } else { s.vy=0; s.piso=true; s.sobre=o; if (o.suelo && nx>o.x+30*k && nx<o.x+o.w-30*k) s.seg={x:nx,y:o.y}; } }
       else if (s.vy<0 && !o.paso && s.py-mh>=o.y+o.h && ny-mh<o.y+o.h){ ny=o.y+o.h+mh; s.vy=0; } }
     s.px=nx; s.py=ny;

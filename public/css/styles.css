@@ -593,3 +593,7 @@ input[type=range].sz{width:110px;accent-color:var(--lavD);flex:none}
 .stk-peel .medalla-art{width:1em;height:1em}
 .mp-lugar{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}
 .mp-pais{display:block;width:100%;height:64px;border-radius:var(--r-sm)}
+/* «El camino de la semilla»: ráfagas de viento (líneas que pasan) */
+.viento-z{transition:opacity .25s}
+.viento-z span{position:absolute;width:38%;height:6px;border-radius:6px;background:rgba(255,255,255,.9);box-shadow:0 0 0 1.6px #A6D2EC;animation:soplo .9s linear infinite}
+@keyframes soplo{from{transform:translateX(40%)}to{transform:translateX(-60%)}}
