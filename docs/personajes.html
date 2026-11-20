@@ -20,6 +20,7 @@
 <div class="wrap">
   <div class="logo">Semi<span>llita</span> · personajes</div>
   <p class="muted" style="font-weight:700">Piezas de <code>public/js/19-nino.js</code>. Toca un personaje para verlo reaccionar.</p>
+  <div id="animales"></div>
   <h2 class="h-sec">Al azar</h2>
   <div class="row2"><button class="btn" id="otra">Otros personajes</button></div>
   <div class="grid" id="azar"></div>
@@ -36,6 +37,7 @@
 <script src="/js/13-plano-lugares.js"></script>
 <script src="/js/14-plano-mundo.js"></script>
 <script src="/js/19-nino.js"></script>
+<script src="/js/21-animales.js"></script>
 <script>
 const bgs=['bg-mint','bg-sky','bg-peach','bg-lav','bg-butter','bg-rose','bg-sage'];
 const caja=(d,txt,i)=>`<div class="it ${bgs[i%bgs.length]}">${ninoMascot(d,92,'n'+Math.random().toString(36).slice(2))}<code>${txt}</code></div>`;
@@ -62,6 +64,10 @@ const secc=[
 ];
 document.getElementById('out').innerHTML=secc.map(([t,l])=>`<h2 class="h-sec">${t} <small class="muted">(${l.length})</small></h2><div class="grid">${l.map(([d,n],i)=>caja({...base,...d},n,i)).join('')}</div>`).join('')
   +`<h2 class="h-sec">Solo la cabeza</h2><div class="grid">${Array.from({length:6},(_,i)=>`<div class="it ${bgs[i]}"><div class="cab">${nino(ninoAzar(5),{solo:'cabeza'})}</div></div>`).join('')}</div>`;
+/* animalitos: cada especie con sus rasgos */
+const bicho=(sp,r,txt,i)=>`<div class="it ${bgs[i%bgs.length]}"><div class="mascot" style="--ms:92px"><span class="body">${creature(sp,{rasgos:r})}</span><span class="shadow"></span></div><code>${txt}</code></div>`;
+document.getElementById('animales').innerHTML=Object.entries(ESPECIES).map(([sp,E])=>`<h2 class="h-sec">Animalito · ${sp}</h2>`+
+  Object.entries(E.rasgos).map(([k,[n,l]])=>`<h3 style="font-size:var(--fs-sm);margin:var(--s-3) 0 var(--s-2)">${n}</h3><div class="grid">${l.map(([v,nm],i)=>bicho(sp,{[k]:v},nm,i)).join('')}</div>`).join('')).join('');
 document.body.addEventListener('click',e=>{ const m=e.target.closest('.mascot'); if(m) reac(m,['happy','surprised','think','sad'][Math.floor(Math.random()*4)]); });
 </script>
 </body>

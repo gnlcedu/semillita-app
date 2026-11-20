@@ -83,7 +83,7 @@ label.lb{display:block;font-weight:800;margin:var(--s-5) 0 var(--s-2)}
 .bg-peach{background:var(--peach)}.bg-rose{background:var(--rose)}.bg-mint{background:var(--mint)}.bg-sky{background:var(--sky)}.bg-lav{background:var(--lav)}.bg-butter{background:var(--butter)}.bg-sage{background:var(--sage)}
 .fg-peach{background:var(--peachD)}.fg-rose{background:var(--roseD)}.fg-mint{background:var(--mintD)}.fg-sky{background:var(--skyD)}.fg-lav{background:var(--lavD)}.fg-butter{background:var(--butterD)}.fg-sage{background:var(--sageD)}
 /* ruta */
-.tabs{display:flex;gap:var(--s-2);overflow-x:auto;padding:var(--s-1) 0 var(--s-3);scrollbar-width:none}
+.tabs{display:flex;gap:var(--s-2);overflow-x:auto;white-space:nowrap;padding:var(--s-1) 0 var(--s-3);scrollbar-width:none}
 .route{position:relative;margin-top:var(--s-2)}
 .gblock{margin:var(--s-6) 0 var(--s-6);display:flex;align-items:center;gap:var(--s-3)}
 .gblock .gi{font-size:var(--fs-3xl);width:48px;height:48px;border-radius:var(--r-md);display:grid;place-items:center}
@@ -529,3 +529,5 @@ input[type=range].sz{width:110px;accent-color:var(--lavD);flex:none}
 .mp-tabs{flex-wrap:wrap;overflow:visible;justify-content:center}
 .mp-dib.cab svg{overflow:hidden}
 .mp-chip svg{overflow:hidden}
+/* pestañas centradas que, si no caben, se desplazan sin cortar la primera */
+.tabs.centro>:first-child{margin-left:auto}.tabs.centro>:last-child{margin-right:auto}

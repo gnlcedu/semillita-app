@@ -132,7 +132,7 @@ function vFriend(){
   }
   app.innerHTML=`<div class="top"><button class="icon-btn" id="back">←</button><h2>Mi amigo ${mname(p.avatar)}</h2></div>
     <div style="display:flex;justify-content:center;margin:var(--s-1) 0 var(--s-2)">${mascot(p.avatar,150,'msc','')}</div>
-    <div class="tabs" style="justify-content:center">${[['ropa','🎩 Ropa'],['color','🎨 Color'],['nivel','🌱 Nivel'],['album','📒 Álbum']].map(([k,n])=>`<button class="chip ${k===tab?'on':''}" data-tab="${k}">${n}</button>`).join('')}</div>
+    <div class="tabs centro">${[['ropa','🎩 Ropa'],['color','🐾 Cómo es'],['nivel','🌱 Nivel'],['album','📒 Álbum']].map(([k,n])=>`<button class="chip ${k===tab?'on':''}" data-tab="${k}">${n}</button>`).join('')}</div>
     <div>${body}</div>`;
   bind('#back',()=>go({name:'home'}));
   bind('[data-tab]',el=>go({name:'friend',tab:el.dataset.tab}));
