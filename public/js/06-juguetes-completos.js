@@ -305,7 +305,19 @@ function toyMusic2(root){
 
 /* ---------- 4. ACUARIO (completo) ---------- */
 function toyAquarium2(root){
-  const FISH=[['🐟','pez','Los peces respiran por las branquias.'],['🐠','pez tropical','Vive en los arrecifes de coral.'],['🐡','pez globo','Se infla para asustar a otros.'],['🐙','pulpo','Tiene ocho brazos y tres corazones.'],['🦑','calamar','Lanza tinta para esconderse.'],['🦀','cangrejo','Camina de lado.'],['🦞','langosta','Tiene un caparazón duro.'],['🐢','tortuga marina','Puede vivir muchísimos años.'],['🐬','delfín','Es un mamífero: respira aire.'],['🦈','tiburón','Tiene muchas filas de dientes.'],['🐳','ballena','Es el animal más grande del mundo.'],['🪼','medusa','No tiene huesos ni cerebro.']];
+  /* descripciones cortas para niños; se leen en voz alta al tocar el animal (ficha) */
+  const FISH=[['🐟','pez','Respira bajo el agua con sus branquias. Se mueve con sus aletas y su cola.'],
+    ['🐠','pez tropical','Vive en los arrecifes de coral, en mares calientes como el Caribe. Sus colores lo ayudan a esconderse entre los corales.'],
+    ['🐡','pez globo','Cuando se asusta, traga agua y se infla como una pelota. Así los otros peces no se lo pueden comer.'],
+    ['🐙','pulpo','Tiene ocho brazos con ventosas y tres corazones. Puede cambiar de color para esconderse.'],
+    ['🦑','calamar','Tiene diez brazos. Cuando hay peligro, lanza una nube de tinta y se escapa.'],
+    ['🦀','cangrejo','Camina de lado con sus ocho patas. Usa sus dos tenazas para comer y defenderse.'],
+    ['🦞','langosta','Tiene un caparazón duro que cambia cuando crece. Camina por el fondo del mar.'],
+    ['🐢','tortuga marina','Respira aire, por eso sube a la superficie. Pone sus huevos en la arena de la playa.'],
+    ['🐬','delfín','Es un mamífero: respira aire por un agujerito en la cabeza. Vive en grupo y es muy juguetón.'],
+    ['🦈','tiburón','Le salen dientes nuevos toda la vida. Siente a otros animales desde muy lejos.'],
+    ['🐳','ballena','Es el animal más grande del mundo. Las ballenas jorobadas visitan la bahía de Samaná cada invierno.'],
+    ['🪼','medusa','No tiene huesos ni cerebro, y su cuerpo es casi todo agua. Algunas pican: ¡mírala sin tocarla!']];
   const DECO=['🏰','🪸','🐚','🪨','🗿','💎','⚓','🌿'];
   const fish=[], food=[]; let raf, bub, night=false;
   addHTML(root, `<div id="tk" class="abs" style="inset:0 0 var(--tbar-h) 0;background:#BFE1F5;overflow:hidden;transition:background 1s">
@@ -318,8 +330,8 @@ function toyAquarium2(root){
   const count=()=>{ const g={}; fish.forEach(f=>g[f.n]=(g[f.n]||0)+1); root.querySelector('#cnt').innerHTML=Object.entries(g).map(([n,c])=>`${c} ${emo(FISH.find(x=>x[1]===n)[0],'1.5em')}`).join('  ')||'Acuario vacío'; };
   function add(i){ if (fish.length>=18){ tsay('¡El acuario está lleno!'); return; } const [e,n,fact]=FISH[i];
     const el=document.createElement('span'); el.className='abs fishw'; el.innerHTML=emo(e); el.style.cssText=`left:0;top:0;font-size:${n==='ballena'?62:n==='medusa'?38:42}px;will-change:transform;cursor:pointer`;
-    tk.appendChild(el); if(el.animate&&!RM) el.animate([{opacity:0},{opacity:1}],{duration:500}); const f={el,n,fact,x:rnd(20,Wt()-70),y:rnd(40,Ht()-120),tx:0,ty:0,sp:n==='tortuga marina'||n==='medusa'?.4:.6+Math.random()*.9,dir:1,crab:['cangrejo','langosta'].includes(n),jelly:n==='medusa',hop:0}; newT(f); fish.push(f);
-    el.addEventListener('pointerdown',ev=>{ ev.stopPropagation(); f.hop=20; speak(`${n}. ${fact}`); sparks(el,4); });
+    tk.appendChild(el); if(el.animate&&!RM) el.animate([{opacity:0},{opacity:1}],{duration:500}); const f={el,n,fact,x:rnd(20,Wt()-70),y:rnd(40,Ht()-120),tx:0,ty:0,sp:n==='tortuga marina'||n==='medusa'?.18:.28+Math.random()*.35,dir:1,crab:['cangrejo','langosta'].includes(n),jelly:n==='medusa',hop:0}; newT(f); fish.push(f);
+    el.addEventListener('pointerdown',ev=>{ ev.stopPropagation(); f.hop=20; f.quieto=true; sparks(el,4); ficha(tk,el,{emoji:e,nombre:n,texto:fact,alCerrar:()=>{ f.quieto=false; }}); });
     plopS(); count(); }
   const newT=f=>{ f.tx=rnd(10,Wt()-70); f.ty=f.crab?Ht()-86:rnd(30,Ht()-120); };
   tk.addEventListener('pointerdown',e=>{ const p=rel(tk,e); for(let k=0;k<3;k++){ const el=document.createElement('span'); el.className='abs'; el.style.cssText='width:8px;height:8px;border-radius:50%;background:#D9B08A;border:1.4px solid #A9825F;left:0;top:0'; tk.appendChild(el); food.push({el,x:p.x+rnd(-12,12),y:p.y+rnd(-6,6)}); } popS(); });
@@ -328,8 +340,8 @@ function toyAquarium2(root){
     fish.forEach(f=>{ let tx=f.tx, ty=f.ty, tf=null;
       if (food.length && !f.jelly){ tf=food.reduce((a,b)=>Math.hypot(b.x-f.x-20,b.y-f.y-20)<Math.hypot(a.x-f.x-20,a.y-f.y-20)?b:a); tx=tf.x-20; ty=f.crab?f.y:tf.y-20; }
       const dx=tx-f.x, dy=ty-f.y, d=Math.hypot(dx,dy)||1, sp=f.sp*(tf?2.2:1);
-      if (d>2){ f.x+=dx/d*sp; f.y+=dy/d*sp*(f.jelly?.5:1); if (Math.abs(dx)>1) f.dir=dx>0?-1:1; }
-      if (tf && Math.hypot(tf.x-f.x-20,tf.y-f.y-20)<20){ tf.el.remove(); food.splice(food.indexOf(tf),1); note(500,.08,'sine',.08); burbujitas(tk,f.x+20,f.y+14,{n:2,sube:40,c:'rgba(255,255,255,.6)',borde:'#FFFFFF'}); }
+      if (d>2 && !f.quieto){ f.x+=dx/d*sp; f.y+=dy/d*sp*(f.jelly?.5:1); if (Math.abs(dx)>1) f.dir=dx>0?-1:1; }
+      if (f.quieto){} else if (tf && Math.hypot(tf.x-f.x-20,tf.y-f.y-20)<20){ tf.el.remove(); food.splice(food.indexOf(tf),1); note(500,.08,'sine',.08); burbujitas(tk,f.x+20,f.y+14,{n:2,sube:40,c:'rgba(255,255,255,.6)',borde:'#FFFFFF'}); }
       else if (!tf && d<6) newT(f);
       if (f.hop>0) f.hop--; const jy = f.jelly ? Math.sin(performance.now()/500+f.x)*6 : 0;
       f.el.style.transform=`translate(${f.x}px,${f.y-f.hop+jy}px) scaleX(${f.crab||f.jelly?1:f.dir}) scale(${1+f.hop/60})`; });
@@ -345,7 +357,7 @@ function toyAquarium2(root){
   add(0); add(1); add(5); loop();
   /* un animal nuevo cae al agua: salpica arriba */
   const _add=add; add=i=>{ const n=fish.length; _add(i); if(fish.length>n){ const f=fish[fish.length-1]; ondas(tk,f.x+20,14,{ancho:90}); gotitas(tk,f.x+20,10,{n:4,c:'#E3F2FB'}); } };
-  setTimeout(()=>tsay('Toca un animal para conocerlo. Toca el agua para darles comida'),2400);
+  setTimeout(()=>tsay('Toca un animal y te cuento cómo es. Toca el agua para darles comida'),2400);
   return ()=>{ cancelAnimationFrame(raf); clearInterval(bub); };
 }
 

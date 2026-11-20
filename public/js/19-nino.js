@@ -45,9 +45,14 @@ const NINO_DEF={piel:'p3',cara:'redonda',ojos:'puntos',colOjos:'#6B4A35',cejas:'
   acc:{cabeza:null,cara:null,cuello:null,mano:null,espalda:null}};
 const PIEL=Object.fromEntries(NINO_OPC.piel.map(([k,,c])=>[k,c]));
 
-function nino(datos={}, {solo=''}={}){
+/* opciones de escena:
+   - buzo: traje de buceo, careta, tanque de oxígeno con manguera y aletas (acuario).
+   - pieza: {svg, x, y, w, h} pieza de un juguete (delantal, bata, regadera, instrumento) dibujada dentro
+     del personaje, en sus coordenadas, para que se mueva junto con él. */
+function nino(datos={}, {solo='', buzo=false, pieza=null}={}){
   const {P,C,E,R,F,D,L,Lo,o:oc,sk,estrella,petalos}=PLANO_KIT;
   const o={...NINO_DEF,...datos, acc:{...NINO_DEF.acc,...(datos.acc||{})}};
+  if (buzo) Object.assign(o,{camisa:'traje',abajo:'pantalon',colCamisa:'#7E9FD0',colAbajo:'#6E8CC0',zapatos:'aletas',colZapatos:'#F6D36F',acc:{}});
   const piel=PIEL[o.piel]||o.piel||PIEL.p3, pielO=shade(piel,-.12), cp=o.colPelo, cc=o.colCamisa, ca=o.colAbajo, cz=o.colZapatos;
   const ex=20, ey=98, my=126, G=(cl,b)=>`<g class="${cl}">${b}</g>`, espejo=b=>`<g transform="translate(200 0) scale(-1 1)">${b}</g>`;
 
@@ -79,12 +84,14 @@ function nino(datos={}, {solo=''}={}){
     case 'mono': atras=C(100,24,20,cp)+R(90,38,20,8,4,'#F4A6A6'); adelante=P(FR.liso,cp); break;
     default: adelante=P(FR.corto,cp);
   }
+  /* tanque de oxígeno del buzo: va en la espalda y se asoma por el lado derecho */
+  if (buzo) atras=R(132,140,26,70,11,'#F6D36F')+R(138,130,14,12,3,'#B4B9C8')+L('M136 160 H156 M136 190 H156',shade('#F6D36F',-.2),1.6)+atras;
   if (o.camisa==='sueter') atras=P('M60 168 Q58 136 100 134 Q142 136 140 168Z',shade(cc,-.1))+atras;
 
   /* ---------- cuerpo ---------- */
   const T='M62 170 Q64 154 84 152 H116 Q136 154 138 170 L142 228 Q142 234 136 234 H64 Q58 234 58 228Z';
   const VEST='M70 168 Q72 154 86 152 H114 Q128 154 130 168 L150 252 Q150 258 144 258 H56 Q50 258 50 252Z';
-  const vestido=o.camisa==='vestido', manga=o.camisa==='sueter'?'larga':'corta';
+  const vestido=o.camisa==='vestido', manga=(o.camisa==='sueter'||o.camisa==='traje')?'larga':'corta';
   const brazo=s=>{ const d='M66 164 Q54 186 50 214', b=Lo(d,manga==='larga'?cc:piel,15)+(manga==='corta'?Lo('M66 164 Q60 176 57 186',cc,19):'')+C(49,220,9,piel); return s>0?espejo(b):b; };
   /* piernas y ropa de abajo */
   let piernas=R(76,226,20,54,8,piel)+R(104,226,20,54,8,piel);
@@ -99,6 +106,7 @@ function nino(datos={}, {solo=''}={}){
     escolares: P('M68 286 Q66 274 82 274 Q96 274 98 283 Q98 290 90 290 H72 Q68 290 68 286Z',cz)+L('M76 278 Q84 276 90 280',shade(cz,.4),1.6),
     sandalias: E(84,282,13,8,piel)+L('M73 282 H95 M78 276 L84 286 L90 276',cz,3.6)+P('M68 288 Q68 284 74 284 H96 Q100 284 100 288 Q100 291 96 291 H72 Q68 291 68 288Z',shade(cz,-.08)),
     chancletas: E(84,280,12,8,piel)+P('M66 288 Q66 283 74 283 H96 Q101 283 101 288 Q101 292 96 292 H72 Q66 292 66 288Z',cz)+L('M86 274 L78 284 M86 274 L94 284','#FFFFFF',2.6),
+    aletas: P('M72 276 L58 302 Q80 308 100 302 L96 276Z',cz)+L('M70 290 L66 302 M84 290 V304 M94 288 L96 302',shade(cz,-.2),1.6),
     botas: P('M72 256 H96 V282 Q98 290 90 290 H70 Q66 290 66 284 Q66 276 72 274Z',cz)+L('M72 262 H96',shade(cz,-.2),1.8)
   }[o.zapatos]||'';
   /* camisa */
@@ -113,6 +121,7 @@ function nino(datos={}, {solo=''}={}){
     case 'jersey': torso=P(T,cc)+L('M86 154 L100 170 L114 154',shade(cc,-.3),3)+L('M100 170 V232',shade(cc,-.22),1.6)+D(104,184,2,shade(cc,-.3))+D(104,200,2,shade(cc,-.3))+`<text x="122" y="210" text-anchor="middle" font-family="Nunito,sans-serif" font-weight="900" font-size="20" fill="${shade(cc,-.35)}">7</text>`; break;
     case 'estrella': torso=P(T,cc)+L('M88 153 Q100 162 112 153',shade(cc,-.2),2)+estrella(100,194,15,7,'#F6D36F'); break;
     case 'vestido': torso=P(VEST,cc)+L('M66 196 H134',shade(cc,-.18),2.4)+[[80,220],[110,214],[96,238],[124,240],[70,244]].map(([x,y])=>D(x,y,3,shade(cc,.55))).join(''); break;
+    case 'traje': torso=P(T,cc)+L('M100 154 V232',shade(cc,-.25),2)+L('M64 182 L76 182 M124 182 L136 182',shade('#F6D36F',0),4)+L('M84 154 L80 230 M116 154 L120 230','#5A5266',3.4); break;
     default: torso=P(T,cc)+L('M88 153 Q100 162 112 153',shade(cc,-.2),2);
   }
 
@@ -178,12 +187,19 @@ function nino(datos={}, {solo=''}={}){
   }, pon=s=>A[s]&&ac[A[s]]?ac[A[s]]():'';
   const tirantes=A.espalda==='mochila'?L('M80 154 Q76 180 78 204 M120 154 Q124 180 122 204',shade('#F7C59F',-.2),5):'';
 
-  const cuerpo = solo==='cabeza' ? '' : `${pon('espalda')}${brazo(-1)}${brazo(1)}${piernas}${pie}${espejo(pie)}${torso}${tirantes}${pon('cuello')}${pon('mano')}`;
+  /* careta (ojos visibles a través del vidrio), correa y regulador con su manguera hasta el tanque */
+  const equipo=L('M44 96 Q46 82 58 84 M156 96 Q154 82 142 84','#5A5266',4)
+    +`<rect x="${xl-17}" y="${ey-14}" width="${2*ex+34}" height="28" rx="12" fill="rgba(190,226,248,.42)" stroke="#5A5266" stroke-width="3.4"/>`
+    +L(`M100 ${ey-14} V${ey+14}`,'#5A5266',3)+L('M106 130 Q146 132 146 132 Q152 134 146 142',  '#7A7484',4.2)+C(100,129,8,'#7A7484')+R(94,126,12,6,3,'#5A5266');
+  /* pieza de un juguete: su <svg> (100×100) se coloca en el rectángulo pedido */
+  const piezaSvg = (pieza&&pieza.svg&&solo!=='cabeza') ? (()=>{ const t=pieza.svg, i=t.indexOf('<svg'), a=t.indexOf('>',i), z=t.lastIndexOf('</svg>'); if(i<0||z<0) return '';
+    return `<svg x="${pieza.x}" y="${pieza.y}" width="${pieza.w}" height="${pieza.h}" viewBox="0 0 100 100" overflow="visible">${t.slice(a+1,z)}</svg>`; })() : '';
+  const cuerpo = solo==='cabeza' ? '' : `${pon('espalda')}${brazo(-1)}${brazo(1)}${piernas}${pie}${espejo(pie)}${torso}${tirantes}${pieza&&pieza.capa==='cuerpo'?piezaSvg:''}${pon('cuello')}${pon('mano')}`;
   const cuello = solo==='cabeza' ? '' : R(90,138,20,20,6,pielO);
   const vb = solo==='cabeza' ? (o.pelo==='afro'?'4 -12 192 192':'22 4 156 156') : '-14 -12 228 306';
   return `<svg viewBox="${vb}" class="crt nn" aria-hidden="true" focusable="false">
     ${atras}${cuerpo}${cuello}${orejas}<path d="${CARA}" fill="${piel}" ${sk(piel)}/>
-    ${mejillas}${pecas}${ojos}${G("cj",cejas)}${nariz}${bocas}${adelante}${pon('cara')}${pon('cabeza')}
+    ${mejillas}${pecas}${ojos}${G("cj",cejas)}${nariz}${bocas}${adelante}${pon('cara')}${pon('cabeza')}${buzo?equipo:''}${pieza&&pieza.capa!=='cuerpo'?piezaSvg:''}
   </svg>`;
 }
 
@@ -198,8 +214,8 @@ function ninoAzar(nivel=1){
   return r;
 }
 /* igual que mascot(): caja con sombra, balanceo y expresiones */
-function ninoMascot(datos,size=64,id='nin',cls=''){
-  return `<div class="mascot nino ${cls}" id="${id}" style="--ms:${size}px"><span class="body">${nino(datos)}</span><span class="shadow"></span></div>`;
+function ninoMascot(datos,size=64,id='nin',cls='',opc={}){
+  return `<div class="mascot nino ${cls}" id="${id}" style="--ms:${size}px"><span class="body">${nino(datos,opc)}</span><span class="shadow"></span></div>`;
 }
 Object.assign(window,{nino,ninoAzar,ninoMascot,NINO_OPC,NINO_DEF});
 })();

@@ -124,18 +124,34 @@ vProfiles=function(){
 
 /* escenas de los juguetes: el niño va al lado de su animalito, del lado que mira al centro.
    La pieza del juguete (delantal, bata, regadera, careta, instrumento) la lleva el niño. */
-/* dónde va cada animalito: solo los que tienen alas vuelan; en el agua nadan los marinos; los demás, en el piso */
+/* dónde va cada animalito: solo los que tienen alas vuelan; en el agua nadan los marinos y los demás
+   van en la arena con casco de buceo (nadie se ahoga) */
 const VUELAN=['mariposa','abeja','buho','cotorra'], NADAN=['delfin','pulpo','tortuga'];
-window.modoPet=(p,agua=false)=>{ const sp=SPECIES[p.avatar]; return VUELAN.includes(sp)?'vuela':(agua&&NADAN.includes(sp))?'nada':'piso'; };
+window.modoPet=(p,agua=false)=>{ const sp=SPECIES[p.avatar]; if (agua) return NADAN.includes(sp)?'nada':'piso'; return VUELAN.includes(sp)?'vuela':'piso'; };
+/* rectángulo de cada pieza dentro del niño (coordenadas de nino()); 'cuerpo' = encima de la ropa, debajo de la cabeza */
+const PIEZA={'pet-shop':{x:64,y:150,w:72,h:86,capa:'cuerpo'},'pet-lab':{x:46,y:146,w:108,h:112,capa:'cuerpo'},'pet-garden':{x:132,y:176,w:68,h:68},'pet-music':{x:114,y:170,w:80,h:80}};
+const svgDe=html=>{ const t=String(html||''), i=t.indexOf('<svg'), z=t.lastIndexOf('</svg>'); return i<0||z<0?'':t.slice(i,z+6); };
 const _scenePet=window.scenePet;
 window.scenePet=(root,opts={})=>{
   const el=_scenePet(root,opts), p=prof(); if(!el||!p) return el;
   el.classList.add('pet-'+modoPet(p,opts.agua));
+  if (opts.agua){ /* bajo el agua: sin careta suelta; el que no es marino lleva casco */
+    const pr=el.querySelector('.pet-prop'); if(pr) pr.remove();
+    if (modoPet(p,true)==='piso'){ const b=el.querySelector('#scp .body'); if(b) b.innerHTML=creature(petOf(p).sp,{...petOf(p),casco:true}); } }
   if (!p.nino) return el;
   const size=opts.size||64, lado=/(^|;)\s*right/.test(opts.at||'')?'izq':'der';
-  const caja=document.createElement('div'); caja.className='kid-box kid-'+lado; caja.innerHTML=ninoMascot(ninoDe(p),Math.round(size*.95),'scn');
-  const prop=el.querySelector('.pet-prop'); if(prop) caja.appendChild(prop);
-  el.appendChild(caja);
+  const opc=opts.agua?{buzo:true}:(PIEZA[opts.cls]&&opts.prop?{pieza:{...PIEZA[opts.cls],svg:svgDe(opts.prop)}}:{});
+  const caja=document.createElement('div'); caja.className='kid-box kid-'+lado; caja.innerHTML=ninoMascot(ninoDe(p),Math.round(size*.95),'scn','',opc);
+  /* la pieza ya va dibujada dentro del niño (se mueve con él): se quita la suelta */
+  const prop=el.querySelector('.pet-prop'); if(prop) prop.remove();
+  el._nino={opc}; el.appendChild(caja);
   return el;
+};
+/* cambiar la pieza (por ejemplo, otro instrumento) vuelve a dibujar al niño con ella */
+const _setPetProp=window.setPetProp;
+window.setPetProp=(root,html)=>{
+  const el=root.querySelector('.scene-pet'), b=root.querySelector('#scn .body'), p=prof();
+  if (!el||!el._nino||!b||!p) return _setPetProp(root,html);
+  const opc=el._nino.opc; if (opc.pieza){ opc.pieza={...opc.pieza,svg:svgDe(html)}; b.innerHTML=nino(ninoDe(p),opc); }
 };
 })();

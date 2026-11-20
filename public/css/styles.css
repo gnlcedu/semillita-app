@@ -574,3 +574,8 @@ input[type=range].sz{width:110px;accent-color:var(--lavD);flex:none}
 .pl-ent{display:flex;align-items:flex-end;justify-content:center}
 .pl-ent .mascot:not(.pet-vuela) .body{animation:none}
 .pl-ent.corre .mascot:not(.pet-vuela) .body{animation:trote .34s ease-in-out infinite}
+/* ficha hablada de un animal (acuario, granja) */
+.ficha{position:absolute;z-index:9;width:min(260px,82%);padding:var(--s-3);display:flex;flex-direction:column;gap:var(--s-2);font-size:var(--fs-sm);line-height:1.35;box-shadow:var(--sh-3)}
+.ficha b{font-size:var(--fs-md)}
+.ficha p{margin:0;font-weight:600}
+.ficha .fi-oir{align-self:flex-start;min-height:var(--tap)}

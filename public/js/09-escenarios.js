@@ -77,4 +77,32 @@ window.sceneParallax=(root)=>{
   const ori=e=>{ if(!root.isConnected){ window.removeEventListener('deviceorientation',ori); return; } if(e.gamma==null) return; set(e.gamma/30,((e.beta||45)-45)/30); };
   window.addEventListener('deviceorientation',ori,{passive:true});
 };
+
+/* ficha(cont, el, {emoji, nombre, texto, alCerrar}) — tarjetita sobre un animal con su nombre y una
+   descripción corta que se lee en voz alta (acuario, granja). Se cierra sola, al tocarla o al tocar otra cosa.
+   Botón «Escuchar» para oírla otra vez. Devuelve una función para cerrarla. */
+window.ficha=(cont,el,{emoji='',nombre='',texto='',alCerrar=null}={})=>{
+  cont.querySelectorAll('.ficha').forEach(x=>x._cerrar&&x._cerrar());
+  const c=document.createElement('div'); c.className='ficha card'; c.setAttribute('role','status');
+  c.innerHTML=`<div class="row" style="gap:var(--s-2);align-items:center"><span class="fi-ic">${emo(emoji,'1.9em')}</span><b>${nombre[0].toUpperCase()+nombre.slice(1)}</b></div>
+    <p>${texto}</p><button class="chip fi-oir" type="button">${kic('sonido','1em')} Escuchar</button>`;
+  cont.appendChild(c);
+  /* lugar: encima del animal si cabe; si no, debajo. Siempre dentro del contenedor */
+  const rc=cont.getBoundingClientRect(), re=el.getBoundingClientRect(), w=c.offsetWidth, h=c.offsetHeight;
+  let x=re.left-rc.left+re.width/2-w/2, y=re.top-rc.top-h-10; if (y<8) y=re.bottom-rc.top+10;
+  x=Math.max(8,Math.min(rc.width-w-8,x)); y=Math.max(8,Math.min(rc.height-h-8,y));
+  c.style.left=x+'px'; c.style.top=y+'px';
+  if (!RM && c.animate) c.animate([{opacity:0,transform:'scale(.9)'},{opacity:1,transform:'scale(1)'}],{duration:220,easing:'ease-out'});
+  const decir=()=>speak(`${nombre}. ${texto}`); decir();
+  let t=setTimeout(()=>cerrar(),Math.max(7000,texto.length*90));
+  const fuera=e=>{ if(!c.contains(e.target)) cerrar(); };
+  const cerrar=()=>{ if(!c.isConnected) return; clearTimeout(t); cont.removeEventListener('pointerdown',fuera,true); c.remove(); if(alCerrar) alCerrar(); };
+  c._cerrar=cerrar;
+  c.addEventListener('pointerdown',e=>e.stopPropagation());
+  c.querySelector('.fi-oir').addEventListener('click',e=>{ e.stopPropagation(); clearTimeout(t); t=setTimeout(()=>cerrar(),Math.max(7000,texto.length*90)); decir(); });
+  c.addEventListener('click',e=>{ if(!e.target.closest('.fi-oir')) cerrar(); });
+  setTimeout(()=>cont.addEventListener('pointerdown',fuera,true),0);
+  return cerrar;
+};
 })();
+

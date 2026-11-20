@@ -100,6 +100,16 @@ function toyFarm(root){
   const lv=LV();
   const A=[['🐄','vaca','¡Muuu!','moo','cow','🌾'],['🐷','cerdo','¡Oinc, oinc!','oink','pig','🍎'],['🐔','gallina','¡Coc, coc, coc!','cluck','hen','🌽'],['🐑','oveja','¡Beee!','baa','sheep','🌿'],['🐴','caballo','¡Iiiiih!','neigh','horse','🥕'],['🦆','pato','¡Cuac, cuac!','quack','duck','🐛'],['🐶','perro','¡Guau, guau!','woof','dog','🦴'],['🐱','gato','¡Miau!','meow','cat','🐟'],['🐐','chivo','¡Meee!','maa','goat','🍃']];
   let food=null, quiz=null;
+  /* después de su sonido, cada animal muestra una ficha hablada para aprender cómo es */
+  const DESC={vaca:'Come pasto y nos da leche. Tiene un estómago con cuatro partes para digerir la hierba.',
+    cerdo:'Se revuelca en el lodo para refrescarse, porque casi no suda. Es muy inteligente.',
+    gallina:'Pone huevos y por la noche duerme subida en un palo. Sus pollitos dicen pío, pío.',
+    oveja:'Tiene el cuerpo cubierto de lana. Con su lana se hacen suéteres y frisas.',
+    caballo:'Corre muy rápido y puede dormir de pie. En el campo ayuda a cargar cosas.',
+    pato:'Nada muy bien: sus patas tienen piel entre los dedos, como aletas. Sus plumas no se mojan.',
+    perro:'Es un amigo fiel. Su nariz huele muchísimo mejor que la nuestra.',
+    gato:'Ve muy bien de noche y se limpia con su lengua. Cuando está contento, ronronea.',
+    chivo:'Sube a lugares altos con sus patas fuertes y come hojas de muchas plantas. En el campo dominicano hay muchos.'};
   addHTML(root, `<div class="abs" style="inset:0 0 var(--tbar-h) 0;background:linear-gradient(#D6ECFA 0 30%,#CFE6B8 30%)"></div>
     ${scene('granja','inset:0 0 var(--tbar-h) 0')}
     <div id="fm" class="abs" style="left:8px;right:8px;top:30%;bottom:calc(var(--tbar-h) + var(--s-2));display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,minmax(0,1fr));gap:var(--s-1) var(--s-2)"></div>
@@ -115,7 +125,7 @@ function toyFarm(root){
     if (lv===2 && food){ if (food===a[5]){ const fb=ft.querySelector('.on'); if(fb) volar(fb,s,fb.innerHTML,{arco:-90}); win(`¡Ñam! A ${a[1]==='vaca'||a[1]==='gallina'||a[1]==='oveja'?'la':'el'} ${a[1]} le gusta ${food}`); sparks(b,6); } else tsay(`Hmm, ${a[1]==='vaca'||a[1]==='gallina'||a[1]==='oveja'?'la':'el'} ${a[1]} no come eso`); food=null; ft.querySelectorAll('[data-f]').forEach(x=>x.classList.remove('on')); return; }
     if (lv===3 && quiz){ if (a===quiz){ sonidoAnimal(a[1]); win(`Yes! The ${a[4]} says ${a[3]}!`); quiz=null; } else { sonidoAnimal(a[1],()=>speak(`No, that is the ${a[4]}`,'en-US')); } return; }
     /* primero se oye el animal de verdad y luego el animalito dice quién es */
-    sonidoAnimal(a[1],()=>speak(lv===3?`The ${a[4]} says ${a[3]}`:`Soy ${a[1]==='vaca'||a[1]==='gallina'||a[1]==='oveja'?'la':'el'} ${a[1]}`, lv===3?'en-US':'es-ES')); }));
+    sonidoAnimal(a[1],()=>{ if (lv===3) speak(`The ${a[4]} says ${a[3]}`,'en-US'); else if (b.isConnected) ficha(root,b,{emoji:a[0],nombre:`${a[1]==='vaca'||a[1]==='gallina'||a[1]==='oveja'?'la':'el'} ${a[1]}`,texto:DESC[a[1]]}); }); }));
   ft.querySelectorAll('[data-f]').forEach(b=>b.addEventListener('click',()=>{ food=b.dataset.f; ft.querySelectorAll('[data-f]').forEach(x=>x.classList.toggle('on',x===b)); tsay('¿Quién come esto? Toca el animal'); }));
   const q=root.querySelector('#q'); if (q) q.addEventListener('click',()=>{ quiz=pick(A); const z=quiz; tsay(`Which animal says ${z[3]}?`,'en-US'); setTimeout(()=>{ if(quiz===z) sonidoAnimal(z[1]); },1900); });
   return ()=>{ window.removeEventListener('resize',medir); if (sonAnimal){ sonAnimal.pause(); sonAnimal=null; } };

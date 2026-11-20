@@ -344,6 +344,10 @@ function accesorio(s,k,anc){
   return `<g transform="translate(${x} ${y}) scale(${e}) translate(${-bx} ${-by})">${svg}</g>`;
 }
 
+/* casco de buceo redondo (acuario): rodea la cabeza según el anclaje de cada especie */
+function casco(anc){ const [x,y,e]=anc.cabeza, cy=+(y+56*e).toFixed(1), r=+(92*e).toFixed(1);
+  return `<circle cx="${x}" cy="${cy}" r="${r}" fill="rgba(200,232,250,.32)" stroke="#8FB8D6" stroke-width="3.2"/>`
+    +`<path d="M${(x-r*.72).toFixed(1)} ${(cy+r*.7).toFixed(1)} Q${x} ${(cy+r*1.08).toFixed(1)} ${(x+r*.72).toFixed(1)} ${(cy+r*.7).toFixed(1)}" fill="none" stroke="#B4B9C8" stroke-width="${(7*e+2).toFixed(1)}" stroke-linecap="round"/>`; }
 creature=function(sp,o={}){
   const E=ESPECIES[sp]; if(!E) return viejo ? viejo(sp,o) : '';
   const r={...defRasgos(sp),...(o.rasgos||{})};
@@ -352,7 +356,7 @@ creature=function(sp,o={}){
   if (o.color && !(o.rasgos||{})[k0] && E.rasgos[k0][1].some(([v])=>v===o.color)) r[k0]=o.color;
   const d=E.dibujo(r), out=o.outfit||{}, a=s=>accesorio(s,out[s],d.anc);
   const aura=(o.level||1)>=5?`<circle cx="100" cy="118" r="92" fill="#FBF1C8"/>`:'';
-  return `<svg viewBox="-12 -12 224 224" class="crt" aria-hidden="true" focusable="false">${aura}${a('back')}${d.fondo}${d.cuerpo}${d.cara}${a('neck')}${a('eyes')}${a('hat')}${a('hand')}</svg>`;
+  return `<svg viewBox="-12 -12 224 224" class="crt" aria-hidden="true" focusable="false">${aura}${a('back')}${d.fondo}${d.cuerpo}${d.cara}${a('neck')}${a('eyes')}${a('hat')}${a('hand')}${o.casco?casco(d.anc):''}</svg>`;
 };
 Object.assign(window,{ESPECIES,defRasgos});
 
