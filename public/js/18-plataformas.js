@@ -88,9 +88,13 @@ function toyCamino(root){
       : it.k==='estrella' ? `<div class="abs" data-it="${i}" style="left:${it.x-lado/2}px;top:${it.y-lado/2}px;width:${lado}px;height:${lado}px;z-index:4">${pz('p_estrella',lado/2,lado-1,lado-2,1)}</div>`
       : `<div class="abs" data-it="${i}" style="left:${it.x-lado/2}px;top:${it.y-lado/2}px;width:${lado}px;height:${lado}px;font-size:${lado-2}px;line-height:1;z-index:4">${emo(VISTA[it.k])}</div>`; });
     /* meta y jugador */
-    const pm=Math.round(66*k), pw=Math.round(44*k), ph=Math.round(50*k);
+    const pm=Math.round(66*k);
+    /* fase 5 de personajes: si el niño armó su personaje, corre él y el animalito lo sigue */
+    const conNino=!!(prof().nino && typeof ninoMascot==='function'), pw=Math.round((conNino?40:44)*k), ph=Math.round((conNino?62:50)*k);
+    const qs=Math.round(30*k), qw=Math.round(qs*1.2), qh=Math.round(qs*1.2+10);
     h+=`<div id="mac" class="abs" style="left:${mx-pm/2}px;top:${gy-pm+2}px;width:${pm}px;height:${pm}px;font-size:${pm-6}px;line-height:1;z-index:4;text-align:center">${emo('🪴')}</div>`;
-    h+=`<div id="pj" class="abs" style="left:0;top:0;width:${pw}px;height:${ph}px;z-index:5;will-change:transform"><div id="pjv" style="width:${pw}px;height:${ph}px">${mascot(prof().avatar,pw,'pjm')}</div></div>`;
+    h+=`<div id="pj" class="abs" style="left:0;top:0;width:${pw}px;height:${ph}px;z-index:5;will-change:transform"><div id="pjv" style="width:${pw}px;height:${ph}px">${conNino?ninoMascot(ninoDe(prof()),Math.round((ph-10)/1.6),'scn'):mascot(prof().avatar,pw,'pjm')}</div></div>`;
+    if (conNino) h+=`<div id="pet" class="abs" style="left:0;top:0;width:${qw}px;height:${qh}px;z-index:4;will-change:transform;pointer-events:none"><div id="petv" style="width:${qw}px;height:${qh}px">${mascot(prof().avatar,qs,'scp')}</div></div>`;
     cam.innerHTML=`<div id="lej" class="abs" style="left:0;top:0;width:${WW}px;height:${H}px;will-change:transform">${lej}</div><div id="mun" class="abs" style="left:0;top:0;width:${WW}px;height:${H}px;will-change:transform">${h}</div>
       <div id="hud" class="abs" style="left:8px;top:8px;right:8px;z-index:7;display:flex;flex-wrap:wrap;gap:var(--s-1) var(--s-2);align-items:center;pointer-events:none">
         <div style="display:flex;gap:var(--s-3);background:var(--card);border:var(--bw) solid var(--line);border-radius:var(--r-pill);padding:var(--s-1) var(--s-3);font-weight:800;font-size:var(--fs-sm);box-shadow:var(--sh-1)">${['semilla','agua','sol'].map(n=>`<span style="display:inline-flex;align-items:center;gap:3px">${emo(VISTA[n])}<b data-n="${n}">0</b></span>`).join('')}<span style="display:inline-flex;align-items:center;gap:3px">${emo('⭐')}<b data-n="estrella">0</b></span></div>
@@ -102,10 +106,11 @@ function toyCamino(root){
     sol.forEach(o=>{ if (o.movil) o.el=q('#'+o.id); }); peligros.forEach(o=>{ if (o.id) o.el=q('#'+o.id); });
     st={W,H,T,k,gy,WW,sol,items,peligros,palabra,letra:0,mx,etapa,dif, n:{semilla:0,agua:0,sol:0,estrella:0}, vidas:3, inv:0, emp:0, empT:0,
       px:1.6*T, py:gy, vx:0, vy:0, piso:true, tPiso:0, cx:0, seg:{x:1.6*T,y:gy}, mira:1, fin:false, aviso:0, dicho:{}, sobre:null, pw, ph,
-      pj:q('#pj'), pjv:q('#pjv'), mun:q('#mun'), lej:q('#lej'), mac:q('#mac')};
+      pj:q('#pj'), pjv:q('#pjv'), pet:q('#pet'), petv:q('#petv'), qw, qh, qx:.6*T, qy:gy, qm:1, hist:[], giro:SPECIES[prof().avatar]==='tortuga'?-1:1,  /* la tortuga se dibuja mirando a la izquierda */ mun:q('#mun'), lej:q('#lej'), mac:q('#mac')};
     pintar();
   }
-  function pintar(){ const s=st; s.pj.style.transform=`translate3d(${s.px-s.pw/2}px,${s.py-s.ph}px,0)`; s.pjv.style.transform=`scaleX(${s.mira})`;
+  function pintar(){ const s=st; s.pj.style.transform=`translate3d(${s.px-s.pw/2}px,${s.py-s.ph}px,0)`; s.pjv.style.transform=`scaleX(${s.mira*(s.pet?1:s.giro)})`; s.pjv.classList.toggle('corre', s.piso && Math.abs(s.vx)>1);
+    if (s.pet){ s.pet.style.transform=`translate3d(${s.qx-s.qw/2}px,${s.qy-s.qh}px,0)`; s.petv.style.transform=`scaleX(${s.qm*s.giro})`; s.petv.classList.toggle('corre', !!s.qmov); }
     s.mun.style.transform=`translate3d(${-s.cx}px,0,0)`; s.lej.style.transform=`translate3d(${RM?0:-s.cx*.25}px,0,0)`; }
   function recoger(it){
     const s=st;
@@ -178,6 +183,9 @@ function toyCamino(root){
     for (const o of s.peligros){ if (Math.abs(s.px-o.x)<o.w/2+9*k && s.py>o.y-o.h+4*k && s.py-mh<o.y-3*k){ tropiezo(o.quien, s.px<o.x?-1:1); break; } }
     for (const it of s.items){ if (!it.ok && Math.abs(it.x-s.px)<30*k && Math.abs(it.y-(s.py-24*k))<34*k) recoger(it); }
     if (!s.fin && Math.abs(s.px-s.mx)<46*k && s.piso) llegar();
+    /* el animalito sigue al niño: va detrás, por donde el niño pasó hace un momento (así también salta) */
+    if (s.pet){ s.hist.push([s.px,s.py,ahora]); while (s.hist.length>2 && ahora-s.hist[1][2]>.22) s.hist.shift(); const [hx,hy]=s.hist[0], tx=hx-s.mira*30*k, ox=s.qx;
+      s.qx+=(tx-s.qx)*Math.min(1,dt*8); s.qy=hy; s.qmov=Math.abs(s.qx-ox)>.4; if (s.qmov) s.qm=s.qx>ox?1:-1; }
     const cx=Math.max(0,Math.min(s.WW-s.W,s.px-s.W*.38)); s.cx += (cx-s.cx)*Math.min(1,dt*8);
     pintar();
   }

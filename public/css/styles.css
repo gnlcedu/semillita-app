@@ -552,3 +552,6 @@ input[type=range].sz{width:110px;accent-color:var(--lavD);flex:none}
 .pet-garden .kid-box .pet-prop{left:66%;top:56%;width:52%;height:36%;transform:rotate(-14deg);transform-origin:20% 80%;animation:water 3.2s ease-in-out infinite}
 .pet-diver .kid-box .pet-prop{left:16%;top:25%;width:68%;height:19%}
 .pet-music .kid-box .pet-prop{left:48%;top:52%;width:62%;height:42%;animation:bob 1.6s ease-in-out infinite}
+/* «El camino de la semilla» con el niño: trote al caminar (se apaga con movimiento reducido por la regla global) */
+.corre .mascot .body{animation:trote .34s ease-in-out infinite}
+@keyframes trote{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-7%) rotate(3deg)}}
