@@ -293,6 +293,8 @@ th{color:var(--soft);font-weight:700;font-size:var(--fs-xs)}
 input[type=range].sz{width:110px;accent-color:var(--lavD);flex:none}
 /* animalito SVG, teclado, lectura y cuentos (antes en 07-aprender-adultos.js) */
 .mascot .body .crt{width:calc(var(--ms) * 1.2);height:calc(var(--ms) * 1.2);display:block;overflow:visible}
+/* niño o niña del jugador (19-nino.js): dibujo alto, 228 × 306 */
+.mascot.nino .body .crt{width:calc(var(--ms) * 1.19);height:calc(var(--ms) * 1.6)}
 .crt .eh,.crt .es,.crt .ez,.crt .mh,.crt .ms,.crt .ew,.crt .et,.crt .mw,.crt .mt{display:none}
 .mascot.surprised .crt .eo,.mascot.surprised .crt .mo,.mascot.think .crt .eo,.mascot.think .crt .mo{display:none}
 .mascot.surprised .crt .ew,.mascot.surprised .crt .mw,.mascot.think .crt .et,.mascot.think .crt .mt{display:inline}

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Semillita · Personajes</title>
+<!-- Abrir con `npm run dev` → /docs/personajes.html -->
+<link rel="stylesheet" href="/css/styles.css">
+<style>
+  body{background:var(--paper)}
+  .wrap{max-width:1000px;margin:0 auto;padding:var(--s-4) var(--s-4) 80px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:var(--s-3)}
+  .it{border-radius:var(--r-lg);padding:var(--s-3) var(--s-2);text-align:center;display:flex;flex-direction:column;align-items:center}
+  .it code{display:block;margin-top:var(--s-1);font-size:var(--fs-2xs);color:#5A566B;font-weight:700}
+  .it .cab{width:72px;height:72px}
+  .row2{display:flex;gap:var(--s-2);flex-wrap:wrap;margin:var(--s-3) 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="logo">Semi<span>llita</span> · personajes</div>
+  <p class="muted" style="font-weight:700">Piezas de <code>public/js/19-nino.js</code>. Toca un personaje para verlo reaccionar.</p>
+  <h2 class="h-sec">Al azar</h2>
+  <div class="row2"><button class="btn" id="otra">Otros personajes</button></div>
+  <div class="grid" id="azar"></div>
+  <h2 class="h-sec">Expresiones</h2>
+  <div class="row2" id="moods"></div>
+  <div class="grid" id="expr"></div>
+  <div id="out"></div>
+</div>
+<script>function shade(h,a){ const n=parseInt(h.slice(1),16); const f=c=>Math.max(0,Math.min(255,Math.round(a<0?c*(1+a):c+(255-c)*a))); return '#'+[n>>16,n>>8&255,n&255].map(f).map(x=>x.toString(16).padStart(2,'0')).join(''); }</script>
+<script src="/kenney/kenney.js"></script>
+<script src="/js/08-ilustraciones.js"></script>
+<script>window.SCENES={}; function rnd(a,b){return a+Math.floor(Math.random()*(b-a+1));}</script>
+<script src="/js/12-estilo-plano.js"></script>
+<script src="/js/13-plano-lugares.js"></script>
+<script src="/js/14-plano-mundo.js"></script>
+<script src="/js/19-nino.js"></script>
+<script>
+const bgs=['bg-mint','bg-sky','bg-peach','bg-lav','bg-butter','bg-rose','bg-sage'];
+const caja=(d,txt,i)=>`<div class="it ${bgs[i%bgs.length]}">${ninoMascot(d,92,'n'+Math.random().toString(36).slice(2))}<code>${txt}</code></div>`;
+const reac=(el,m)=>{ el.classList.remove('happy','sad','surprised','think','sleep'); void el.offsetWidth; el.classList.add(m); };
+function azar(){ document.getElementById('azar').innerHTML=Array.from({length:8},(_,i)=>caja(ninoAzar(5),'al azar',i)).join(''); }
+azar(); document.getElementById('otra').onclick=azar;
+const MOODS=[['','Normal'],['happy','Feliz'],['sad','Triste'],['surprised','Sorpresa'],['think','Pensando'],['sleep','Dormido']];
+document.getElementById('moods').innerHTML=MOODS.map(([m,n])=>`<button class="chip" data-m="${m}">${n}</button>`).join('');
+document.getElementById('expr').innerHTML=NINO_OPC.expr.map(([k,n],i)=>caja({...NINO_DEF,expr:k,pelo:['rizos','dos_colas','afro','liso','corto'][i],piel:['p2','p4','p6','p3','p8'][i]},n,i)).join('');
+document.getElementById('moods').onclick=e=>{ const m=e.target.dataset.m; if(m===undefined) return; document.querySelectorAll('#expr .mascot').forEach(el=>{ el.classList.remove('happy','sad','surprised','think','sleep'); if(m) el.classList.add(m); }); };
+const base={...NINO_DEF};
+const secc=[
+  ['Piel',NINO_OPC.piel.map(([k,n])=>[{piel:k},n])],
+  ['Cara',NINO_OPC.cara.map(([k,n])=>[{cara:k},n])],
+  ['Ojos',NINO_OPC.ojos.map(([k,n])=>[{ojos:k,colOjos:'#6FA3CB'},n])],
+  ['Cejas',NINO_OPC.cejas.map(([k,n])=>[{cejas:k},n])],
+  ['Nariz',NINO_OPC.nariz.map(([k,n])=>[{nariz:k},n])],
+  ['Pecas y mejillas',[[{pecas:true},'pecas'],[{mejillas:false},'sin mejillas']]],
+  ['Pelo',NINO_OPC.pelo.map(([k,n],i)=>[{pelo:k,colPelo:NINO_OPC.colPelo[i%NINO_OPC.colPelo.length][0]},n])],
+  ['Camisa',NINO_OPC.camisa.map(([k,n,nv],i)=>[{camisa:k,colCamisa:NINO_OPC.colRopa[i*2%NINO_OPC.colRopa.length]},`${n} · nivel ${nv}`])],
+  ['Abajo',NINO_OPC.abajo.map(([k,n])=>[{abajo:k},n])],
+  ['Zapatos',NINO_OPC.zapatos.map(([k,n,nv])=>[{zapatos:k},`${n} · nivel ${nv}`])],
+  ...Object.entries(NINO_OPC.acc).map(([s,l])=>['Accesorios · '+s,l.map(([k,n,nv])=>[{acc:{[s]:k}},`${n} · nivel ${nv}`])])
+];
+document.getElementById('out').innerHTML=secc.map(([t,l])=>`<h2 class="h-sec">${t} <small class="muted">(${l.length})</small></h2><div class="grid">${l.map(([d,n],i)=>caja({...base,...d},n,i)).join('')}</div>`).join('')
+  +`<h2 class="h-sec">Solo la cabeza</h2><div class="grid">${Array.from({length:6},(_,i)=>`<div class="it ${bgs[i]}"><div class="cab">${nino(ninoAzar(5),{solo:'cabeza'})}</div></div>`).join('')}</div>`;
+document.body.addEventListener('click',e=>{ const m=e.target.closest('.mascot'); if(m) reac(m,['happy','surprised','think','sad'][Math.floor(Math.random()*4)]); });
+</script>
+</body>
+</html>
