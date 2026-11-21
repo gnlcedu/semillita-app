@@ -597,23 +597,78 @@ function flyTo(el, targetId='msc'){
 /* =========================================================
    VOZ Y SONIDO
    ========================================================= */
-/* Estilos de voz: cambian el tono (p) y la velocidad (r) de la voz del dispositivo. El estilo se guarda en
-   S.settings.voiceStyle y la voz elegida en S.settings.voiceName; si faltan, se usa «Clara» y la primera voz en español. */
-const VOCES=[{id:'clara',n:'Clara',d:'Tono normal',p:1,r:1.2},{id:'dulce',n:'Dulce',d:'Aguda y suave',p:1.35,r:1.15},{id:'calma',n:'Tranquila',d:'Grave y pausada',p:.8,r:1.07},{id:'alegre',n:'Alegre',d:'Aguda y ágil',p:1.5,r:1.33}];
+/* Estilos de voz: cambian un poco el tono (p) y la velocidad (r) de la voz del dispositivo. Se mantienen cerca de 1
+   porque, lejos de ahí, las voces del sistema suenan robóticas. El estilo se guarda en S.settings.voiceStyle y la voz
+   elegida en S.settings.voiceName; si faltan, se usa «Clara» y la mejor voz en español que tenga el dispositivo. */
+const VOCES=[{id:'clara',n:'Clara',d:'Tono normal',p:1.05,r:1},{id:'dulce',n:'Dulce',d:'Un poco aguda y suave',p:1.18,r:.95},{id:'calma',n:'Tranquila',d:'Grave y pausada',p:.94,r:.88},{id:'alegre',n:'Alegre',d:'Aguda y ágil',p:1.25,r:1.08}];
 const vozEstilo=()=>VOCES.find(v=>v.id===S.settings.voiceStyle)||VOCES[0];
-function vocesES(){ try{ return speechSynthesis.getVoices().filter(v=>v.lang.toLowerCase().startsWith('es')); }catch(e){ return []; } }
+/* Puntaje de una voz: primero República Dominicana, luego Latinoamérica, luego España; dentro de cada grupo, las
+   voces neuronales («Natural», «Neural», Google, «Enhanced»…). Si una voz en línea falla (sin internet), se descarta
+   en esta sesión y se usa la siguiente. */
+const VOZ_MALA=new Set();
+const vozBuena=v=>/natural|neural|google|enhanced|premium|mejorad|siri|wavenet/i.test(v.name)&&!/compact|espeak/i.test(v.name);
+function vozPuntos(v, lang){
+  const l=v.lang.replace('_','-').toLowerCase(); let s=0;
+  if (lang.startsWith('en')){ s+= l==='en-us'?30 : l.startsWith('en')?15 : -999; }
+  else { if(!l.startsWith('es')) return -999; s+= l==='es-do'?50 : l==='es-es'?10 : 30; }
+  if (vozBuena(v)) s+=40;
+  if (/compact|espeak/i.test(v.name)) s-=30;
+  if (v.localService) s+=3;
+  /* a igual calidad, una voz suave de mujer suena más cercana para los niños */
+  if (/ramona|dalia|sabina|paulina|helena|laura|elvira|paloma|monica|mónica|marisol|camila|valentina|elena|zira|aria|jenny|samantha/i.test(v.name)) s+=2;
+  return s;
+}
+function vocesOrden(lang='es'){ try{ return speechSynthesis.getVoices().filter(v=>!VOZ_MALA.has(v.name)&&vozPuntos(v,lang)>-999).sort((a,b)=>vozPuntos(b,lang)-vozPuntos(a,lang)); }catch(e){ return []; } }
+function vocesES(){ return vocesOrden('es'); }
+function vozPara(lang){
+  const lista=vocesOrden(lang);
+  if (!lang.startsWith('en') && S.settings.voiceName){ const e=lista.find(v=>v.name===S.settings.voiceName); if(e) return e; }
+  return lista[0]||null;
+}
+/* Prepara el texto para leerlo: quita etiquetas y emojis, dice «RD$25» como «25 pesos» y lo parte en frases cortas
+   para que haya pausas naturales (y Chrome no corte los textos largos a los 15 s). */
+function frasesVoz(text){
+  const t=strip(text).replace(/[\p{Extended_Pictographic}\u{1F1E6}-\u{1F1FF}️‍]/gu,'').replace(/RD\$\s?(\d+(?:[.,]\d+)*)/g,'$1 pesos')
+    .replace(/\s+([,.!?¡¿…])/g,'$1').replace(/\s+/g,' ').trim();
+  if (!t) return [];
+  const out=[];
+  (t.match(/[^.!?…]+(?:[.!?…]+["»”)]*|$)/g)||[t]).forEach(f=>{ f=f.trim(); if(!f) return;
+    if (f.length<=160){ out.push(f); return; }
+    let cur=''; f.split(/(?<=[,;:])\s+/).forEach(p=>{ if(cur&&(cur+' '+p).length>160){ out.push(cur); cur=p; } else cur=cur?cur+' '+p:p; }); if(cur) out.push(cur); });
+  return out;
+}
+/* Cada lectura tiene un turno: cualquier speechSynthesis.cancel() (de speak, render o un juguete) lo cambia, así las
+   frases que faltaban no siguen sonando después de cambiar de pantalla. */
+let VOZ_TURNO=0;
+try{ if (typeof speechSynthesis!=='undefined'){ const _cancel=speechSynthesis.cancel.bind(speechSynthesis);
+  speechSynthesis.cancel=()=>{ VOZ_TURNO++; try{ const m=document.getElementById('msc'); if(m) m.classList.remove('talk'); }catch(e){} _cancel(); }; } }catch(e){}
 function speak(text, lang='es-ES'){
   try{
     if (!S.settings.voice || !('speechSynthesis' in window)) return;
     speechSynthesis.cancel();
-    const en=lang.startsWith('en'), est=vozEstilo();
-    const u=new SpeechSynthesisUtterance(strip(text)); u.lang=lang; u.rate=en?est.r*.9:est.r; u.pitch=est.p;
-    const todas=speechSynthesis.getVoices();
-    const v=(!en&&S.settings.voiceName&&todas.find(v=>v.name===S.settings.voiceName))||todas.find(v=>v.lang.toLowerCase().startsWith(lang.slice(0,2).toLowerCase()));
-    if (v) u.voice=v;
-    const m=document.getElementById('msc');
-    if (m){ u.onstart=()=>m.classList.add('talk'); u.onend=u.onerror=()=>m.classList.remove('talk'); }
-    speechSynthesis.speak(u);
+    const en=lang.startsWith('en'), est=vozEstilo(), frases=frasesVoz(text);
+    if (!frases.length) return;
+    const turno=++VOZ_TURNO, m=document.getElementById('msc');
+    const decir=(i)=>{
+      if (turno!==VOZ_TURNO || i>=frases.length){ if(m&&turno===VOZ_TURNO) m.classList.remove('talk'); return; }
+      const v=vozPara(lang), u=new SpeechSynthesisUtterance(frases[i]);
+      u.lang=v?v.lang:lang; if(v) u.voice=v;
+      u.rate=en?est.r*.9:est.r; u.pitch=est.p;
+      let empezo=false, listo=false;
+      /* una voz en línea que no responde (sin internet) se descarta y se usa la siguiente */
+      const cambiarVoz=()=>{ if(listo) return; listo=true; VOZ_MALA.add(v.name);
+        try{ speechSynthesis.cancel(); }catch(_){} VOZ_TURNO=turno; setTimeout(()=>{ if(VOZ_TURNO===turno) decir(i); },30); };
+      u.onstart=()=>{ empezo=true; if(m&&turno===VOZ_TURNO) m.classList.add('talk'); };
+      u.onend=()=>{ if(listo||turno!==VOZ_TURNO) return; listo=true; /* pausa corta entre frases, más larga tras punto */
+        setTimeout(()=>decir(i+1), /[.!?…]$/.test(frases[i])?180:60); };
+      u.onerror=(e)=>{ if(listo||turno!==VOZ_TURNO) return;
+        if (e&&(e.error==='interrupted'||e.error==='canceled')){ listo=true; if(m) m.classList.remove('talk'); return; }
+        if (v&&!empezo&&!v.localService){ cambiarVoz(); return; }
+        listo=true; decir(i+1); };
+      speechSynthesis.speak(u);
+      if (v&&!v.localService) setTimeout(()=>{ if(!empezo&&turno===VOZ_TURNO) cambiarVoz(); },3500);
+    };
+    decir(0);
   }catch(e){}
 }
 let AC=null;
